@@ -15,6 +15,17 @@
 	},
 	"config": {
 	},
+	"Hooks": {
+		"LoadExtensionSchemaUpdates": "schema"
+	},
+	"HookHandlers": {
+		"schema": {
+			"class": "MediaWiki\\Extension\\Produnto\\SchemaHooks"
+		}
+	},
+	"DatabaseVirtualDomains": [
+		"virtual-produnto"
+	],
 	"RestRoutes": [
 	],
 	"MessagesDirs": {

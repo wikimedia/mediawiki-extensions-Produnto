@@ -1,0 +1,395 @@
+[
+	{
+		"name": "produnto_active_deployment",
+		"comment": "The active deployment (the set of package versions) for each wiki",
+		"columns": [
+			{
+				"name": "pad_wiki",
+				"comment": "The wiki ID",
+				"type": "binary",
+				"options": {
+					"length": 255,
+					"notnull": true
+				}
+			},
+			{
+				"name": "pad_deployment",
+				"comment": "Link to produnto_deployment.pd_id",
+				"type": "integer",
+				"options": {
+					"unsigned": true,
+					"notnull": true
+				}
+			}
+		],
+		"indexes": [],
+		"pk": [ "pad_wiki" ]
+	},
+	{
+		"name": "produnto_deployment",
+		"comment": "",
+		"columns": [
+			{
+				"name": "pd_id",
+				"comment": "primary key",
+				"type": "integer",
+				"options": {
+					"unsigned": true,
+					"notnull": true,
+					"autoincrement": true
+				}
+			},
+			{
+				"name": "pd_target_wiki",
+				"comment": "The wiki ID of the deployment target",
+				"type": "binary",
+				"options": {
+					"length": 255,
+					"notnull": true
+				}
+			},
+			{
+				"name": "pd_control_wiki",
+				"comment": "The wiki ID of the JSON page controlling the deployment",
+				"type": "binary",
+				"options": {
+					"length": 255,
+					"notnull": true
+				}
+			},
+			{
+				"name": "pd_control_rev_id",
+				"comment": "The rev_id of the JSON page which is controlling this deployment",
+				"type": "integer",
+				"options": {
+					"unsigned": true,
+					"notnull": true
+				}
+			}
+		],
+		"indexes": [
+			{
+				"name": "pd_target_wiki_id",
+				"columns": [ "pd_target_wiki", "pd_id" ],
+				"comment": "For determining the replacement timestamp during purging",
+				"unique": false
+			}
+		],
+		"pk": [ "pd_id" ]
+	},
+	{
+		"name": "produnto_deployment_data",
+		"comment": "Merged cache blobs relating to a whole deployment",
+		"columns": [
+			{
+				"name": "pdd_id",
+				"comment": "primary key",
+				"type": "integer",
+				"options": {
+					"unsigned": true,
+					"notnull": true,
+					"autoincrement": true
+				}
+			},
+			{
+				"name": "pdd_deployment",
+				"comment": "Link to produnto_deployment.pd_id",
+				"type": "integer",
+				"options": {
+					"unsigned": true,
+					"notnull": true
+				}
+			},
+			{
+				"name": "pdd_name",
+				"comment": "The name of the deployment data, e.g. \"scribunto\"",
+				"type": "binary",
+				"options": {
+					"length": 255,
+					"notnull": true
+				}
+			},
+			{
+				"name": "pdd_text",
+				"comment": "The contents",
+				"type": "blob",
+				"options": {
+					"length": 4294967295,
+					"notnull": true
+				}
+			}
+		],
+		"indexes": [
+			{
+				"name": "pdd_deployment_name",
+				"columns": [ "pdd_deployment", "pdd_name" ],
+				"comment": "",
+				"unique": true
+			}
+		],
+		"pk": [ "pdd_id" ]
+	},
+	{
+		"name": "produnto_package_deployment",
+		"comment": "Associations between package versions and deployments",
+		"columns": [
+			{
+				"name": "ppd_deployment",
+				"comment": "Link to produnto_deployment.pd_id",
+				"type": "integer",
+				"options": {
+					"unsigned": true,
+					"notnull": true
+				}
+			},
+			{
+				"name": "ppd_package_version",
+				"comment": "Link to produnto_package_version.ppv_id",
+				"type": "integer",
+				"options": {
+					"unsigned": true,
+					"notnull": true
+				}
+			}
+		],
+		"indexes": [
+			{
+				"name": "ppd_package_version",
+				"columns": [ "ppd_package_version" ],
+				"comment": "For purging - find deployments that keep a version alive",
+				"unique": false
+			}
+		],
+		"pk": [ "ppd_deployment", "ppd_package_version" ]
+	},
+	{
+		"name": "produnto_package_version",
+		"comment": "Package versions",
+		"columns": [
+			{
+				"name": "ppv_id",
+				"comment": "primary key",
+				"type": "integer",
+				"options": {
+					"unsigned": true,
+					"notnull": true,
+					"autoincrement": true
+				}
+			},
+			{
+				"name": "ppv_package",
+				"comment": "Link to produnto_package.pp_id",
+				"type": "binary",
+				"options": {
+					"length": 255,
+					"notnull": true
+				}
+			},
+			{
+				"name": "ppv_version",
+				"comment": "The version string, e.g. 1.0.0",
+				"type": "binary",
+				"options": {
+					"length": 255,
+					"notnull": true
+				}
+			},
+			{
+				"name": "ppv_state",
+				"comment": "PHP const: 1=fetching, 2=ready, 3=failed",
+				"type": "mwtinyint",
+				"options": {
+					"length": 1,
+					"notnull": true
+				}
+			},
+			{
+				"name": "ppv_error",
+				"comment": "An error message, set if the fetch failed",
+				"type": "blob",
+				"options": {
+					"length": 65535,
+					"notnull": false
+				}
+			}
+		],
+		"indexes": [
+			{
+				"name": "ppv_package_version",
+				"columns": [ "ppv_package", "ppv_version" ],
+				"comment": "To deduplicate fetch requests",
+				"unique": true
+			}
+		],
+		"pk": [ "ppv_id" ]
+	},
+	{
+		"name": "produnto_package",
+		"comment": "Packages",
+		"columns": [
+			{
+				"name": "pp_id",
+				"comment": "primary key",
+				"type": "integer",
+				"options": {
+					"unsigned": true,
+					"notnull": true,
+					"autoincrement": true
+				}
+			},
+			{
+				"name": "pp_name",
+				"comment": "The package name",
+				"type": "binary",
+				"options": {
+					"length": 255,
+					"notnull": true
+				}
+			},
+			{
+				"name": "pp_url",
+				"comment": "The source URL",
+				"type": "blob",
+				"options": {
+					"length": 65535,
+					"notnull": true
+				}
+			}
+		],
+		"indexes": [
+			{
+				"name": "pp_name",
+				"columns": [ "pp_name" ],
+				"comment": "For searching and sorting by name",
+				"unique": true
+			}
+		],
+		"pk": [ "pp_id" ]
+	},
+	{
+		"name": "produnto_file",
+		"comment": "Files in packages",
+		"columns": [
+			{
+				"name": "pf_id",
+				"comment": "primary key",
+				"type": "integer",
+				"options": {
+					"unsigned": true,
+					"notnull": true,
+					"autoincrement": true
+				}
+			},
+			{
+				"name": "pf_package_version",
+				"comment": "Link to produnto_package_version.ppv_id",
+				"type": "integer",
+				"options": {
+					"unsigned": true,
+					"notnull": true
+				}
+			},
+			{
+				"name": "pf_name_id",
+				"comment": "Link to produnto_file_name.pfn_id",
+				"type": "integer",
+				"options": {
+					"unsigned": true,
+					"notnull": true
+				}
+			},
+			{
+				"name": "pf_hash",
+				"comment": "Link to produnto_file_text.pft_hash",
+				"type": "binary",
+				"options": {
+					"length": 64,
+					"notnull": true,
+					"fixed": true
+				}
+			}
+		],
+		"indexes": [
+			{
+				"name": "produnto_file_package_name",
+				"columns": [ "pf_package_version", "pf_name_id" ],
+				"comment": "For cleaning up failed fetches",
+				"unique": false
+			},
+			{
+				"name": "produnto_file_name_package",
+				"columns": [ "pf_name_id", "pf_package_version" ],
+				"comment": "For loading files, and for purging the produnto_file_name table",
+				"unique": false
+			},
+			{
+				"name": "pf_hash",
+				"columns": [ "pf_hash" ],
+				"comment": "For purging the produnto_file_text table",
+				"unique": false
+			}
+		],
+		"pk": [ "pf_id" ]
+	},
+	{
+		"name": "produnto_file_name",
+		"comment": "File paths relative to the package root, shared to reduce size",
+		"columns": [
+			{
+				"name": "pfn_id",
+				"comment": "primary key",
+				"type": "integer",
+				"options": {
+					"unsigned": true,
+					"notnull": true,
+					"autoincrement": true
+				}
+			},
+			{
+				"name": "pfn_name",
+				"comment": "relative path",
+				"type": "binary",
+				"options": {
+					"length": 4095,
+					"notnull": true
+				}
+			}
+		],
+		"indexes": [
+			{
+				"name": "pfn_name",
+				"columns": [ "pfn_name" ],
+				"comment": "For insert deduplication, loading",
+				"unique": true
+			}
+		],
+		"pk": [ "pfn_id" ]
+	},
+	{
+		"name": "produnto_file_text",
+		"comment": "Shared file contents",
+		"columns": [
+			{
+				"name": "pft_hash",
+				"comment": "SHA-256 hash of pft_text",
+				"type": "binary",
+				"options": {
+					"length": 64,
+					"notnull": true,
+					"fixed": true
+				}
+			},
+			{
+				"name": "pft_text",
+				"comment": "the file contents",
+				"type": "blob",
+				"options": {
+					"length": 4294967295,
+					"notnull": true
+				}
+			}
+		],
+		"indexes": [],
+		"pk": [ "pft_hash" ]
+	}
+]
