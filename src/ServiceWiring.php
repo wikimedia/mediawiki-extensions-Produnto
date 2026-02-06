@@ -3,6 +3,7 @@
 use MediaWiki\Extension\Produnto\Fetcher\Fetcher;
 use MediaWiki\Extension\Produnto\Server\ServerContainer;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
+use MediaWiki\Extension\Produnto\Updater\Updater;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 
@@ -30,6 +31,13 @@ return [
 	'Produnto.Store' => static function ( MediaWikiServices $services ) {
 		return new ProduntoStore(
 			$services->getConnectionProvider()
+		);
+	},
+
+	'Produnto.Updater' => static function ( MediaWikiServices $services ) {
+		return new Updater(
+			$services->get( 'Produnto.Store' ),
+			$services->getHookContainer()
 		);
 	}
 ];

@@ -20,14 +20,29 @@
 		"ProduntoServers": {
 			"value": [],
 			"description": "An array of server configuration objects describing upstream package sources"
+		},
+		"ProduntoPackagesTitle": {
+			"value": null,
+			"description": "The title to use for the deployed package list, or null for MediaWiki:Packages.json"
 		}
 	},
 	"Hooks": {
-		"LoadExtensionSchemaUpdates": "schema"
+		"LoadExtensionSchemaUpdates": "schema",
+		"ContentHandlerDefaultModelFor": "updater",
+		"JsonValidateSave": "updater",
+		"PageSaveComplete": "updater"
 	},
 	"HookHandlers": {
 		"schema": {
 			"class": "MediaWiki\\Extension\\Produnto\\SchemaHooks"
+		},
+		"updater": {
+			"class": "MediaWiki\\Extension\\Produnto\\Updater\\UpdaterHooks",
+			"services": [
+				"MainConfig",
+				"TitleParser",
+				"Produnto.Updater"
+			]
 		}
 	},
 	"DatabaseVirtualDomains": [

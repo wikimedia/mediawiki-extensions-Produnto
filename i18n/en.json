@@ -6,5 +6,8 @@
 	},
 	"produnto-desc": "Package manager for on-wiki software development",
 	"produnto-fetch-server-error": "Fetch failed due to a server error: $1",
-	"produnto-fetch-http-error": "Fetch failed with an error: $1"
+	"produnto-fetch-http-error": "Fetch failed with an error: $1",
+	"produnto-update-invalid": "Can't save packages page: not a valid package list",
+	"produnto-update-json-error": "Can't save packages page: $1",
+	"produnto-update-missing-package": "Can't save packages page: no such package $1 $2"
 }
