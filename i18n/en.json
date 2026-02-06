@@ -4,5 +4,7 @@
 			"Tim Starling"
 		]
 	},
-	"produnto-desc": "Package manager for on-wiki software development"
+	"produnto-desc": "Package manager for on-wiki software development",
+	"produnto-fetch-server-error": "Fetch failed due to a server error: $1",
+	"produnto-fetch-http-error": "Fetch failed with an error: $1"
 }

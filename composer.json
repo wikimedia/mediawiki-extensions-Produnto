@@ -1,4 +1,7 @@
 {
+	"require": {
+		"ext-zip": "*"
+	},
 	"require-dev": {
 		"mediawiki/mediawiki-codesniffer": "50.0.0",
 		"mediawiki/mediawiki-phan-config": "0.19.0",

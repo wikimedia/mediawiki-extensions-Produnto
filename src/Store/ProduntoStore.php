@@ -1,0 +1,109 @@
+<?php
+
+namespace MediaWiki\Extension\Produnto\Store;
+
+use Wikimedia\MapCacheLRU\MapCacheLRU;
+use Wikimedia\Rdbms\IConnectionProvider;
+use Wikimedia\Rdbms\IDBAccessObject;
+use Wikimedia\Rdbms\IReadableDatabase;
+
+/**
+ * Service providing access to the database
+ */
+class ProduntoStore {
+	public const STATE_FETCHING = 1;
+	public const STATE_READY = 2;
+	public const STATE_FAILED = 3;
+
+	private const TEXT_CACHE_SIZE = 1000;
+
+	private IConnectionProvider $dbProvider;
+	private TextStore $textStore;
+	private MapCacheLRU $textCache;
+	private NameStore $nameStore;
+
+	public function __construct(
+		IConnectionProvider $dbProvider
+	) {
+		$this->dbProvider = $dbProvider;
+		$this->textStore = new TextStore( $dbProvider );
+		$this->textCache = new MapCacheLRU( self::TEXT_CACHE_SIZE );
+		$this->nameStore = new NameStore( $dbProvider );
+	}
+
+	/**
+	 * Create a new package version
+	 *
+	 * @return PackageBuilder
+	 */
+	public function createPackageVersion(): PackageBuilder {
+		return new PackageBuilder(
+			$this->textStore,
+			$this->textCache,
+			$this->nameStore,
+			$this->dbProvider->getPrimaryDatabase( 'virtual-produnto' )
+		);
+	}
+
+	/**
+	 * Resume building of a package in the fetching state.
+	 *
+	 * @param PackageAccess $package
+	 * @return PackageBuilder
+	 */
+	public function resumePackageBuilder( PackageAccess $package ): PackageBuilder {
+		return PackageBuilder::resume(
+			$this->textStore,
+			$this->textCache,
+			$this->nameStore,
+			$this->dbProvider->getPrimaryDatabase( 'virtual-produnto' ),
+			$package
+		);
+	}
+
+	/**
+	 * Get the package version with the specified ID, or null if there is no such package.
+	 *
+	 * @param int $id
+	 * @param int $recency One of the READ_xxx constants
+	 * @return PackageAccess|null
+	 */
+	public function getPackageById( $id, $recency = IDBAccessObject::READ_NORMAL ): ?PackageAccess {
+		$db = $this->getDbFromRecency( $recency );
+		$row = $db->newSelectQueryBuilder()
+			->select( [ 'pp_name', 'ppv_version', 'pp_url', 'ppv_state', 'ppv_error' ] )
+			->from( 'produnto_package_version' )
+			->join( 'produnto_package', null, 'pp_id=ppv_package' )
+			->where( [ 'ppv_id' => $id ] )
+			->recency( $recency )
+			->caller( __METHOD__ )
+			->fetchRow();
+		if ( $row ) {
+			return new PackageAccess(
+				$this->textCache,
+				$db,
+				$id,
+				$row->pp_name,
+				$row->ppv_version,
+				$row->pp_url,
+				$row->ppv_state,
+				$row->ppv_error,
+			);
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Get a connection using IDBAccessObject recency flags
+	 * @param int $recency
+	 * @return IReadableDatabase
+	 */
+	private function getDbFromRecency( $recency ) {
+		if ( $recency & IDBAccessObject::READ_LATEST ) {
+			return $this->dbProvider->getPrimaryDatabase( 'virtual-produnto' );
+		} else {
+			return $this->dbProvider->getReplicaDatabase( 'virtual-produnto' );
+		}
+	}
+}

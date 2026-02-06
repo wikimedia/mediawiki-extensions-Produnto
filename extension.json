@@ -13,7 +13,14 @@
 	"AutoloadNamespaces": {
 		"MediaWiki\\Extension\\Produnto\\": "src/"
 	},
+	"TestAutoloadNamespaces": {
+		"MediaWiki\\Extension\\Produnto\\Tests\\": "tests/phpunit/"
+	},
 	"config": {
+		"ProduntoServers": {
+			"value": [],
+			"description": "An array of server configuration objects describing upstream package sources"
+		}
 	},
 	"Hooks": {
 		"LoadExtensionSchemaUpdates": "schema"
@@ -27,7 +34,26 @@
 		"virtual-produnto"
 	],
 	"RestRoutes": [
+		{
+			"method": "POST",
+			"path": "/produnto/v1/gitlab/tag",
+			"class": "MediaWiki\\Extension\\Produnto\\Rest\\GitlabTagHandler",
+			"services": [
+				"Produnto.ServerContainer",
+				"Produnto.Fetcher",
+				"Produnto.Logger"
+			]
+		}
 	],
+	"JobClasses": {
+		"ProduntoFetch": {
+			"class": "MediaWiki\\Extension\\Produnto\\Fetcher\\FetchJob",
+			"services": [
+				"Produnto.Fetcher"
+			],
+			"needsPage": false
+		}
+	},
 	"MessagesDirs": {
 		"Produnto": [
 			"i18n"
@@ -35,5 +61,8 @@
 	},
 	"ResourceModules": {
 	},
+	"ServiceWiringFiles": [
+		"src/ServiceWiring.php"
+	],
 	"manifest_version": 2
 }

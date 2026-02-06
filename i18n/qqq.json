@@ -4,5 +4,7 @@
 			"Tim Starling"
 		]
 	},
-	"produnto-desc": "{{desc|name=Produnto|url=https://www.mediawiki.org/wiki/Extension:Produnto}}"
+	"produnto-desc": "{{desc|name=Produnto|url=https://www.mediawiki.org/wiki/Extension:Produnto}}",
+	"produnto-fetch-server-error": "Used as an error message",
+	"produnto-fetch-http-error": "Used as an error message"
 }
