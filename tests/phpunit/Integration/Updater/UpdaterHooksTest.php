@@ -16,7 +16,7 @@ class UpdaterHooksTest extends \MediaWikiIntegrationTestCase {
 		$store->createPackageVersion()
 			->name( 'test' )
 			->version( '1.0.0' )
-			->url( '' )
+			->fetchedUrl( '' )
 			->commit();
 		$this->editPage(
 			'MediaWiki:Packages.json',

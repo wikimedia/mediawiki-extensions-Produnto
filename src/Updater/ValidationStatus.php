@@ -8,7 +8,7 @@ use StatusValue;
 /**
  * @extends StatusValue<never>
  */
-class ValidationStatus extends \StatusValue {
+class ValidationStatus extends StatusValue {
 	/** @var PackageAccess[] */
 	private $packages = [];
 	/** @var array */

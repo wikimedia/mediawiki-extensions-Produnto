@@ -1,0 +1,89 @@
+{
+	"$schema": "https://json-schema.org/schema#",
+	"description": "Schema for Produnto package manifest files (produnto.json).",
+	"type": "object",
+	"properties": {
+		"type": {
+			"type": "string",
+			"description": "The type of the package.",
+			"enum": [ "scribunto" ]
+		},
+		"name": {
+			"type": "object",
+			"description": "The localised package name.",
+			"patternProperties": {
+				"^[a-z0-9-]{2,128}$": {
+					"type": "string",
+					"description": "The package name in the specified language."
+				}
+			}
+		},
+		"description": {
+			"type": "object",
+			"description": "A short localised description of the package.",
+			"patternProperties": {
+				"^[a-z0-9-]{2,128}$": {
+					"type": "string",
+					"description": "The package description in the specified language."
+				}
+			}
+		},
+		"author": {
+			"type": [
+				"string",
+				"array"
+			],
+			"description": "The package's authors.",
+			"items": {
+				"type": "string"
+			}
+		},
+		"license": {
+			"type": "string",
+			"description": "SPDX identifier for the license under which the package is released."
+		},
+		"url": {
+			"type": "string",
+			"description": "The URL of the package homepage. Optional: use source-url and doc-url if there is no separate homepage."
+		},
+		"collab-url": {
+			"type": "string",
+			"description": "The URL of a human-readable entry point for source code review and contributions. For example, a GitLab project page."
+		},
+		"doc-url": {
+			"type": "string",
+			"description": "The URL of the documentation page."
+		},
+		"issue-url": {
+			"type": "string",
+			"description": "The URL of the package's bug tracker."
+		},
+		"requires": {
+			"type": "object",
+			"description": "The dependencies of the package",
+			"properties": {
+				"Lua": {
+					"type": "string",
+					"description": "The Lua version required"
+				},
+				"MediaWiki": {
+					"type": "string",
+					"description": "The MediaWiki version required"
+				}
+			},
+			"patternProperties": {
+				".*": {
+					"type": "string",
+					"description": "Required package versions"
+				}
+			}
+		},
+		"modules": {
+			"type": "object",
+			"description": "A map of each global Scribunto module name to its implementing file, relative to the package root.",
+			"patternProperties": {
+				".*": { "type": "string" }
+			}
+		}
+	}
+}

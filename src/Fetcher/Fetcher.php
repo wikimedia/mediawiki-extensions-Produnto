@@ -2,11 +2,17 @@
 
 namespace MediaWiki\Extension\Produnto\Fetcher;
 
+use Exception;
+use MediaWiki\Extension\Produnto\Manifest\ManifestFactory;
 use MediaWiki\Extension\Produnto\Server\ServerContainer;
+use MediaWiki\Extension\Produnto\Store\PackageAccess;
+use MediaWiki\Extension\Produnto\Store\PackageBuilder;
 use MediaWiki\Extension\Produnto\Store\PackageBuilderError;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
 use MediaWiki\JobQueue\JobQueueGroup;
+use MediaWiki\Request\WebRequest;
 use Psr\Log\LoggerInterface;
+use Wikimedia\Rdbms\DBError;
 use Wikimedia\Rdbms\IDBAccessObject;
 
 /**
@@ -18,6 +24,7 @@ class Fetcher {
 		private ServerContainer $serverContainer,
 		private JobQueueGroup $jobQueueGroup,
 		private LoggerInterface $logger,
+		private ManifestFactory $manifestFactory,
 	) {
 	}
 
@@ -31,14 +38,13 @@ class Fetcher {
 		$packageBuilder = $this->store->createPackageVersion();
 		$package = $packageBuilder
 			->name( $projectName )
-			->url( $url )
+			->fetchedUrl( $url )
 			->version( $version )
 			->suspend();
 		$this->jobQueueGroup->push( FetchJob::newSpec( $package->getId() ) );
 	}
 
 	public function fetch( int $packageId ): bool {
-		$status = new FetchStatus();
 		$package = $this->store->getPackageById( $packageId, IDBAccessObject::READ_LOCKING );
 		if ( !$package ) {
 			$this->logger->error( 'Fetcher: no such package ID {packageId}',
@@ -47,19 +53,39 @@ class Fetcher {
 			return true;
 		}
 		$packageBuilder = $this->store->resumePackageBuilder( $package );
-		$server = $this->serverContainer->getServerForUrl( $package->getUrl() );
+		try {
+			return $this->fetchPackage( $package, $packageBuilder );
+		} catch ( DBError $e ) {
+			// Writing the status is unsafe
+			throw $e;
+		} catch ( Exception $e ) {
+			$status = new FetchStatus();
+			$status->genericError( 'caught exception of class "' .
+				get_class( $e ) . '" [' . WebRequest::getRequestId() . ']' );
+			$packageBuilder->fail( $status );
+			throw $e;
+		}
+	}
+
+	/**
+	 * Fetch in an exception guarded context
+	 *
+	 * @param PackageAccess $package
+	 * @param PackageBuilder $packageBuilder
+	 * @return bool
+	 */
+	private function fetchPackage( PackageAccess $package, PackageBuilder $packageBuilder ) {
+		$status = new FetchStatus();
+		$server = $this->serverContainer->getServerForUrl( $package->getFetchedUrl() );
 		if ( !$server ) {
 			$this->logger->error( 'Fetcher: server not found for URL {url}',
-				[ 'url' => $package->getUrl() ] );
+				[ 'url' => $package->getFetchedUrl() ] );
 			$status->genericError( 'Server is no longer configured' );
 			$packageBuilder->fail( $status );
 			return true;
 		}
 		$status = $server->fetch( $package, $packageBuilder );
-		if ( $status->isOK() ) {
-			$packageBuilder->commit();
-			return true;
-		} else {
+		if ( !$status->isOK() ) {
 			$this->logger->error( 'Fetch failure: {status}',
 				[ 'status' => (string)$status ] );
 			$packageBuilder->fail( $status );
@@ -70,5 +96,16 @@ class Fetcher {
 				return true;
 			}
 		}
+
+		$manifestStatus = $this->manifestFactory->parseManifest( $packageBuilder->suspend() );
+		if ( !$manifestStatus->isOK() ) {
+			$packageBuilder->fail( $manifestStatus );
+			return true;
+		}
+
+		$manifestStatus->value->populateProps( $packageBuilder );
+		$packageBuilder->commit();
+
+		return true;
 	}
 }

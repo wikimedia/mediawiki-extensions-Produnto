@@ -16,13 +16,13 @@ class UpdaterTest extends \MediaWikiIntegrationTestCase {
 		$store = $this->getStore();
 		$store->createPackageVersion()
 			->name( 'test1' )
-			->url( 'http://example.com/' )
+			->fetchedUrl( 'http://example.com/' )
 			->version( '1.0.0' )
 			->addFile( 'README.MD', 'A file' )
 			->commit();
 		$store->createPackageVersion()
 			->name( 'test2' )
-			->url( 'http://example.com/' )
+			->fetchedUrl( 'http://example.com/' )
 			->version( '1.0.0' )
 			->addFile( 'README.MD', 'A file' )
 			->commit();

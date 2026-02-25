@@ -110,7 +110,7 @@ class GitlabServer extends GitServer {
 			$response =
 				$client->get(
 					$this->url . 'api/v4/projects/' .
-					rawurlencode( $this->urlToProjectPath( $package->getUrl() ) ) .
+					rawurlencode( $this->urlToProjectPath( $package->getFetchedUrl() ) ) .
 					'/repository/archive.zip',
 					[ RequestOptions::SINK => $file ]
 				);

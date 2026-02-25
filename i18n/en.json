@@ -5,8 +5,13 @@
 		]
 	},
 	"produnto-desc": "Package manager for on-wiki software development",
+	"produnto-fetch-error": "Fetch failed: $1",
 	"produnto-fetch-server-error": "Fetch failed due to a server error: $1",
 	"produnto-fetch-http-error": "Fetch failed with an error: $1",
+	"produnto-fetch-no-manifest": "The package did not contain a manifest file.",
+	"produnto-fetch-manifest": "Error in produnto.json: $1",
+	"produnto-fetch-manifest-schema": "Schema validation error in produnto.json: [$1] $2",
+	"produnto-fetch-module-missing": "The package manifest refers to a module \"$1\" with path \"$2\", but no such path exists.",
 	"produnto-update-invalid": "Can't save packages page: not a valid package list",
 	"produnto-update-json-error": "Can't save packages page: $1",
 	"produnto-update-missing-package": "Can't save packages page: no such package $1 $2"

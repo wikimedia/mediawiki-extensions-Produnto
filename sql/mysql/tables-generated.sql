@@ -45,6 +45,7 @@ CREATE TABLE /*_*/produnto_package_version (
   ppv_version VARBINARY(255) NOT NULL,
   ppv_state TINYINT(1) NOT NULL,
   ppv_error BLOB DEFAULT NULL,
+  ppv_props MEDIUMBLOB NOT NULL,
   UNIQUE INDEX ppv_package_version (ppv_package, ppv_version),
   PRIMARY KEY(ppv_id)
 ) /*$wgDBTableOptions*/;

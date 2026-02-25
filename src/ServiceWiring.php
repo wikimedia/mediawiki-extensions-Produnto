@@ -1,6 +1,7 @@
 <?php
 
 use MediaWiki\Extension\Produnto\Fetcher\Fetcher;
+use MediaWiki\Extension\Produnto\Manifest\ManifestFactory;
 use MediaWiki\Extension\Produnto\Server\ServerContainer;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
 use MediaWiki\Extension\Produnto\Updater\Updater;
@@ -13,7 +14,8 @@ return [
 			$services->get( 'Produnto.Store' ),
 			$services->get( 'Produnto.ServerContainer' ),
 			$services->getJobQueueGroup(),
-			LoggerFactory::getInstance( 'Produnto' )
+			LoggerFactory::getInstance( 'Produnto' ),
+			new ManifestFactory()
 		);
 	},
 

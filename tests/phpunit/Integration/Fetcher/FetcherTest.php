@@ -39,14 +39,14 @@ class FetcherTest extends \MediaWikiIntegrationTestCase {
 		$fetcher->asyncFetch(
 			'produnto-test',
 			'https://gitlab.wikimedia.org/tstarling/produnto-test',
-			'1.0.0'
+			'1.1'
 		);
 		$this->runJobs();
 
 		$store = $this->getStore();
 		$package = $store->getPackageById( 1 );
 		$this->assertSame( 'produnto-test', $package->getName() );
-		$this->assertSame( '1.0.0', $package->getVersion() );
+		$this->assertSame( '1.1', $package->getVersion() );
 
 		$readme = <<<EOT
 # produnto-test
@@ -54,6 +54,13 @@ class FetcherTest extends \MediaWikiIntegrationTestCase {
 Test package project for Produnto
 EOT;
 		$this->assertSame( $readme, $package->getFileContents( 'README.md' ) );
+
+		$this->assertSame( 'scribunto', $package->getType() );
+		$this->assertSame( 'https://gitlab.wikimedia.org/tstarling/produnto-test',
+			$package->getCollabUrl() );
+		$this->assertSame( 'Produnto test', $package->getLocalName( 'en' ) );
+		$this->assertSame( 'Produnto test description',
+			$package->getDescription( 'en' ) );
 	}
 
 	private function getFetcher(): Fetcher {

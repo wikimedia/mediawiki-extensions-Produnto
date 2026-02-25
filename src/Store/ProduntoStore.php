@@ -24,7 +24,7 @@ class ProduntoStore {
 	private NameStore $nameStore;
 
 	public function __construct(
-		IConnectionProvider $dbProvider
+		IConnectionProvider $dbProvider,
 	) {
 		$this->dbProvider = $dbProvider;
 		$this->textStore = new TextStore( $dbProvider );
@@ -39,7 +39,7 @@ class ProduntoStore {
 	 */
 	public function createDeployment(): DeploymentBuilder {
 		return new DeploymentBuilder(
-			$this->textCache,
+			$this->getFileAccess( IDBAccessObject::READ_LATEST ),
 			$this->dbProvider->getPrimaryDatabase( 'virtual-produnto' )
 		);
 	}
@@ -84,7 +84,7 @@ class ProduntoStore {
 			return null;
 		}
 		return new DeploymentAccess(
-			$this->textCache,
+			$this->getFileAccess( IDBAccessObject::READ_NORMAL ),
 			$db,
 			(int)$row->pd_id
 		);
@@ -98,7 +98,7 @@ class ProduntoStore {
 	public function createPackageVersion(): PackageBuilder {
 		return new PackageBuilder(
 			$this->textStore,
-			$this->textCache,
+			$this->getFileAccess( IDBAccessObject::READ_LATEST ),
 			$this->nameStore,
 			$this->dbProvider->getPrimaryDatabase( 'virtual-produnto' )
 		);
@@ -113,7 +113,7 @@ class ProduntoStore {
 	public function resumePackageBuilder( PackageAccess $package ): PackageBuilder {
 		return PackageBuilder::resume(
 			$this->textStore,
-			$this->textCache,
+			$this->getFileAccess( IDBAccessObject::READ_LATEST ),
 			$this->nameStore,
 			$this->dbProvider->getPrimaryDatabase( 'virtual-produnto' ),
 			$package
@@ -130,7 +130,7 @@ class ProduntoStore {
 	public function getPackageById( $id, $recency = IDBAccessObject::READ_NORMAL ): ?PackageAccess {
 		$db = $this->getDbFromRecency( $recency );
 		$row = $db->newSelectQueryBuilder()
-			->select( [ 'pp_name', 'ppv_version', 'pp_url', 'ppv_state', 'ppv_error' ] )
+			->select( [ 'pp_name', 'ppv_version', 'pp_url', 'ppv_state', 'ppv_error', 'ppv_props' ] )
 			->from( 'produnto_package_version' )
 			->join( 'produnto_package', null, 'pp_id=ppv_package' )
 			->where( [ 'ppv_id' => $id ] )
@@ -139,12 +139,12 @@ class ProduntoStore {
 			->fetchRow();
 		if ( $row ) {
 			return new PackageAccess(
-				$this->textCache,
-				$db,
+				$this->getFileAccess( $recency ),
 				$id,
 				$row->pp_name,
 				$row->ppv_version,
 				$row->pp_url,
+				PackageAccess::decodeProps( $id, $row->ppv_props ),
 				$row->ppv_state,
 				$row->ppv_error,
 			);
@@ -166,7 +166,7 @@ class ProduntoStore {
 	): ?PackageAccess {
 		$db = $this->getDbFromRecency( $recency );
 		$row = $db->newSelectQueryBuilder()
-			->select( [ 'ppv_id', 'pp_url', 'ppv_state', 'ppv_error' ] )
+			->select( [ 'ppv_id', 'pp_url', 'ppv_state', 'ppv_error', 'ppv_props' ] )
 			->from( 'produnto_package_version' )
 			->join( 'produnto_package', null, 'pp_id=ppv_package' )
 			->where( [
@@ -178,12 +178,12 @@ class ProduntoStore {
 			->fetchRow();
 		if ( $row ) {
 			return new PackageAccess(
-				$this->textCache,
-				$db,
-				$row->ppv_id,
+				$this->getFileAccess( $recency ),
+				(int)$row->ppv_id,
 				$name,
 				$version,
 				$row->pp_url,
+				PackageAccess::decodeProps( (int)$row->ppv_id, $row->ppv_props ),
 				$row->ppv_state,
 				$row->ppv_error
 			);
@@ -203,5 +203,16 @@ class ProduntoStore {
 		} else {
 			return $this->dbProvider->getReplicaDatabase( 'virtual-produnto' );
 		}
+	}
+
+	/**
+	 * @param int $recency
+	 * @return SqlFileAccess
+	 */
+	private function getFileAccess( $recency ) {
+		return new SqlFileAccess(
+			$this->textCache,
+			$this->getDbFromRecency( $recency )
+		);
 	}
 }

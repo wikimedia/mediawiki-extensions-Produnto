@@ -2,6 +2,8 @@
 
 namespace MediaWiki\Extension\Produnto\Tests\Integration\Store;
 
+use MediaWiki\Extension\Produnto\Store\PackageAccess;
+use MediaWiki\Extension\Produnto\Store\PackageBuilder;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
 use MediaWiki\Extension\Produnto\Store\VersionAlreadyExistsError;
 use MediaWiki\Extension\Produnto\Store\WrongUrlError;
@@ -88,7 +90,7 @@ class PackageBuilderTest extends \MediaWikiIntegrationTestCase {
 
 		$builder = $store->createPackageVersion();
 		$this->setFields( $builder );
-		$builder->url( 'http://example.com/bar' );
+		$builder->fetchedUrl( 'http://example.com/bar' );
 		$this->expectException( WrongUrlError::class );
 		$builder->commit();
 	}
@@ -111,30 +113,56 @@ class PackageBuilderTest extends \MediaWikiIntegrationTestCase {
 		return $this->getServiceContainer()->get( 'Produnto.Store' );
 	}
 
-	private function setFields( $builder ) {
+	private function setFields( PackageBuilder $builder ) {
 		$builder->name( 'foo' )
 			->version( '1.0.0' )
-			->url( 'http://example.com/foo' );
+			->fetchedUrl( 'http://example.com/foo' )
+			->type( 'test' )
+			->homepageUrl( 'http://example.com/foo/home' )
+			->docUrl( 'http://example.com/foo/doc' )
+			->collabUrl( 'http://example.com/foo/collab' )
+			->issueUrl( 'http://example.com/foo/issue' )
+			->description( 'en', 'Package description' )
+			->localName( 'en', 'Foo' )
+			->author( 'Alice' )
+			->author( 'Bob' )
+			->license( 'CC0-1.0' )
+			->requires( 'bar', '>1.0.0' )
+			->module( 'foo', 'src/init.lua' );
 	}
 
-	private function addFiles( $builder ) {
+	private function addFiles( PackageBuilder $builder ) {
 		$builder->addFile( 'README.md', 'Some documentation' )
 			->addFile( 'empty', '' )
 			->addFile( 'src/test.lua', 'return {}' );
 	}
 
-	private function assertFields( $package, $expectedState ) {
+	private function assertFields( PackageAccess $package, $expectedState ) {
 		$this->assertSame( 'foo', $package->getName() );
 		$this->assertSame( '1.0.0', $package->getVersion() );
-		$this->assertSame( 'http://example.com/foo', $package->getUrl() );
+		$this->assertSame( 'http://example.com/foo/home', $package->getHomepageUrl() );
+		$this->assertSame( 'http://example.com/foo', $package->getFetchedUrl() );
+		$this->assertSame( 'test', $package->getType() );
+		$this->assertSame( 'http://example.com/foo/doc', $package->getDocUrl() );
+		$this->assertSame( 'http://example.com/foo/collab', $package->getCollabUrl() );
+		$this->assertSame( 'http://example.com/foo/issue', $package->getIssueUrl() );
+		$this->assertSame( 'Package description', $package->getDescription( 'en' ) );
+		$this->assertSame( 'Foo', $package->getLocalName( 'en' ) );
+		$this->assertSame( [ 'Alice', 'Bob' ], $package->getAuthors() );
+		$this->assertSame( 'CC0-1.0', $package->getLicense() );
+		$this->assertSame( [ 'bar' => '>1.0.0' ], $package->getRequires() );
+		$this->assertSame( [ 'foo' => 'src/init.lua' ], $package->getModules() );
 		$this->assertSame( 1, $package->getId() );
 		$this->assertSame( $expectedState, $package->getState() );
 	}
 
-	private function assertFiles( $package ) {
+	private function assertFiles( PackageAccess $package ) {
 		$this->assertSame( 'Some documentation', $package->getFileContents( 'README.md' ) );
 		$this->assertSame( '', $package->getFileContents( 'empty' ) );
 		$this->assertSame( 'return {}', $package->getFileContents( 'src/test.lua' ) );
 		$this->assertNull( $package->getFileContents( 'nonexistent' ) );
+
+		$this->assertTrue( $package->hasFile( 'README.md' ) );
+		$this->assertFalse( $package->hasFile( 'nonexistent' ) );
 	}
 }

@@ -48,6 +48,7 @@ CREATE TABLE produnto_package_version (
   ppv_version TEXT NOT NULL,
   ppv_state SMALLINT NOT NULL,
   ppv_error TEXT DEFAULT NULL,
+  ppv_props TEXT NOT NULL,
   PRIMARY KEY(ppv_id)
 );
 

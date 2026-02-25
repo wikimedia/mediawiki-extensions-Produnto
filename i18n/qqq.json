@@ -5,8 +5,13 @@
 		]
 	},
 	"produnto-desc": "{{desc|name=Produnto|url=https://www.mediawiki.org/wiki/Extension:Produnto}}",
+	"produnto-fetch-error": "Used for unlikely internal errors. Parameters:\n* $1 - The error message in English",
 	"produnto-fetch-server-error": "Used as an error message",
 	"produnto-fetch-http-error": "Used as an error message",
+	"produnto-fetch-no-manifest": "Used as an error message",
+	"produnto-fetch-manifest": "A generic error to do with produnto.json in a package being fetched. Parameters:\n* $1 - The error message in English.",
+	"produnto-fetch-manifest-schema": "This error message indicates that the produnto.json file is written in a way that is not consistent with the documentation, such as an array being used where a string is expected. Parameters:\n* $1 - the failing property\n* $2 - the error message from the JSON schema library, in English",
+	"produnto-fetch-module-missing": "Used as an error message. Parameters:\n* $1 - the module name specified in produnto.json.\n* $2 - the module path which does not exist in the package.",
 	"produnto-update-invalid": "Used for generic errors when saving MediaWiki:Packages.json.",
 	"produnto-update-json-error": "A JSON parse error when saving MediaWiki:Packages.json. Parameters:\n* $1: the localised error from FormatJson",
 	"produnto-update-missing-package": "When saving MediaWiki:Packages.json, either the package name or the version is wrong. Parameters:\n* $1: the package name\n* $2: the package version"

@@ -3,7 +3,6 @@
 namespace MediaWiki\Extension\Produnto\Store;
 
 use MediaWiki\WikiMap\WikiMap;
-use Wikimedia\MapCacheLRU\MapCacheLRU;
 use Wikimedia\Rdbms\IDatabase;
 
 class DeploymentBuilder {
@@ -23,7 +22,7 @@ class DeploymentBuilder {
 	private array $packages = [];
 
 	public function __construct(
-		private MapCacheLRU $textCache,
+		private FileAccess $fileAccess,
 		private IDatabase $dbw
 	) {
 	}
@@ -94,7 +93,7 @@ class DeploymentBuilder {
 			$this->packageRows = [];
 		}
 		return new DeploymentAccess(
-			$this->textCache,
+			$this->fileAccess,
 			$this->dbw,
 			$id,
 			$this->dataItems,

@@ -211,6 +211,15 @@
 					"length": 65535,
 					"notnull": false
 				}
+			},
+			{
+				"name": "ppv_props",
+				"comment": "JSON blob of package properties",
+				"type": "blob",
+				"options": {
+					"length": 16777215,
+					"notnull": true
+				}
 			}
 		],
 		"indexes": [
@@ -248,7 +257,7 @@
 			},
 			{
 				"name": "pp_url",
-				"comment": "The source URL",
+				"comment": "The fetch URL",
 				"type": "blob",
 				"options": {
 					"length": 65535,

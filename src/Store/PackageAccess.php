@@ -2,46 +2,236 @@
 
 namespace MediaWiki\Extension\Produnto\Store;
 
+use MediaWiki\Language\LanguageFallback;
 use StatusValue;
-use Wikimedia\MapCacheLRU\MapCacheLRU;
-use Wikimedia\Rdbms\IReadableDatabase;
 
 /**
  * Read-only access to data relating to a package version
  */
 class PackageAccess {
 	public function __construct(
-		private MapCacheLRU $textCache,
-		private IReadableDatabase $db,
+		private FileAccess $fileAccess,
 		private int $id,
 		private string $name,
 		private string $version,
-		private string $url,
+		private string $fetchedUrl,
+		private array $props,
 		private int $state,
 		private ?string $error
 	) {
 	}
 
+	/**
+	 * Unpack the JSON package properties blob and validate it
+	 *
+	 * @param int $id
+	 * @param string $json
+	 * @return array
+	 */
+	public static function decodeProps( int $id, string $json ) {
+		if ( $json === '' ) {
+			$json = '{}';
+		}
+		return json_decode( $json, true, flags: JSON_THROW_ON_ERROR );
+	}
+
+	/**
+	 * Encode the properties array, producing a JSON string
+	 *
+	 * @param array $props
+	 * @return string
+	 */
+	public static function encodeProps( $props ) {
+		if ( $props === [] ) {
+			return '';
+		}
+		return json_encode( $props,
+			JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR
+		);
+	}
+
+	/**
+	 * Get the package name
+	 *
+	 * @return string
+	 */
 	public function getName(): string {
 		return $this->name;
 	}
 
+	/**
+	 * Get the version
+	 *
+	 * @return string
+	 */
 	public function getVersion(): string {
 		return $this->version;
 	}
 
-	public function getUrl(): string {
-		return $this->url;
+	/**
+	 * Get the URL used for fetching the package
+	 *
+	 * @return string
+	 */
+	public function getFetchedUrl(): string {
+		return $this->fetchedUrl;
 	}
 
+	/**
+	 * Get the package property array
+	 *
+	 * @return array
+	 */
+	public function getProps(): array {
+		return $this->props;
+	}
+
+	/**
+	 * Get the package type, e.g. "scribunto"
+	 *
+	 * @return string|null
+	 */
+	public function getType(): ?string {
+		return $this->props['type'] ?? null;
+	}
+
+	/**
+	 * Get the homepage URL
+	 *
+	 * @return string|null
+	 */
+	public function getHomepageUrl(): ?string {
+		return $this->props['homepage-url'] ?? null;
+	}
+
+	/**
+	 * Get the documentation URL
+	 *
+	 * @return string|null
+	 */
+	public function getDocUrl(): ?string {
+		return $this->props['doc-url'] ?? null;
+	}
+
+	/**
+	 * Get the collab URL, e.g. GitLab project page
+	 *
+	 * @return string|null
+	 */
+	public function getCollabUrl(): ?string {
+		return $this->props['collab-url'] ?? null;
+	}
+
+	/**
+	 * Get the bug tracker URL
+	 *
+	 * @return string|null
+	 */
+	public function getIssueUrl(): ?string {
+		return $this->props['issue-url'] ?? null;
+	}
+
+	/**
+	 * Get the package authors
+	 *
+	 * @return string[]
+	 */
+	public function getAuthors(): array {
+		return $this->props['authors'] ?? [];
+	}
+
+	/**
+	 * Get the license
+	 *
+	 * @return string|null
+	 */
+	public function getLicense(): ?string {
+		return $this->props['license'] ?? null;
+	}
+
+	/**
+	 * Get constraints by package name
+	 *
+	 * @return array<string,string>
+	 */
+	public function getRequires(): array {
+		return $this->props['requires'] ?? [];
+	}
+
+	/**
+	 * Get the map of Lua module name to implementation path
+	 *
+	 * @return array<string,string>
+	 */
+	public function getModules(): array {
+		return $this->props['modules'] ?? [];
+	}
+
+	/**
+	 * Get the package description in the given language, with optional fallback.
+	 *
+	 * @param string $lang
+	 * @param LanguageFallback|null $fallbackProvider
+	 * @return string|null
+	 */
+	public function getDescription( string $lang, ?LanguageFallback $fallbackProvider = null ): ?string {
+		return $this->getLocalisedProperty( 'description', $lang, $fallbackProvider );
+	}
+
+	/**
+	 * Get the localised package name, falling back to the canonical name
+	 *
+	 * @param string $lang
+	 * @param LanguageFallback|null $falllbackProvider
+	 * @return string
+	 */
+	public function getLocalName( string $lang, ?LanguageFallback $falllbackProvider = null ): string {
+		return $this->getLocalisedProperty( 'name', $lang, $falllbackProvider )
+			?? $this->getName();
+	}
+
+	private function getLocalisedProperty( string $prop, string $lang,
+		?LanguageFallback $fallbackProvider
+	): ?string {
+		if ( !isset( $this->props[$prop] ) ) {
+			return null;
+		}
+		$values = $this->props[$prop];
+		if ( isset( $values[$lang] ) ) {
+			return $values[$lang];
+		}
+		if ( $fallbackProvider ) {
+			foreach ( $fallbackProvider->getAll( $lang ) as $fallback ) {
+				if ( isset( $values[$fallback] ) ) {
+					return $values[$fallback];
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Get the ppv_id value
+	 *
+	 * @return int
+	 */
 	public function getId(): int {
 		return $this->id;
 	}
 
+	/**
+	 * Get the package state, one of the ProduntoStore::STATE_* constants
+	 * @return int
+	 */
 	public function getState(): int {
 		return $this->state;
 	}
 
+	/**
+	 * Get the fetch status
+	 *
+	 * @return StatusValue
+	 */
 	public function getStatus(): StatusValue {
 		if ( $this->error ) {
 			return unserialize(
@@ -55,24 +245,23 @@ class PackageAccess {
 		}
 	}
 
+	/**
+	 * Get the contents of a file from the package
+	 *
+	 * @param string $path
+	 * @return string|null
+	 */
 	public function getFileContents( string $path ): ?string {
-		$func = __METHOD__;
-		$text = $this->textCache->getWithSetCallback(
-			$this->textCache->makeKey( $this->id, $path ),
-			function () use ( $path, $func ) {
-				return $this->db->newSelectQueryBuilder()
-					->select( 'pft_text' )
-					->from( 'produnto_file_text' )
-					->join( 'produnto_file', null, 'pf_hash=pft_hash' )
-					->join( 'produnto_file_name', null, 'pf_name_id=pfn_id' )
-					->where( [
-						'pfn_name' => $path,
-						'pf_package_version' => $this->id
-					] )
-					->caller( $func )
-					->fetchField();
-			}
-		);
-		return $text === false ? null : $text;
+		return $this->fileAccess->getFileContents( $this->id, $path );
+	}
+
+	/**
+	 * Determine whether the package has a file with the given name.
+	 *
+	 * @param string $path
+	 * @return bool
+	 */
+	public function hasFile( string $path ): bool {
+		return $this->fileAccess->hasFile( $this->id, $path );
 	}
 }
