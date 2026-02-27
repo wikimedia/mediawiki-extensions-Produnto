@@ -14,6 +14,7 @@ class PackageAccess {
 		private int $id,
 		private string $name,
 		private string $version,
+		private string $upstreamRef,
 		private string $fetchedUrl,
 		private array $props,
 		private int $state,
@@ -66,6 +67,15 @@ class PackageAccess {
 	 */
 	public function getVersion(): string {
 		return $this->version;
+	}
+
+	/**
+	 * Get the commit hash, or some other server-dependent reference
+	 *
+	 * @return string
+	 */
+	public function getUpstreamRef(): string {
+		return $this->upstreamRef;
 	}
 
 	/**

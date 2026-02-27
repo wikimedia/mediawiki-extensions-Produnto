@@ -55,7 +55,7 @@ JSON;
 					'produnto.json' => $json,
 					'init.lua' => '',
 				] ] ),
-				1, '', '', '', [], 0, null
+				1, '', '', '', '', [], 0, null
 			)
 		);
 		$this->assertStatusGood( $status );

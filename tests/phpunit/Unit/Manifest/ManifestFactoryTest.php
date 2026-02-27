@@ -33,6 +33,7 @@ class ManifestFactoryTest extends \MediaWikiUnitTestCase {
 			1,
 			'test',
 			'1.0.0',
+			'',
 			'http://example.com',
 			[],
 			ProduntoStore::STATE_READY,

@@ -116,6 +116,7 @@ class PackageBuilderTest extends \MediaWikiIntegrationTestCase {
 	private function setFields( PackageBuilder $builder ) {
 		$builder->name( 'foo' )
 			->version( '1.0.0' )
+			->upstreamRef( 'refs/tags/v1.0.0' )
 			->fetchedUrl( 'http://example.com/foo' )
 			->type( 'test' )
 			->homepageUrl( 'http://example.com/foo/home' )
@@ -140,6 +141,7 @@ class PackageBuilderTest extends \MediaWikiIntegrationTestCase {
 	private function assertFields( PackageAccess $package, $expectedState ) {
 		$this->assertSame( 'foo', $package->getName() );
 		$this->assertSame( '1.0.0', $package->getVersion() );
+		$this->assertSame( 'refs/tags/v1.0.0', $package->getUpstreamRef() );
 		$this->assertSame( 'http://example.com/foo/home', $package->getHomepageUrl() );
 		$this->assertSame( 'http://example.com/foo', $package->getFetchedUrl() );
 		$this->assertSame( 'test', $package->getType() );

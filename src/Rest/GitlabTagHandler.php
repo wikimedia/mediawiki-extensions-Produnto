@@ -64,7 +64,7 @@ class GitlabTagHandler extends Handler {
 			);
 		}
 		try {
-			$this->fetcher->asyncFetch( $name, $projectUrl, $version );
+			$this->fetcher->asyncFetch( $name, $projectUrl, $version, $ref );
 			$response = $this->getResponseFactory()->createJson( [ 'status' => 'accepted' ] );
 			$response->setStatus( 202 );
 		} catch ( VersionAlreadyExistsError ) {

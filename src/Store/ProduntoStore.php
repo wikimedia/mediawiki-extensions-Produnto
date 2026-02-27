@@ -130,7 +130,10 @@ class ProduntoStore {
 	public function getPackageById( $id, $recency = IDBAccessObject::READ_NORMAL ): ?PackageAccess {
 		$db = $this->getDbFromRecency( $recency );
 		$row = $db->newSelectQueryBuilder()
-			->select( [ 'pp_name', 'ppv_version', 'pp_url', 'ppv_state', 'ppv_error', 'ppv_props' ] )
+			->select( [
+				'pp_name', 'ppv_version', 'ppv_upstream_ref', 'pp_url', 'ppv_state',
+				'ppv_error', 'ppv_props'
+			] )
 			->from( 'produnto_package_version' )
 			->join( 'produnto_package', null, 'pp_id=ppv_package' )
 			->where( [ 'ppv_id' => $id ] )
@@ -143,6 +146,7 @@ class ProduntoStore {
 				$id,
 				$row->pp_name,
 				$row->ppv_version,
+				$row->ppv_upstream_ref,
 				$row->pp_url,
 				PackageAccess::decodeProps( $id, $row->ppv_props ),
 				$row->ppv_state,
@@ -166,7 +170,9 @@ class ProduntoStore {
 	): ?PackageAccess {
 		$db = $this->getDbFromRecency( $recency );
 		$row = $db->newSelectQueryBuilder()
-			->select( [ 'ppv_id', 'pp_url', 'ppv_state', 'ppv_error', 'ppv_props' ] )
+			->select( [
+				'ppv_id', 'pp_url', 'ppv_upstream_ref', 'ppv_state', 'ppv_error', 'ppv_props'
+			] )
 			->from( 'produnto_package_version' )
 			->join( 'produnto_package', null, 'pp_id=ppv_package' )
 			->where( [
@@ -182,6 +188,7 @@ class ProduntoStore {
 				(int)$row->ppv_id,
 				$name,
 				$version,
+				$row->ppv_upstream_ref,
 				$row->pp_url,
 				PackageAccess::decodeProps( (int)$row->ppv_id, $row->ppv_props ),
 				$row->ppv_state,

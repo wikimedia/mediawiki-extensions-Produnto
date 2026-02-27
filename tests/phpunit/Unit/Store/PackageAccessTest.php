@@ -18,6 +18,7 @@ class PackageAccessTest extends \MediaWikiUnitTestCase {
 			1,
 			'foo',
 			'1.0.0',
+			'refs/tags/v1.0.0',
 			'http://example.com/foo',
 			[
 				'type' => 'test',
@@ -57,6 +58,10 @@ class PackageAccessTest extends \MediaWikiUnitTestCase {
 
 	public function testGetVersion() {
 		$this->assertSame( '1.0.0', $this->newPackage()->getVersion() );
+	}
+
+	public function testGetUpstreamRef() {
+		$this->assertSame( 'refs/tags/v1.0.0', $this->newPackage()->getUpstreamRef() );
 	}
 
 	public function testGetFetchedUrl() {

@@ -60,7 +60,9 @@ class DeploymentAccess {
 	public function getPackages(): array {
 		if ( $this->packages === null ) {
 			$res = $this->db->newSelectQueryBuilder()
-				->select( [ 'ppv_id', 'pp_name', 'ppv_version', 'pp_url', 'ppv_state', 'ppv_error', 'ppv_props' ] )
+				->select( [
+					'ppv_id', 'pp_name', 'ppv_version', 'ppv_upstream_ref',
+					'pp_url', 'ppv_state', 'ppv_error', 'ppv_props' ] )
 				->from( 'produnto_package_version' )
 				->join( 'produnto_package', null, 'pp_id=ppv_package' )
 				->join( 'produnto_package_deployment', null, 'ppd_package_version=ppv_id' )
@@ -74,6 +76,7 @@ class DeploymentAccess {
 					$row->ppv_id,
 					$row->pp_name,
 					$row->ppv_version,
+					$row->ppv_upstream_ref,
 					$row->pp_url,
 					PackageAccess::decodeProps( $row->ppv_id, $row->ppv_props ),
 					$row->ppv_state,

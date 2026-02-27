@@ -41,8 +41,8 @@ CREATE INDEX ppd_package_version ON /*_*/produnto_package_deployment (ppd_packag
 CREATE TABLE /*_*/produnto_package_version (
   ppv_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   ppv_package BLOB NOT NULL, ppv_version BLOB NOT NULL,
-  ppv_state SMALLINT NOT NULL, ppv_error BLOB DEFAULT NULL,
-  ppv_props BLOB NOT NULL
+  ppv_upstream_ref BLOB NOT NULL, ppv_state SMALLINT NOT NULL,
+  ppv_error BLOB DEFAULT NULL, ppv_props BLOB NOT NULL
 );
 
 CREATE UNIQUE INDEX ppv_package_version ON /*_*/produnto_package_version (ppv_package, ppv_version);

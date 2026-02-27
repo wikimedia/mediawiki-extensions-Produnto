@@ -46,6 +46,7 @@ CREATE TABLE produnto_package_version (
   ppv_id SERIAL NOT NULL,
   ppv_package TEXT NOT NULL,
   ppv_version TEXT NOT NULL,
+  ppv_upstream_ref TEXT NOT NULL,
   ppv_state SMALLINT NOT NULL,
   ppv_error TEXT DEFAULT NULL,
   ppv_props TEXT NOT NULL,

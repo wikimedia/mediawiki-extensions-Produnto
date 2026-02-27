@@ -111,7 +111,8 @@ class GitlabServer extends GitServer {
 				$client->get(
 					$this->url . 'api/v4/projects/' .
 					rawurlencode( $this->urlToProjectPath( $package->getFetchedUrl() ) ) .
-					'/repository/archive.zip',
+					'/repository/archive.zip' .
+					'?sha=' . rawurlencode( $package->getUpstreamRef() ),
 					[ RequestOptions::SINK => $file ]
 				);
 		} catch ( GuzzleException $e ) {

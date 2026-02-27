@@ -43,6 +43,7 @@ CREATE TABLE /*_*/produnto_package_version (
   ppv_id INT UNSIGNED AUTO_INCREMENT NOT NULL,
   ppv_package VARBINARY(255) NOT NULL,
   ppv_version VARBINARY(255) NOT NULL,
+  ppv_upstream_ref VARBINARY(255) NOT NULL,
   ppv_state TINYINT(1) NOT NULL,
   ppv_error BLOB DEFAULT NULL,
   ppv_props MEDIUMBLOB NOT NULL,

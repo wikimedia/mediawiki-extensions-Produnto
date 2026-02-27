@@ -14,7 +14,7 @@ class ValidationStatusTest extends \MediaWikiUnitTestCase {
 		$status = new ValidationStatus;
 		$package = new PackageAccess(
 			new SimpleFileAccess(),
-			1, '', '', '', [], 0, null
+			1, '', '', '', '', [], 0, null
 		);
 		$status->addPackage( $package );
 		$this->assertSame( [ $package ], $status->getPackages() );

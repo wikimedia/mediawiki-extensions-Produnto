@@ -39,7 +39,8 @@ class FetcherTest extends \MediaWikiIntegrationTestCase {
 		$fetcher->asyncFetch(
 			'produnto-test',
 			'https://gitlab.wikimedia.org/tstarling/produnto-test',
-			'1.1'
+			'1.1',
+			'refs/tags/v1.0'
 		);
 		$this->runJobs();
 
@@ -47,6 +48,7 @@ class FetcherTest extends \MediaWikiIntegrationTestCase {
 		$package = $store->getPackageById( 1 );
 		$this->assertSame( 'produnto-test', $package->getName() );
 		$this->assertSame( '1.1', $package->getVersion() );
+		$this->assertSame( 'refs/tags/v1.0', $package->getUpstreamRef() );
 
 		$readme = <<<EOT
 # produnto-test

@@ -195,6 +195,15 @@
 				}
 			},
 			{
+				"name": "ppv_upstream_ref",
+				"comment": "Some kind of upstream server-dependent identifier, for example a Git commit name",
+				"type": "binary",
+				"options": {
+					"length": 255,
+					"notnull": true
+				}
+			},
+			{
 				"name": "ppv_state",
 				"comment": "PHP const: 1=fetching, 2=ready, 3=failed",
 				"type": "mwtinyint",

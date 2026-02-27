@@ -32,14 +32,16 @@ class Fetcher {
 	 * @param string $projectName
 	 * @param string $url
 	 * @param string $version
+	 * @param string $ref
 	 * @throws PackageBuilderError
 	 */
-	public function asyncFetch( $projectName, $url, $version ) {
+	public function asyncFetch( $projectName, $url, $version, $ref ) {
 		$packageBuilder = $this->store->createPackageVersion();
 		$package = $packageBuilder
 			->name( $projectName )
 			->fetchedUrl( $url )
 			->version( $version )
+			->upstreamRef( $ref )
 			->suspend();
 		$this->jobQueueGroup->push( FetchJob::newSpec( $package->getId() ) );
 	}

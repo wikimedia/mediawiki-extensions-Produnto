@@ -15,6 +15,7 @@ class PackageBuilder {
 	private NameStore $nameStore;
 	private ?string $name = null;
 	private ?string $version = null;
+	private string $upstreamRef = '';
 	private ?string $fetchedUrl = null;
 	private array $props = [];
 	private ?int $id = null;
@@ -60,6 +61,7 @@ class PackageBuilder {
 		$builder->fetchedUrl = $package->getFetchedUrl();
 		$builder->props = $package->getProps();
 		$builder->version = $package->getVersion();
+		$builder->upstreamRef = $package->getUpstreamRef();
 		$builder->id = $package->getId();
 		$builder->state = $package->getState();
 		return $builder;
@@ -86,6 +88,18 @@ class PackageBuilder {
 	public function version( string $version ): self {
 		$this->assertNotInserted( __FUNCTION__ );
 		$this->version = $version;
+		return $this;
+	}
+
+	/**
+	 * Set the commit hash or some other server-dependent upstream ref
+	 *
+	 * @param string $ref
+	 * @return $this
+	 */
+	public function upstreamRef( string $ref ): self {
+		$this->assertNotInserted( __FUNCTION__ );
+		$this->upstreamRef = $ref;
 		return $this;
 	}
 
@@ -292,6 +306,7 @@ class PackageBuilder {
 			$id,
 			$this->name,
 			$this->version,
+			$this->upstreamRef,
 			$this->fetchedUrl,
 			$this->props,
 			$this->state,
@@ -314,6 +329,7 @@ class PackageBuilder {
 			$id,
 			$this->name,
 			$this->version,
+			$this->upstreamRef,
 			$this->fetchedUrl,
 			$this->props,
 			$this->state,
@@ -408,6 +424,7 @@ class PackageBuilder {
 				->row( [
 					'ppv_package' => $packageId,
 					'ppv_version' => $this->version,
+					'ppv_upstream_ref' => $this->upstreamRef,
 					'ppv_state' => $this->state,
 					'ppv_props' => PackageAccess::encodeProps( $this->props ),
 				] )
