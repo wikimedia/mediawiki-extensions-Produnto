@@ -23,35 +23,6 @@ class PackageAccess {
 	}
 
 	/**
-	 * Unpack the JSON package properties blob and validate it
-	 *
-	 * @param int $id
-	 * @param string $json
-	 * @return array
-	 */
-	public static function decodeProps( int $id, string $json ) {
-		if ( $json === '' ) {
-			$json = '{}';
-		}
-		return json_decode( $json, true, flags: JSON_THROW_ON_ERROR );
-	}
-
-	/**
-	 * Encode the properties array, producing a JSON string
-	 *
-	 * @param array $props
-	 * @return string
-	 */
-	public static function encodeProps( $props ) {
-		if ( $props === [] ) {
-			return '';
-		}
-		return json_encode( $props,
-			JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR
-		);
-	}
-
-	/**
 	 * Get the package name
 	 *
 	 * @return string

@@ -148,7 +148,7 @@ class ProduntoStore {
 				$row->ppv_version,
 				$row->ppv_upstream_ref,
 				$row->pp_url,
-				PackageAccess::decodeProps( $id, $row->ppv_props ),
+				self::decodeJson( $row->ppv_props ),
 				$row->ppv_state,
 				$row->ppv_error,
 			);
@@ -190,7 +190,7 @@ class ProduntoStore {
 				$version,
 				$row->ppv_upstream_ref,
 				$row->pp_url,
-				PackageAccess::decodeProps( (int)$row->ppv_id, $row->ppv_props ),
+				self::decodeJson( $row->ppv_props ),
 				$row->ppv_state,
 				$row->ppv_error
 			);
@@ -222,4 +222,35 @@ class ProduntoStore {
 			$this->getDbFromRecency( $recency )
 		);
 	}
+
+	/**
+	 * Decode a JSON array stored internally
+	 *
+	 * @internal
+	 * @param string $json
+	 * @return array
+	 */
+	public static function decodeJson( string $json ) {
+		if ( $json === '' ) {
+			$json = '{}';
+		}
+		return json_decode( $json, true, flags: JSON_THROW_ON_ERROR );
+	}
+
+	/**
+	 * Encode an array as JSON for internal storage
+	 *
+	 * @internal
+	 * @param array $data
+	 * @return string
+	 */
+	public static function encodeJson( $data ) {
+		if ( $data === [] ) {
+			return '';
+		}
+		return json_encode( $data,
+			JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR
+		);
+	}
+
 }

@@ -364,7 +364,7 @@ class PackageBuilder {
 			->set( [
 				'ppv_state' => $this->state,
 				'ppv_error' => $error,
-				'ppv_props' => PackageAccess::encodeProps( $this->props )
+				'ppv_props' => ProduntoStore::encodeJson( $this->props )
 			] )
 			->where( [ 'ppv_id' => $id ] )
 			->caller( __METHOD__ )
@@ -384,7 +384,7 @@ class PackageBuilder {
 		$this->dbw->newUpdateQueryBuilder()
 			->update( 'produnto_package_version' )
 			->set( [
-				'ppv_props' => PackageAccess::encodeProps( $this->props )
+				'ppv_props' => ProduntoStore::encodeJson( $this->props )
 			] )
 			->where( [ 'ppv_id' => $id ] )
 			->caller( __METHOD__ )
@@ -426,7 +426,7 @@ class PackageBuilder {
 					'ppv_version' => $this->version,
 					'ppv_upstream_ref' => $this->upstreamRef,
 					'ppv_state' => $this->state,
-					'ppv_props' => PackageAccess::encodeProps( $this->props ),
+					'ppv_props' => ProduntoStore::encodeJson( $this->props ),
 				] )
 				->ignore()
 				->caller( __METHOD__ )

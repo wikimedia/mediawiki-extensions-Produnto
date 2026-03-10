@@ -38,8 +38,7 @@ return [
 
 	'Produnto.Updater' => static function ( MediaWikiServices $services ) {
 		return new Updater(
-			$services->get( 'Produnto.Store' ),
-			$services->getHookContainer()
+			$services->get( 'Produnto.Store' )
 		);
 	}
 ];

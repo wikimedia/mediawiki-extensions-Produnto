@@ -20,10 +20,10 @@ class ValidationStatusTest extends \MediaWikiUnitTestCase {
 		$this->assertSame( [ $package ], $status->getPackages() );
 	}
 
-	public function testGetExtensionData() {
+	public function testGetModules() {
 		$status = new ValidationStatus;
-		$status->setExtensionData( 'test', 'foo' );
-		$this->assertSame( 'foo', $status->getExtensionData( 'test' ) );
-		$this->assertNull( $status->getExtensionData( 'nonexistent' ) );
+		$this->assertNull( $status->getModules() );
+		$status->setModules( [ 'foo' => [ 1, 'foo.lua' ] ] );
+		$this->assertSame( [ 'foo' => [ 1, 'foo.lua' ] ], $status->getModules() );
 	}
 }

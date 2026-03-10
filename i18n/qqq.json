@@ -14,5 +14,6 @@
 	"produnto-fetch-module-missing": "Used as an error message. Parameters:\n* $1 - the module name specified in produnto.json.\n* $2 - the module path which does not exist in the package.",
 	"produnto-update-invalid": "Used for generic errors when saving MediaWiki:Packages.json.",
 	"produnto-update-json-error": "A JSON parse error when saving MediaWiki:Packages.json. Parameters:\n* $1: the localised error from FormatJson",
-	"produnto-update-missing-package": "When saving MediaWiki:Packages.json, either the package name or the version is wrong. Parameters:\n* $1: the package name\n* $2: the package version"
+	"produnto-update-missing-package": "When saving MediaWiki:Packages.json, either the package name or the version is wrong. Parameters:\n* $1: the package name\n* $2: the package version",
+	"produnto-update-module-conflict": "Used as a warning or error message."
 }

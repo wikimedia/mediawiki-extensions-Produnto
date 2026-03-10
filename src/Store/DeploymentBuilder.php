@@ -12,7 +12,7 @@ class DeploymentBuilder {
 	/** @var int|null The deployment ID, if it has been inserted */
 	private ?int $id = null;
 
-	/** @var array<string,string> Saved data items */
+	/** @var array<string,array> Saved data items */
 	private array $dataItems = [];
 
 	/** @var array A batch of uninserted produnto_package_deployment rows */
@@ -20,6 +20,9 @@ class DeploymentBuilder {
 
 	/** @var PackageAccess[] The packages in the deployment */
 	private array $packages = [];
+
+	/** @var array<string,array{int,string}> */
+	private array $modules = [];
 
 	public function __construct(
 		private FileAccess $fileAccess,
@@ -39,24 +42,35 @@ class DeploymentBuilder {
 	}
 
 	/**
+	 * Set the Lua modules
+	 *
+	 * @param array<string,array{int,string}> $modules
+	 * @return $this
+	 */
+	public function modules( array $modules ): self {
+		$this->modules = $modules;
+		return $this;
+	}
+
+	/**
 	 * Add arbitrary data associated with the deployment
 	 *
 	 * @param string $name
-	 * @param string $contents
+	 * @param array $data
 	 * @return $this
 	 */
-	public function addData( string $name, string $contents ): self {
+	public function addData( string $name, array $data ): self {
 		$id = $this->ensureInserted();
 		$this->dbw->newInsertQueryBuilder()
 			->insertInto( 'produnto_deployment_data' )
 			->row( [
 				'pdd_deployment' => $id,
 				'pdd_name' => $name,
-				'pdd_text' => $contents
+				'pdd_text' => ProduntoStore::encodeJson( $data )
 			] )
 			->caller( __METHOD__ )
 			->execute();
-		$this->dataItems[$name] = $contents;
+		$this->dataItems[$name] = $data;
 		return $this;
 	}
 
@@ -83,6 +97,10 @@ class DeploymentBuilder {
 	 */
 	public function commit(): DeploymentAccess {
 		$id = $this->ensureInserted();
+
+		if ( $this->modules ) {
+			$this->addData( 'modules', $this->modules );
+		}
 
 		if ( $this->packageRows ) {
 			$this->dbw->newInsertQueryBuilder()

@@ -2,10 +2,8 @@
 
 namespace MediaWiki\Extension\Produnto\Tests\Integration\Updater;
 
-use MediaWiki\Extension\Produnto\Store\PackageAccess;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
 use MediaWiki\Extension\Produnto\Updater\Updater;
-use MediaWiki\Extension\Produnto\Updater\ValidationStatus;
 
 /**
  * @group Database
@@ -18,13 +16,15 @@ class UpdaterTest extends \MediaWikiIntegrationTestCase {
 			->name( 'test1' )
 			->fetchedUrl( 'http://example.com/' )
 			->version( '1.0.0' )
-			->addFile( 'README.MD', 'A file' )
+			->addFile( 'src/init.lua', 'return {}' )
+			->module( 'test', 'src/init.lua' )
 			->commit();
 		$store->createPackageVersion()
 			->name( 'test2' )
 			->fetchedUrl( 'http://example.com/' )
 			->version( '1.0.0' )
-			->addFile( 'README.MD', 'A file' )
+			->addFile( 'src/init.lua', 'return {}' )
+			->module( 'test', 'src/init.lua' )
 			->commit();
 	}
 
@@ -52,9 +52,12 @@ class UpdaterTest extends \MediaWikiIntegrationTestCase {
 				(object)[ 'test1' => '2.0.0' ],
 				'produnto-update-missing-package'
 			],
-			'rejected by hook' => [
-				(object)[ 'test2' => '1.0.0' ],
-				'hook-error'
+			'duplicate module' => [
+				(object)[
+					'test1' => '1.0.0',
+					'test2' => '1.0.0'
+				],
+				'produnto-update-module-conflict'
 			],
 		];
 	}
@@ -65,19 +68,6 @@ class UpdaterTest extends \MediaWikiIntegrationTestCase {
 	 * @param ?string $expectedMessage
 	 */
 	public function testValidateDeployment( $input, $expectedMessage ) {
-		$this->clearHook( 'ProduntoValidatePackage' );
-		$this->clearHook( 'ProduntoCreateDeployment' );
-		$this->setTemporaryHook(
-			'ProduntoValidatePackage',
-			static function ( PackageAccess $package, ValidationStatus $status ) {
-				if ( $package->getName() === 'test2' ) {
-					$status->fatal( 'hook-error' );
-					return false;
-				}
-				return true;
-			}
-		);
-
 		$updater = $this->getUpdater();
 		$status = $updater->validateDeployment( $input );
 		if ( $expectedMessage ) {

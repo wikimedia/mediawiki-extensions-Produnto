@@ -2,19 +2,13 @@
 
 namespace MediaWiki\Extension\Produnto\Updater;
 
-use MediaWiki\Extension\Produnto\ProduntoHookRunner;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
-use MediaWiki\HookContainer\HookContainer;
 use stdClass;
 
 class Updater {
-	private ProduntoHookRunner $hookRunner;
-
 	public function __construct(
 		private ProduntoStore $store,
-		HookContainer $hookContainer
 	) {
-		$this->hookRunner = new ProduntoHookRunner( $hookContainer );
 	}
 
 	/**
@@ -30,21 +24,37 @@ class Updater {
 			$status->fatal( 'produnto-update-invalid' );
 			return $status;
 		}
+
+		$modules = [];
+		$packageNamesById = [];
 		foreach ( $packages as $name => $version ) {
 			if ( !is_string( $name ) || !is_string( $version ) ) {
 				$status->fatal( 'produnto-update-invalid' );
 				continue;
 			}
+
 			$package = $this->store->getPackageByName( $name, $version );
 			if ( !$package ) {
 				$status->fatal( 'produnto-update-missing-package', $name, $version );
 				continue;
 			}
-			if ( !$this->hookRunner->onProduntoValidatePackage( $package, $status ) ) {
-				continue;
+
+			$packageNamesById[$package->getId()] = $name;
+
+			foreach ( $package->getModules() as $moduleName => $path ) {
+				if ( array_key_exists( $moduleName, $modules ) ) {
+					$conflictId = $modules[$moduleName][0];
+					$conflictName = $packageNamesById[$conflictId];
+					$status->warning( 'produnto-update-module-conflict',
+						$moduleName, $conflictName, $package->getName() );
+					continue;
+				}
+				$modules[$moduleName] = [ $package->getId(), $path ];
 			}
+
 			$status->addPackage( $package );
 		}
+		$status->setModules( $modules );
 		return $status;
 	}
 
@@ -61,7 +71,7 @@ class Updater {
 		foreach ( $status->getPackages() as $package ) {
 			$deploymentBuilder->addPackage( $package );
 		}
-		$this->hookRunner->onProduntoCreateDeployment( $deploymentBuilder, $status );
+		$deploymentBuilder->modules( $status->getModules() );
 		$deployment = $deploymentBuilder->commit();
 		$this->store->activateDeployment( $deployment );
 	}

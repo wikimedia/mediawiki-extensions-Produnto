@@ -11,6 +11,8 @@ use StatusValue;
 class ValidationStatus extends StatusValue {
 	/** @var PackageAccess[] */
 	private $packages = [];
+	/** @var array<string,array{int,string}>|null */
+	private ?array $modules = null;
 	/** @var array */
 	private $extensionItems = [];
 
@@ -33,22 +35,20 @@ class ValidationStatus extends StatusValue {
 	}
 
 	/**
-	 * A hook can use this to store arbitrary data during validation
-	 *
-	 * @param string $name
-	 * @param mixed $value Does not need to be serializable
+	 * @param array<string,array{int,string}> $modules An associative array of
+	 *   modules where the key is the module name and the value is a list of
+	 *   package version ID and the path inside the package.
 	 */
-	public function setExtensionData( $name, $value ) {
-		$this->extensionItems[$name] = $value;
+	public function setModules( $modules ) {
+		$this->modules = $modules;
 	}
 
 	/**
-	 * Get data stored during validation. To be used by a deployment hook.
-	 *
-	 * @param string $name
-	 * @return mixed|null
+	 * @return array<string,array{int,string}> An associative array of
+	 *    modules where the key is the module name and the value is a list of
+	 *    package version ID and the path inside the package.
 	 */
-	public function getExtensionData( $name ) {
-		return $this->extensionItems[$name] ?? null;
+	public function getModules() {
+		return $this->modules;
 	}
 }

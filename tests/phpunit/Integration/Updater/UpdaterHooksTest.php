@@ -26,7 +26,7 @@ class UpdaterHooksTest extends \MediaWikiIntegrationTestCase {
 		$this->assertSame( 1, $deployment->getId() );
 		$packages = $deployment->getPackages();
 		$this->assertCount( 1, $packages );
-		$this->assertSame( 'test', $packages[0]->getName() );
+		$this->assertSame( 'test', reset( $packages )->getName() );
 	}
 
 	private function getStore(): ProduntoStore {
