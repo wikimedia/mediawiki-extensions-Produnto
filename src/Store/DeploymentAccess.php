@@ -2,10 +2,14 @@
 
 namespace MediaWiki\Extension\Produnto\Store;
 
+use MediaWiki\Extension\Produnto\Runtime\ModuleInfo;
 use Wikimedia\Rdbms\IReadableDatabase;
 use function array_key_exists;
 
 class DeploymentAccess {
+	/** @var array<string,int>|null */
+	private ?array $idsByName = null;
+
 	/**
 	 * @param FileAccess $fileAccess
 	 * @param IReadableDatabase $db
@@ -73,7 +77,7 @@ class DeploymentAccess {
 		if ( !$contents ) {
 			return null;
 		}
-		return new ModuleInfo( $packageId, $package->getName(), $path, $contents );
+		return new ModuleInfo( $package->getName(), $path, $contents );
 	}
 
 	/**
@@ -113,5 +117,25 @@ class DeploymentAccess {
 
 	private function getPackageById( int $id ): ?PackageAccess {
 		return $this->getPackages()[$id] ?? null;
+	}
+
+	/**
+	 * Get a package by name
+	 *
+	 * @param string $name
+	 * @return PackageAccess|null
+	 */
+	public function getPackageByName( string $name ): ?PackageAccess {
+		$packages = $this->getPackages();
+		if ( $this->idsByName === null ) {
+			$this->idsByName = [];
+			foreach ( $packages as $id => $package ) {
+				$this->idsByName[$package->getName()] = $id;
+			}
+		}
+		if ( array_key_exists( $name, $this->idsByName ) ) {
+			return $packages[$this->idsByName[$name]];
+		}
+		return null;
 	}
 }

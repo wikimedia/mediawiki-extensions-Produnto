@@ -1,13 +1,12 @@
 <?php
 
-namespace MediaWiki\Extension\Produnto\Store;
+namespace MediaWiki\Extension\Produnto\Runtime;
 
 /**
- * A bundle of information about a module, returned by DeploymentAccess
+ * A bundle of information about a module
  */
 class ModuleInfo {
 	public function __construct(
-		public readonly int $packageId,
 		public readonly string $packageName,
 		public readonly string $path,
 		public readonly string $contents

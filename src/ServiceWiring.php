@@ -2,6 +2,8 @@
 
 use MediaWiki\Extension\Produnto\Fetcher\Fetcher;
 use MediaWiki\Extension\Produnto\Manifest\ManifestFactory;
+use MediaWiki\Extension\Produnto\Runtime\ProduntoRuntime;
+use MediaWiki\Extension\Produnto\Runtime\SqlLoader;
 use MediaWiki\Extension\Produnto\Server\ServerContainer;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
 use MediaWiki\Extension\Produnto\Updater\Updater;
@@ -21,6 +23,12 @@ return [
 
 	'Produnto.Logger' => static function ( MediaWikiServices $services ) {
 		return LoggerFactory::getInstance( 'Produnto' );
+	},
+
+	'Produnto.Runtime' => static function ( MediaWikiServices $services ) {
+		return new ProduntoRuntime( [
+			new SqlLoader( $services->get( 'Produnto.Store' ) )
+		] );
 	},
 
 	'Produnto.ServerContainer' => static function ( MediaWikiServices $services ) {
