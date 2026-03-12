@@ -49,6 +49,8 @@ class FetcherTest extends \MediaWikiIntegrationTestCase {
 		$this->assertSame( 'produnto-test', $package->getName() );
 		$this->assertSame( '1.1', $package->getVersion() );
 		$this->assertSame( 'refs/tags/v1.0', $package->getUpstreamRef() );
+		$this->assertNull( $package->getFileContents( 'src/' ) );
+		$this->assertIsString( $package->getFileContents( 'src/init.lua' ) );
 
 		$readme = <<<EOT
 # produnto-test

@@ -131,6 +131,10 @@ class GitlabServer extends GitServer {
 		}
 		for ( $i = 0; $i < $archive->numFiles; $i++ ) {
 			$stat = $archive->statIndex( $i );
+			if ( str_ends_with( $stat['name'], '/' ) ) {
+				// Ignore directories
+				continue;
+			}
 			$name = $this->stripInitialPathSegment( $stat['name'] );
 			if ( $name === null ) {
 				// Ignore files not in a directory
