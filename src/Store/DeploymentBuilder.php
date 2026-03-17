@@ -18,7 +18,7 @@ class DeploymentBuilder {
 	/** @var array A batch of uninserted produnto_package_deployment rows */
 	private array $packageRows = [];
 
-	/** @var PackageAccess[] The packages in the deployment */
+	/** @var PackageAccess[] The packages in the deployment, indexed by package ID */
 	private array $packages = [];
 
 	/** @var array<string,array{int,string}> */
@@ -86,7 +86,7 @@ class DeploymentBuilder {
 			'ppd_deployment' => $id,
 			'ppd_package_version' => $package->getId()
 		];
-		$this->packages[] = $package;
+		$this->packages[$package->getId()] = $package;
 		return $this;
 	}
 

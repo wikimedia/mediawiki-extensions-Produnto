@@ -28,9 +28,10 @@ class ServerContainer {
 	}
 
 	/**
+	 * @internal
 	 * @return BaseServer[]
 	 */
-	private function getServers() {
+	public function getServers() {
 		if ( $this->servers === null ) {
 			$this->servers = [];
 			foreach ( $this->config->get( 'ProduntoServers' ) as $serverConfig ) {
@@ -46,4 +47,13 @@ class ServerContainer {
 		}
 		return $this->servers;
 	}
+
+	/**
+	 * @internal
+	 * @param BaseServer[] $servers
+	 */
+	public function setServersForTesting( array $servers ) {
+		$this->servers = $servers;
+	}
+
 }

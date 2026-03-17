@@ -15,7 +15,7 @@ class DeploymentAccess {
 	 * @param IReadableDatabase $db
 	 * @param int $id
 	 * @param array|null $dataItems The data items, or null to load from the DB
-	 * @param PackageAccess[]|null $packages The packages, or null to load from the DB
+	 * @param PackageAccess[]|null $packages The packages indexed by package ID, or null to load from the DB
 	 */
 	public function __construct(
 		private FileAccess $fileAccess,
@@ -74,7 +74,7 @@ class DeploymentAccess {
 			return null;
 		}
 		$contents = $this->fileAccess->getFileContents( $packageId, $path );
-		if ( !$contents ) {
+		if ( $contents === null ) {
 			return null;
 		}
 		return new ModuleInfo( $package->getName(), $path, $contents );

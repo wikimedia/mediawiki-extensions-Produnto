@@ -2,6 +2,7 @@
 
 namespace MediaWiki\Extension\Produnto\Tests\Integration\Updater;
 
+use MediaWiki\Extension\Produnto\ProduntoServices;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
 use MediaWiki\Extension\Produnto\Updater\Updater;
 
@@ -29,11 +30,11 @@ class UpdaterTest extends \MediaWikiIntegrationTestCase {
 	}
 
 	private function getUpdater(): Updater {
-		return $this->getServiceContainer()->get( 'Produnto.Updater' );
+		return ( new ProduntoServices( $this->getServiceContainer() ) )->getUpdater();
 	}
 
 	private function getStore(): ProduntoStore {
-		return $this->getServiceContainer()->get( 'Produnto.Store' );
+		return ( new ProduntoServices( $this->getServiceContainer() ) )->getStore();
 	}
 
 	public static function provideValidateDeployment() {

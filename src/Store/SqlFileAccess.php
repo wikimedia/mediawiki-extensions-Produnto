@@ -6,6 +6,9 @@ use Wikimedia\MapCacheLRU\MapCacheLRU;
 use Wikimedia\Rdbms\IReadableDatabase;
 
 class SqlFileAccess implements FileAccess {
+	/** Marker for missing files */
+	private const MISSING = [];
+
 	public function __construct(
 		private MapCacheLRU $textCache,
 		private IReadableDatabase $db
@@ -16,7 +19,7 @@ class SqlFileAccess implements FileAccess {
 	public function hasFile( int $packageId, string $path ): bool {
 		$func = __METHOD__;
 		$cacheEntry = $this->textCache->get( $this->textCache->makeKey( $packageId, $path ) );
-		if ( $cacheEntry === false ) {
+		if ( $cacheEntry === self::MISSING ) {
 			return false;
 		} elseif ( is_string( $cacheEntry ) ) {
 			return true;
@@ -43,7 +46,7 @@ class SqlFileAccess implements FileAccess {
 		$text = $this->textCache->getWithSetCallback(
 			$this->textCache->makeKey( $packageId, $path ),
 			function () use ( $packageId, $path, $func ) {
-				return $this->db->newSelectQueryBuilder()
+				$text = $this->db->newSelectQueryBuilder()
 					->select( 'pft_text' )
 					->from( 'produnto_file_text' )
 					->join( 'produnto_file', null, 'pf_hash=pft_hash' )
@@ -54,9 +57,10 @@ class SqlFileAccess implements FileAccess {
 					] )
 					->caller( $func )
 					->fetchField();
+				return $text ?: self::MISSING;
 			}
 		);
-		return $text === false ? null : $text;
+		return $text === self::MISSING ? null : $text;
 	}
 
 	/** @inheritDoc */

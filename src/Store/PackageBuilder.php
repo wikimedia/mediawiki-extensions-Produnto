@@ -2,6 +2,7 @@
 
 namespace MediaWiki\Extension\Produnto\Store;
 
+use InvalidArgumentException;
 use StatusValue;
 use Wikimedia\Rdbms\IDatabase;
 use function array_key_exists;
@@ -345,6 +346,9 @@ class PackageBuilder {
 	public function fail( StatusValue $status ) {
 		if ( $this->id === null ) {
 			return;
+		}
+		if ( !in_array( $status::class, PackageAccess::STATUS_CLASSES ) ) {
+			throw new InvalidArgumentException( 'Invalid status class: ' . $status::class );
 		}
 		$this->updateState( $this->id, ProduntoStore::STATE_FAILED, serialize( $status ) );
 	}

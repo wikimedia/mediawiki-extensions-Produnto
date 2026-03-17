@@ -28,6 +28,10 @@ class Fetcher {
 	) {
 	}
 
+	public function setLogger( LoggerInterface $logger ) {
+		$this->logger = $logger;
+	}
+
 	/**
 	 * @param string $projectName
 	 * @param string $url
@@ -84,6 +88,7 @@ class Fetcher {
 				[ 'url' => $package->getFetchedUrl() ] );
 			$status->genericError( 'Server is no longer configured' );
 			$packageBuilder->fail( $status );
+			// Do not retry
 			return true;
 		}
 		$status = $server->fetch( $package, $packageBuilder );
@@ -91,7 +96,9 @@ class Fetcher {
 			$this->logger->error( 'Fetch failure: {status}',
 				[ 'status' => (string)$status ] );
 			$packageBuilder->fail( $status );
-			if ( $status->hasMessage( 'produnto-fetch-server-error' ) ) {
+			if ( $status->hasMessage( 'produnto-fetch-server-error' )
+				|| $status->hasMessage( 'produnto-fetch-connect-error' )
+			) {
 				// Retry
 				return false;
 			} else {

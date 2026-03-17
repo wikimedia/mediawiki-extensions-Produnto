@@ -16,7 +16,7 @@ use Wikimedia\Http\HttpStatus;
  */
 class FetchStatus extends StatusValue {
 	public function genericError( string $message ) {
-		$this->error( 'produnto-fetch-error', $message );
+		$this->fatal( 'produnto-fetch-error', $message );
 	}
 
 	public function httpError( ResponseInterface $response ) {
@@ -31,8 +31,9 @@ class FetchStatus extends StatusValue {
 			$reason = HttpStatus::getMessage( $code ) ?? "$code";
 		}
 
-		$this->error(
+		$this->fatal(
 			$message,
+			$code,
 			$reason,
 			Psr7\Message::bodySummary( $response, 1000 ) ?? ''
 		);
@@ -44,6 +45,6 @@ class FetchStatus extends StatusValue {
 			ConnectException::class => 'connection failed',
 			default => $class
 		};
-		$this->error( 'produnto-fetch-server-error', $reason );
+		$this->fatal( 'produnto-fetch-connect-error', $reason );
 	}
 }

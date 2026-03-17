@@ -2,6 +2,7 @@
 
 namespace MediaWiki\Extension\Produnto\Tests\Integration\Store;
 
+use MediaWiki\Extension\Produnto\ProduntoServices;
 use MediaWiki\Extension\Produnto\Store\PackageAccess;
 use MediaWiki\Extension\Produnto\Store\PackageBuilder;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
@@ -11,6 +12,8 @@ use MediaWiki\Extension\Produnto\Store\WrongUrlError;
 /**
  * @covers \MediaWiki\Extension\Produnto\Store\PackageBuilder
  * @covers \MediaWiki\Extension\Produnto\Store\PackageAccess::getFileContents
+ * @covers \MediaWiki\Extension\Produnto\Store\ProduntoStore::createPackageVersion
+ * @covers \MediaWiki\Extension\Produnto\Store\ProduntoStore::resumePackageBuilder
  * @group Database
  */
 class PackageBuilderTest extends \MediaWikiIntegrationTestCase {
@@ -110,7 +113,7 @@ class PackageBuilderTest extends \MediaWikiIntegrationTestCase {
 	}
 
 	private function getStore(): ProduntoStore {
-		return $this->getServiceContainer()->get( 'Produnto.Store' );
+		return ( new ProduntoServices( $this->getServiceContainer() ) )->getStore();
 	}
 
 	private function setFields( PackageBuilder $builder ) {

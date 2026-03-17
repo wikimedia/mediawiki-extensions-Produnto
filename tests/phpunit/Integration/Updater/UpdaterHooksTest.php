@@ -2,6 +2,7 @@
 
 namespace MediaWiki\Extension\Produnto\Tests\Integration\Updater;
 
+use MediaWiki\Extension\Produnto\ProduntoServices;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
 
 /**
@@ -30,6 +31,6 @@ class UpdaterHooksTest extends \MediaWikiIntegrationTestCase {
 	}
 
 	private function getStore(): ProduntoStore {
-		return $this->getServiceContainer()->get( 'Produnto.Store' );
+		return ( new ProduntoServices( $this->getServiceContainer() ) )->getStore();
 	}
 }

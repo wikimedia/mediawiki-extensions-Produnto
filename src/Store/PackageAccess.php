@@ -2,13 +2,23 @@
 
 namespace MediaWiki\Extension\Produnto\Store;
 
+use MediaWiki\Extension\Produnto\Fetcher\FetchStatus;
+use MediaWiki\Extension\Produnto\Manifest\ManifestStatus;
 use MediaWiki\Language\LanguageFallback;
 use StatusValue;
+use Wikimedia\Message\MessageValue;
 
 /**
  * Read-only access to data relating to a package version
  */
 class PackageAccess {
+	public const STATUS_CLASSES = [
+		StatusValue::class,
+		FetchStatus::class,
+		ManifestStatus::class,
+		MessageValue::class
+	];
+
 	public function __construct(
 		private FileAccess $fileAccess,
 		private int $id,
@@ -217,9 +227,7 @@ class PackageAccess {
 		if ( $this->error ) {
 			return unserialize(
 				$this->error,
-				[
-					'allowed_classes' => [ StatusValue::class ]
-				]
+				[ 'allowed_classes' => self::STATUS_CLASSES ]
 			);
 		} else {
 			return StatusValue::newGood();

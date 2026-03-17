@@ -2,14 +2,16 @@
 
 namespace MediaWiki\Extension\Produnto\Tests\Integration\Rest;
 
-use MediaWiki\Extension\Produnto\Fetcher\Fetcher;
+use MediaWiki\Extension\Produnto\ProduntoServices;
 use MediaWiki\Extension\Produnto\Rest\GitlabTagHandler;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\Rest\RequestData;
 use MediaWiki\Tests\Rest\Handler\HandlerTestTrait;
 
 /**
+ * @group Database
  * @covers \MediaWiki\Extension\Produnto\Rest\GitlabTagHandler
+ * @covers \MediaWiki\Extension\Produnto\Store\VersionAlreadyExistsError
  */
 class GitlabTagHandlerTest extends \MediaWikiIntegrationTestCase {
 	use HandlerTestTrait;
@@ -124,13 +126,7 @@ class GitlabTagHandlerTest extends \MediaWikiIntegrationTestCase {
 		}
 	}
 
-	/**
-	 * @dataProvider provideExecute
-	 * @param array $reqData
-	 * @param int $expectedCode
-	 * @param ?string $expectedMessage
-	 */
-	public function testExecute( $reqData, $expectedCode, $expectedMessage ) {
+	private function setupServers() {
 		$this->overrideConfigValue( 'ProduntoServers', [
 			[
 				'type' => 'gitlab',
@@ -138,16 +134,26 @@ class GitlabTagHandlerTest extends \MediaWikiIntegrationTestCase {
 				'projectPrefixes' => [ 'tstarling' ]
 			]
 		] );
+	}
 
-		$fetcher = $this->createNoOpMock( Fetcher::class, [ 'asyncFetch' ] );
-		$fetcher->expects( $this->any() )->method( 'asyncFetch' )->willReturn( null );
-
-		$services = $this->getServiceContainer();
-		$handler = new GitlabTagHandler(
-			$services->get( 'Produnto.ServerContainer' ),
-			$fetcher,
+	private function getHandler() {
+		$services = new ProduntoServices( $this->getServiceContainer() );
+		return new GitlabTagHandler(
+			$services->getServerContainer(),
+			$services->getFetcher(),
 			LoggerFactory::getInstance( 'Produnto' )
 		);
+	}
+
+	/**
+	 * @dataProvider provideExecute
+	 * @param array $reqData
+	 * @param int $expectedCode
+	 * @param ?string $expectedMessage
+	 */
+	public function testExecute( $reqData, $expectedCode, $expectedMessage ) {
+		$this->setupServers();
+		$handler = $this->getHandler();
 		$request = new RequestData( $reqData );
 		if ( $expectedMessage !== null ) {
 			$exception = $this->executeHandlerAndGetHttpException( $handler, $request );
@@ -157,5 +163,22 @@ class GitlabTagHandlerTest extends \MediaWikiIntegrationTestCase {
 			$response = $this->executeHandler( $handler, $request );
 			$this->assertSame( $expectedCode, $response->getStatusCode() );
 		}
+	}
+
+	public function testVersionAlreadyExists() {
+		$reqData = iterator_to_array( self::provideExecute() )['success'][0];
+		$this->setupServers();
+		$request = new RequestData( $reqData );
+
+		$handler = $this->getHandler();
+		$response = $this->executeHandler( $handler, $request );
+		$this->assertSame( 202, $response->getStatusCode() );
+
+		$handler = $this->getHandler();
+		$response = $this->executeHandler( $handler, $request );
+		$this->assertSame(
+			'{"status":"already fetched"}',
+			$response->getBody()->getContents()
+		);
 	}
 }
