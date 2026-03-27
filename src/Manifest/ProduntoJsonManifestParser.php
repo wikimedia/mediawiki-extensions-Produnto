@@ -3,18 +3,18 @@
 namespace MediaWiki\Extension\Produnto\Manifest;
 
 use JsonSchema\Validator;
-use MediaWiki\Extension\Produnto\Store\PackageAccess;
+use MediaWiki\Extension\Produnto\Store\FileCollection;
 use MediaWiki\Json\FormatJson;
 use stdClass;
 
 class ProduntoJsonManifestParser implements ManifestParser {
 	/** @inheritDoc */
-	public function hasManifest( PackageAccess $package ): bool {
+	public function hasManifest( FileCollection $package ): bool {
 		return $package->getFileContents( 'produnto.json' ) !== null;
 	}
 
 	/** @inheritDoc */
-	public function parse( PackageAccess $package ): ManifestStatus {
+	public function parse( FileCollection $package ): ManifestStatus {
 		$status = new ManifestStatus;
 		$data = $this->parseJson( $package, $status );
 		if ( $data === null ) {
@@ -37,11 +37,11 @@ class ProduntoJsonManifestParser implements ManifestParser {
 	 * Get produnto.json and parse it. Note that existence of the manifest file is
 	 * conventionally already verified by hasManifest().
 	 *
-	 * @param PackageAccess $package
+	 * @param FileCollection $package
 	 * @param ManifestStatus $status
 	 * @return stdClass|null
 	 */
-	private function parseJson( PackageAccess $package, ManifestStatus $status ) {
+	private function parseJson( FileCollection $package, ManifestStatus $status ) {
 		$json = $package->getFileContents( 'produnto.json' );
 		// @phan-suppress-next-line PhanTypeMismatchArgumentNullable
 		$jsonStatus = FormatJson::parse( $json );
@@ -83,11 +83,11 @@ class ProduntoJsonManifestParser implements ManifestParser {
 	 * Validate the modules property, if there is one.
 	 *
 	 * @param stdClass $data
-	 * @param PackageAccess $package
+	 * @param FileCollection $package
 	 * @param ManifestStatus $status
 	 * @return bool
 	 */
-	private function validateModules( stdClass $data, PackageAccess $package, ManifestStatus $status ) {
+	private function validateModules( stdClass $data, FileCollection $package, ManifestStatus $status ) {
 		if ( !isset( $data->modules ) ) {
 			return true;
 		}

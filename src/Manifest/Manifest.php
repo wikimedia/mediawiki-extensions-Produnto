@@ -14,4 +14,6 @@ interface Manifest {
 	 * @param PackageBuilder $builder
 	 */
 	public function populateProps( PackageBuilder $builder );
+
+	public function getModules(): array;
 }

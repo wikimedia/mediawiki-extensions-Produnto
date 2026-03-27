@@ -11,7 +11,7 @@ use Wikimedia\Message\MessageValue;
 /**
  * Read-only access to data relating to a package version
  */
-class PackageAccess {
+class PackageAccess implements FileCollection {
 	public const STATUS_CLASSES = [
 		StatusValue::class,
 		FetchStatus::class,
@@ -234,22 +234,12 @@ class PackageAccess {
 		}
 	}
 
-	/**
-	 * Get the contents of a file from the package
-	 *
-	 * @param string $path
-	 * @return string|null
-	 */
+	/** @inheritDoc */
 	public function getFileContents( string $path ): ?string {
 		return $this->fileAccess->getFileContents( $this->id, $path );
 	}
 
-	/**
-	 * Determine whether the package has a file with the given name.
-	 *
-	 * @param string $path
-	 * @return bool
-	 */
+	/** @inheritDoc */
 	public function hasFile( string $path ): bool {
 		return $this->fileAccess->hasFile( $this->id, $path );
 	}

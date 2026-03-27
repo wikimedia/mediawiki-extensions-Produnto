@@ -288,7 +288,7 @@ class PackageBuilder {
 			->caller( __METHOD__ )
 			->execute();
 
-		$this->fileAccess->setCache( $id, $path, $contents );
+		$this->fileAccess->setCache( $id, $path, $hash, $contents );
 
 		return $this;
 	}

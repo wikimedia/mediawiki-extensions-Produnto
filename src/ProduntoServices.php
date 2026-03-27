@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\Produnto;
 
 use MediaWiki\Extension\Produnto\Fetcher\Fetcher;
 use MediaWiki\Extension\Produnto\Runtime\ProduntoRuntime;
+use MediaWiki\Extension\Produnto\Sandbox\SandboxStore;
 use MediaWiki\Extension\Produnto\Server\ServerContainer;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
 use MediaWiki\Extension\Produnto\Updater\Updater;
@@ -25,6 +26,10 @@ class ProduntoServices {
 
 	public function getRuntime(): ProduntoRuntime {
 		return $this->services->get( 'Produnto.Runtime' );
+	}
+
+	public function getSandboxStore(): SandboxStore {
+		return $this->services->get( 'Produnto.SandboxStore' );
 	}
 
 	public function getServerContainer(): ServerContainer {

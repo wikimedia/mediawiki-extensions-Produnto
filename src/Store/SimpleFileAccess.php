@@ -6,8 +6,14 @@ namespace MediaWiki\Extension\Produnto\Store;
  * Simple FileAccess class for unit testing
  */
 class SimpleFileAccess implements FileAccess {
-
-	public function __construct( private array $files = [] ) {
+	/**
+	 * @param array<int,array<string,string>> $files File contents indexed by package and path
+	 * @param array<string,string> $filesByHash File contents indexed by content hash
+	 */
+	public function __construct(
+		private array $files = [],
+		private array $filesByHash = [],
+	) {
 	}
 
 	/** @inheritDoc */
@@ -21,7 +27,12 @@ class SimpleFileAccess implements FileAccess {
 	}
 
 	/** @inheritDoc */
-	public function setCache( int $packageId, string $path, string $contents ): void {
+	public function getFileContentsByHash( string $hash ): ?string {
+		return $this->filesByHash[$hash] ?? null;
+	}
+
+	/** @inheritDoc */
+	public function setCache( int $packageId, string $path, string $hash, string $contents ): void {
 		$this->files[$packageId][$path] = $contents;
 	}
 }

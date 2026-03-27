@@ -64,4 +64,9 @@ class ProduntoJsonManifest implements Manifest {
 			}
 		}
 	}
+
+	/** @inheritDoc */
+	public function getModules(): array {
+		return (array)( $this->data->modules ?? [] );
+	}
 }

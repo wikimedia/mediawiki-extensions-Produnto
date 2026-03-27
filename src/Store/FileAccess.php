@@ -25,11 +25,20 @@ interface FileAccess {
 	public function getFileContents( int $packageId, string $path ): ?string;
 
 	/**
+	 * Get the file contents given the hash of the file
+	 *
+	 * @param string $hash
+	 * @return string|null
+	 */
+	public function getFileContentsByHash( string $hash ): ?string;
+
+	/**
 	 * Update an entry in the text cache
 	 *
 	 * @param int $packageId
 	 * @param string $path
+	 * @param string $hash
 	 * @param string $contents
 	 */
-	public function setCache( int $packageId, string $path, string $contents ): void;
+	public function setCache( int $packageId, string $path, string $hash, string $contents ): void;
 }

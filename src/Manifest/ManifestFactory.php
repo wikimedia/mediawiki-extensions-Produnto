@@ -2,7 +2,7 @@
 
 namespace MediaWiki\Extension\Produnto\Manifest;
 
-use MediaWiki\Extension\Produnto\Store\PackageAccess;
+use MediaWiki\Extension\Produnto\Store\FileCollection;
 
 /**
  * Detect a manifest file and invoke the relevant manifest parser.
@@ -11,10 +11,10 @@ use MediaWiki\Extension\Produnto\Store\PackageAccess;
  */
 class ManifestFactory {
 	/**
-	 * @param PackageAccess $package
+	 * @param FileCollection $package
 	 * @return ManifestStatus
 	 */
-	public function parseManifest( PackageAccess $package ) {
+	public function parseManifest( FileCollection $package ) {
 		foreach ( $this->getManifestParsers() as $parser ) {
 			if ( $parser->hasManifest( $package ) ) {
 				return $parser->parse( $package );

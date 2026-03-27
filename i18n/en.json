@@ -16,5 +16,6 @@
 	"produnto-update-invalid": "Can't save packages page: not a valid package list",
 	"produnto-update-json-error": "Can't save packages page: $1",
 	"produnto-update-missing-package": "Can't save packages page: no such package $1 $2",
-	"produnto-update-module-conflict": "The module \"$2\" is present in package \"$1\" but already exists in package \"$2\""
+	"produnto-update-module-conflict": "The module \"$2\" is present in package \"$1\" but already exists in package \"$2\"",
+	"produnto-sandbox-error": "Error creating sandbox: $1"
 }

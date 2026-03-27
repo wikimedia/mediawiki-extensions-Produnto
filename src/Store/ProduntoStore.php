@@ -216,11 +216,36 @@ class ProduntoStore {
 	 * @param int $recency
 	 * @return SqlFileAccess
 	 */
-	private function getFileAccess( $recency ) {
+	public function getFileAccess( $recency ) {
 		return new SqlFileAccess(
 			$this->textCache,
 			$this->getDbFromRecency( $recency )
 		);
+	}
+
+	/**
+	 * Determine whether a set of SHA-256 content hashes exist in the store
+	 *
+	 * @param string[] $hashes
+	 * @return array<string,bool>
+	 */
+	public function hasFileHashBatch( $hashes ) {
+		$db = $this->getDbFromRecency( IDBAccessObject::READ_NORMAL );
+		$results = array_fill_keys( $hashes, false );
+		foreach ( array_chunk( $hashes, 1000 ) as $batchHashes ) {
+			$foundHashes = $db->newSelectQueryBuilder()
+				->select( 'pft_hash' )
+				->from( 'produnto_file_text' )
+				->where( [
+					'pft_hash' => $batchHashes
+				] )
+				->caller( __METHOD__ )
+				->fetchFieldValues();
+			foreach ( $foundHashes as $hash ) {
+				$results[$hash] = true;
+			}
+		}
+		return $results;
 	}
 
 	/**

@@ -58,6 +58,32 @@
 				"Produnto.Fetcher",
 				"Produnto.Logger"
 			]
+		},
+		{
+			"method": "GET",
+			"path": "/produnto/v1/sandbox",
+			"class": "MediaWiki\\Extension\\Produnto\\Rest\\SandboxListHandler",
+			"services": [
+				"Produnto.SandboxStore"
+			]
+		},
+		{
+			"method": "POST",
+			"path": "/produnto/v1/sandbox/{id}",
+			"class": "MediaWiki\\Extension\\Produnto\\Rest\\SandboxPostHandler",
+			"services": [
+				"Produnto.Store",
+				"Produnto.SandboxStore",
+				"Produnto.ManifestFactory"
+			]
+		},
+		{
+			"method": "DELETE",
+			"path": "/produnto/v1/sandbox/{id}",
+			"class": "MediaWiki\\Extension\\Produnto\\Rest\\SandboxDeleteHandler",
+			"services": [
+				"Produnto.SandboxStore"
+			]
 		}
 	],
 	"JobClasses": {
