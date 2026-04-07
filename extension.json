@@ -84,6 +84,19 @@
 			"services": [
 				"Produnto.SandboxStore"
 			]
+		},
+		{
+			"method": "POST",
+			"path": "/produnto/v1/sandbox/{id}/activate",
+			"class": "MediaWiki\\Extension\\Produnto\\Rest\\SandboxActivateHandler",
+			"services": [
+				"Produnto.SandboxStore"
+			]
+		},
+		{
+			"method": "POST",
+			"path": "/produnto/v1/sandbox/{id}/deactivate",
+			"class": "MediaWiki\\Extension\\Produnto\\Rest\\SandboxDeactivateHandler"
 		}
 	],
 	"JobClasses": {
