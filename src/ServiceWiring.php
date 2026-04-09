@@ -2,8 +2,7 @@
 
 use MediaWiki\Extension\Produnto\Fetcher\Fetcher;
 use MediaWiki\Extension\Produnto\Manifest\ManifestFactory;
-use MediaWiki\Extension\Produnto\Runtime\ProduntoRuntime;
-use MediaWiki\Extension\Produnto\Runtime\SqlLoader;
+use MediaWiki\Extension\Produnto\Runtime\RuntimeFactory;
 use MediaWiki\Extension\Produnto\Sandbox\SandboxStore;
 use MediaWiki\Extension\Produnto\Server\ServerContainer;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
@@ -30,10 +29,11 @@ return [
 		return new ManifestFactory();
 	},
 
-	'Produnto.Runtime' => static function ( MediaWikiServices $services ) {
-		return new ProduntoRuntime( [
-			new SqlLoader( $services->get( 'Produnto.Store' ) ),
-		] );
+	'Produnto.RuntimeFactory' => static function ( MediaWikiServices $services ) {
+		return new RuntimeFactory(
+			$services->get( 'Produnto.Store' ),
+			$services->get( 'Produnto.SandboxStore' )
+		);
 	},
 
 	'Produnto.ServerContainer' => static function ( MediaWikiServices $services ) {

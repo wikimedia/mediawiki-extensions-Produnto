@@ -71,6 +71,8 @@ class SandboxActivateHandlerTest extends \MediaWikiIntegrationTestCase {
 			session: $session
 		);
 		$this->assertSame( 200, $res->getStatusCode() );
-		$this->assertNotNull( $session->get( 'ProduntoSandbox' ) );
+		$sandbox = $this->getProduntoServices()->getRuntimeFactory()
+			->getActiveSandbox( $userId, $session );
+		$this->assertNotNull( $sandbox );
 	}
 }

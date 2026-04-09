@@ -2,10 +2,16 @@
 
 namespace MediaWiki\Extension\Produnto\Runtime;
 
+use MediaWiki\Extension\Produnto\Sandbox\SandboxAccess;
+use MediaWiki\Parser\ParserOutput;
+use Wikimedia\Message\MessageValue;
+
 /**
  * Service providing access to deployed packages. For use by extensions.
  */
 class ProduntoRuntime {
+	private bool $wasSandboxUsed = false;
+
 	/**
 	 * @param Loader[] $loaders
 	 */
@@ -24,6 +30,9 @@ class ProduntoRuntime {
 		foreach ( $this->loaders as $loader ) {
 			$info = $loader->getModuleInfo( $moduleName );
 			if ( $info ) {
+				if ( $loader instanceof SandboxAccess ) {
+					$this->wasSandboxUsed = true;
+				}
 				return $info;
 			}
 		}
@@ -40,9 +49,26 @@ class ProduntoRuntime {
 	public function getFileContents( $packageName, $path ): ?string {
 		foreach ( $this->loaders as $loader ) {
 			if ( $loader->hasPackage( $packageName ) ) {
-				return $loader->getFileContents( $packageName, $path );
+				$contents = $loader->getFileContents( $packageName, $path );
+				if ( $contents !== null && $loader instanceof SandboxAccess ) {
+					$this->wasSandboxUsed = true;
+				}
+				return $contents;
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * If content from the sandbox was used, add a warning to the ParserOutput
+	 *
+	 * @param ParserOutput $parserOutput
+	 */
+	public function maybeAddSandboxWarning( ParserOutput $parserOutput ) {
+		if ( $this->wasSandboxUsed ) {
+			$parserOutput->addWarningMsgVal(
+				MessageValue::new( 'produnto-sandbox-preview-warning' ),
+			);
+		}
 	}
 }

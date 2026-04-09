@@ -2,6 +2,7 @@
 
 namespace MediaWiki\Extension\Produnto\Sandbox;
 
+use MediaWiki\Extension\Produnto\Runtime\Loader;
 use MediaWiki\Extension\Produnto\Runtime\ModuleInfo;
 use MediaWiki\Extension\Produnto\Store\FileAccess;
 use MediaWiki\Extension\Produnto\Store\FileCollection;
@@ -9,7 +10,7 @@ use MediaWiki\Extension\Produnto\Store\FileCollection;
 /**
  * Provide read-only access to a sandbox
  */
-class SandboxAccess {
+class SandboxAccess implements Loader {
 	/**
 	 * @var array<string,array<string,string>>
 	 */
@@ -93,5 +94,10 @@ class SandboxAccess {
 			);
 		}
 		return null;
+	}
+
+	/** @inheritDoc */
+	public function getFileContents( string $packageName, string $path ): ?string {
+		return $this->getPackage( $packageName )?->getFileContents( $path );
 	}
 }
