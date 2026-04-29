@@ -12,6 +12,7 @@ class ProduntoSandboxPage extends SpecialPage {
 	/** @inheritDoc */
 	public function execute( $subPage ) {
 		$this->setHeaders();
+		$this->requireLogin();
 		$out = $this->getOutput();
 		$out->addModules( 'ext.produnto.SpecialProduntoSandbox' );
 		// For the early progress spinner
