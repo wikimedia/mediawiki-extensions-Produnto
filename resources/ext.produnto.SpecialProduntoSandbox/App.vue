@@ -10,20 +10,19 @@
 	</cdx-message>
 	<div
 		v-for="( sandbox, index ) in sandboxes"
-		:key="index"
+		:key="sandbox.mtime"
 		class="produnto-sandbox-card"
 	>
 		<div class="produnto-sandbox-id">
 			{{ sandbox.id }}
 		</div>
 		<div class="produnto-sandbox-flex">
-			<div class="produnto-sandbox-grow">
-				<div v-if="sandbox.active">{{ msg( 'produnto-sandbox-active' ) }}</div>
-				<div v-else>{{ msg( 'produnto-sandbox-inactive' ) }}</div>
-				<div>
-					{{ msg( 'produnto-sandbox-packages', listToText( sandbox.packageNames ) ) }}
-				</div>
-			</div>
+			<ul class="produnto-sandbox-grow">
+				<li v-if="sandbox.active">{{ msg( 'produnto-sandbox-active' ) }}</li>
+				<li v-else>{{ msg( 'produnto-sandbox-inactive' ) }}</li>
+				<li>{{ msg( 'produnto-sandbox-size-kb', kb( sandbox.size ) ) }}</li>
+				<li>{{ msg( 'produnto-sandbox-mtime', datetime( sandbox.mtime ) ) }}</li>
+			</ul>
 			<div class="produnto-sandbox-buttons">
 				<cdx-button
 					v-if="sandbox.active"
@@ -54,6 +53,7 @@ const {
 	CdxToastContainer,
 	useToast,
 } = require( './codex.js' );
+const { formatTimeAndDate } = require( 'mediawiki.DateFormatter' );
 
 const POLL_INTERVAL = 3000;
 
@@ -168,6 +168,14 @@ module.exports = defineComponent( {
 			toast.show( { message: String( msg ), type: 'error', autoDismiss: true } );
 		}
 
+		function datetime( dt ) {
+			return formatTimeAndDate( new Date( dt ) );
+		}
+
+		function kb( n ) {
+			return mw.language.convertNumber( Math.round( n / 1024 ) );
+		}
+
 		onMounted( onPollTimeout );
 
 		document.addEventListener( 'visibilitychange', () => {
@@ -179,9 +187,10 @@ module.exports = defineComponent( {
 		} );
 
 		return {
+			datetime,
 			fetchError,
 			initializing,
-			listToText: mw.language.listToText,
+			kb,
 			msg: mw.msg,
 			onActivateToggle,
 			onDelete,

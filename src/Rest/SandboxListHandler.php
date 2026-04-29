@@ -21,14 +21,15 @@ class SandboxListHandler extends Handler {
 			return $this->getResponseFactory()
 				->createHttpError( 403, [ 'message' => 'Login required' ] );
 		}
-		$sandboxes = [];
+		$metas = $this->store->getMetadata( $userId );
 		$activeId = $this->getSession()->get( 'ProduntoSandbox' );
-		foreach ( $this->store->getSandboxNames( $userId ) as $name ) {
-			$sandbox = $this->store->get( $userId, $name );
+		$sandboxes = [];
+		foreach ( $metas as $meta ) {
 			$sandboxes[] = [
-				'id' => $name,
-				'packageNames' => $sandbox->getPackageNames(),
-				'active' => $activeId === $name
+				'id' => $meta['id'],
+				'size' => $meta['size'],
+				'mtime' => date( 'c', $meta['mtime'] ),
+				'active' => $activeId === $meta['id'],
 			];
 		}
 		$response = $this->getResponseFactory()->createFromReturnValue( $sandboxes );

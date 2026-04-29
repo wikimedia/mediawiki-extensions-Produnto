@@ -27,6 +27,7 @@
 	"produnto-sandbox-inactive": "Text for when a sandbox is inactive.",
 	"produnto-sandbox-empty": "Text shown instead of a list of sandboxes when there are no sandboxes.",
 	"produnto-sandbox-delete": "Button text",
-	"produnto-sandbox-packages": "Parameters:\n* $1 - a list of package names",
+	"produnto-sandbox-size-kb": "Parameters:\n* $1 - the size of the package in kilobytes, as a localised number",
+	"produnto-sandbox-mtime": "Parameters:\n* $1 - the last modification date and time",
 	"produnto-sandbox-loading": "Progress spinner label, required for accessibility"
 }

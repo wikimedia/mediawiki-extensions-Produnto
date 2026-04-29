@@ -126,7 +126,10 @@
 	"ResourceModules": {
 		"ext.produnto.SpecialProduntoSandbox": {
 			"class": "MediaWiki\\ResourceLoader\\CodexModule",
-			"dependencies": [ "vue" ],
+			"dependencies": [
+				"mediawiki.DateFormatter",
+				"vue"
+			],
 			"messages": [
 				"produnto-sandbox-activate",
 				"produnto-sandbox-deactivate",
@@ -134,7 +137,8 @@
 				"produnto-sandbox-inactive",
 				"produnto-sandbox-empty",
 				"produnto-sandbox-delete",
-				"produnto-sandbox-packages",
+				"produnto-sandbox-size-kb",
+				"produnto-sandbox-mtime",
 				"produnto-sandbox-loading"
 			],
 			"localBasePath": "resources/ext.produnto.SpecialProduntoSandbox",

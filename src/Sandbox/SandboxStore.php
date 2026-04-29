@@ -104,6 +104,29 @@ class SandboxStore {
 	}
 
 	/**
+	 * @param int $userId
+	 * @return array Array of associative arrays, the keys being:
+	 *   - id: The sandbox ID
+	 *   - size: The size in bytes
+	 *   - mtime: The UNIX time of last modification
+	 */
+	public function getMetadata( int $userId ): array {
+		$meta = $this->stash->get( $this->stash->makeKey( self::META_KEY_PREFIX, $userId ) );
+		if ( !$meta ) {
+			return [];
+		}
+		$result = [];
+		foreach ( $meta[self::SIZES] as $id => $size ) {
+			$result[] = [
+				'id' => $id,
+				'size' => $size,
+				'mtime' => $meta[self::MODIFICATION_TIMES][$id] ?? 0,
+			];
+		}
+		return $result;
+	}
+
+	/**
 	 * Get sandbox data from the stash
 	 *
 	 * @param int $userId

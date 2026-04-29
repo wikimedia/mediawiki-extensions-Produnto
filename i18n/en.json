@@ -27,6 +27,7 @@
 	"produnto-sandbox-inactive": "Inactive",
 	"produnto-sandbox-empty": "Waiting for upload",
 	"produnto-sandbox-delete": "Delete",
-	"produnto-sandbox-packages": "Packages: $1",
+	"produnto-sandbox-size-kb": "Size: $1 KB",
+	"produnto-sandbox-mtime": "Last modified: $1",
 	"produnto-sandbox-loading": "Loading"
 }

@@ -34,9 +34,17 @@ class SandboxPostHandlerTest extends \MediaWikiIntegrationTestCase {
 		$this->assertTrue( $res->ok );
 		$this->assertSame( [], $res->missingHashes );
 
+		$sandboxes = $this->listSandboxes();
+		$this->assertIsString( $sandboxes[0]['mtime'] );
+		unset( $sandboxes[0]['mtime'] );
 		$this->assertSame(
-			[ [ 'id' => 'sandbox1', 'packageNames' => [ 'package1' ], 'active' => false ] ],
-			$this->listSandboxes() );
+			[ [
+				'id' => 'sandbox1',
+				'size' => 258,
+				'active' => false
+			] ],
+			$sandboxes
+		);
 		$this->deleteSandbox( 'sandbox1' );
 		$this->assertSame( [], $this->listSandboxes() );
 	}
