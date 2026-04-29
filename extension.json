@@ -99,6 +99,9 @@
 			"class": "MediaWiki\\Extension\\Produnto\\Rest\\SandboxDeactivateHandler"
 		}
 	],
+	"SpecialPages": {
+		"ProduntoSandbox": "MediaWiki\\Extension\\Produnto\\Sandbox\\ProduntoSandboxPage"
+	},
 	"JobClasses": {
 		"ProduntoFetch": {
 			"class": "MediaWiki\\Extension\\Produnto\\Fetcher\\FetchJob",
@@ -113,7 +116,41 @@
 			"i18n"
 		]
 	},
+	"ExtensionMessagesFiles": {
+		"ProduntoAlias": "Produnto.alias.php"
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "resources",
+		"remoteExtPath": "Produnto/resources"
+	},
 	"ResourceModules": {
+		"ext.produnto.SpecialProduntoSandbox": {
+			"class": "MediaWiki\\ResourceLoader\\CodexModule",
+			"dependencies": [ "vue" ],
+			"messages": [
+				"produnto-sandbox-activate",
+				"produnto-sandbox-deactivate",
+				"produnto-sandbox-active",
+				"produnto-sandbox-inactive",
+				"produnto-sandbox-empty",
+				"produnto-sandbox-delete",
+				"produnto-sandbox-packages",
+				"produnto-sandbox-loading"
+			],
+			"localBasePath": "resources/ext.produnto.SpecialProduntoSandbox",
+			"remoteExtPath": "Produnto/resources/ext.produnto.SpecialProduntoSandbox",
+			"packageFiles": [
+				"init.js",
+				"App.vue"
+			],
+			"codexComponents": [
+				"CdxButton",
+				"CdxMessage",
+				"CdxProgressIndicator",
+				"CdxToastContainer",
+				"useToast"
+			]
+		}
 	},
 	"ServiceWiringFiles": [
 		"src/ServiceWiring.php"

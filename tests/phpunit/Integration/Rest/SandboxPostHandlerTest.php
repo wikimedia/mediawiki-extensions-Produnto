@@ -34,7 +34,9 @@ class SandboxPostHandlerTest extends \MediaWikiIntegrationTestCase {
 		$this->assertTrue( $res->ok );
 		$this->assertSame( [], $res->missingHashes );
 
-		$this->assertSame( [ 'sandbox1' ], $this->listSandboxes() );
+		$this->assertSame(
+			[ [ 'id' => 'sandbox1', 'packageNames' => [ 'package1' ], 'active' => false ] ],
+			$this->listSandboxes() );
 		$this->deleteSandbox( 'sandbox1' );
 		$this->assertSame( [], $this->listSandboxes() );
 	}
@@ -71,7 +73,7 @@ class SandboxPostHandlerTest extends \MediaWikiIntegrationTestCase {
 		$authority = $this->mockRegisteredNullAuthority();
 		$response = $this->executeHandler( $handler, $request, authority: $authority );
 		$this->assertSame( 200, $response->getStatusCode() );
-		return json_decode( $response->getBody()->getContents() );
+		return json_decode( $response->getBody()->getContents(), true );
 	}
 
 	private function postSandbox( $id, $filesByPackage, $texts ) {

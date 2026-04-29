@@ -4,5 +4,12 @@
 		"wikimedia/client",
 		"wikimedia/jquery",
 		"wikimedia/mediawiki"
-	]
+	],
+	"rules": {
+		"vue/singleline-html-element-content-newline": "off",
+		"vue/multiline-html-element-content-newline": "off",
+		"comma-dangle": "off",
+		"computed-property-spacing": "off",
+		"no-multiple-empty-lines": "off"
+	}
 }

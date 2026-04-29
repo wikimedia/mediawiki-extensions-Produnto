@@ -18,5 +18,15 @@
 	"produnto-update-missing-package": "When saving MediaWiki:Packages.json, either the package name or the version is wrong. Parameters:\n* $1: the package name\n* $2: the package version",
 	"produnto-update-module-conflict": "Used as a warning or error message.",
 	"produnto-sandbox-error": "Used as an error message",
-	"produnto-sandbox-preview-warning": "A warning shown when previewing a page."
+	"produnto-sandbox-preview-warning": "A warning shown when previewing a page.",
+	"produntosandbox": "Special page title",
+	"produnto-javascript-required": "Used in a noscript element on the sandbox special page.",
+	"produnto-sandbox-activate": "Button text for activating a sandbox.",
+	"produnto-sandbox-deactivate": "Button text for deactivating a sandbox.",
+	"produnto-sandbox-active": "Explanatory text showing that a sandbox is active.",
+	"produnto-sandbox-inactive": "Text for when a sandbox is inactive.",
+	"produnto-sandbox-empty": "Text shown instead of a list of sandboxes when there are no sandboxes.",
+	"produnto-sandbox-delete": "Button text",
+	"produnto-sandbox-packages": "Parameters:\n* $1 - a list of package names",
+	"produnto-sandbox-loading": "Progress spinner label, required for accessibility"
 }
