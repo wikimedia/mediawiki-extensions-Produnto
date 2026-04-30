@@ -139,7 +139,8 @@
 				"produnto-sandbox-delete",
 				"produnto-sandbox-size-kb",
 				"produnto-sandbox-mtime",
-				"produnto-sandbox-loading"
+				"produnto-sandbox-loading",
+				"produnto-sandbox-notify-login"
 			],
 			"localBasePath": "resources/ext.produnto.SpecialProduntoSandbox",
 			"remoteExtPath": "Produnto/resources/ext.produnto.SpecialProduntoSandbox",

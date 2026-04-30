@@ -75,6 +75,19 @@ module.exports = defineComponent( {
 		let pollTimer = null;
 		let fetchPending = false;
 
+		function startup() {
+			if ( window.location.hash === '#!notify-login' ) {
+				toast.show( {
+					message: String( mw.msg( 'produnto-sandbox-notify-login' ) ),
+					type: 'notice',
+					autoDismiss: true
+				} );
+				window.location.hash = '';
+			}
+
+			onPollTimeout();
+		}
+
 		function onPollTimeout() {
 			pollTimer = null;
 			fetchPending = true;
@@ -176,7 +189,7 @@ module.exports = defineComponent( {
 			return mw.language.convertNumber( Math.round( n / 1024 ) );
 		}
 
-		onMounted( onPollTimeout );
+		onMounted( startup );
 
 		document.addEventListener( 'visibilitychange', () => {
 			if ( document.hidden ) {

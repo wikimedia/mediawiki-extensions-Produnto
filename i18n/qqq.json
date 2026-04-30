@@ -29,5 +29,6 @@
 	"produnto-sandbox-delete": "Button text",
 	"produnto-sandbox-size-kb": "Parameters:\n* $1 - the size of the package in kilobytes, as a localised number",
 	"produnto-sandbox-mtime": "Parameters:\n* $1 - the last modification date and time",
-	"produnto-sandbox-loading": "Progress spinner label, required for accessibility"
+	"produnto-sandbox-loading": "Progress spinner label, required for accessibility",
+	"produnto-sandbox-notify-login": "Used in a notification toast when the CLI uploader logs in"
 }
