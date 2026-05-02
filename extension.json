@@ -11,7 +11,8 @@
 		"MediaWiki": ">= 1.45.0"
 	},
 	"AutoloadNamespaces": {
-		"MediaWiki\\Extension\\Produnto\\": "src/"
+		"MediaWiki\\Extension\\Produnto\\": "src/",
+		"MediaWiki\\Extension\\Produnto\\Maintenance\\": "maintenance/"
 	},
 	"TestAutoloadNamespaces": {
 		"MediaWiki\\Extension\\Produnto\\Tests\\": "tests/phpunit/"
