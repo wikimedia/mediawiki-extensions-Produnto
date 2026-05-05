@@ -5,9 +5,9 @@ namespace MediaWiki\Extension\Produnto\Fetcher;
 use Exception;
 use MediaWiki\Extension\Produnto\Manifest\ManifestFactory;
 use MediaWiki\Extension\Produnto\Server\ServerContainer;
-use MediaWiki\Extension\Produnto\Store\PackageAccess;
 use MediaWiki\Extension\Produnto\Store\PackageBuilder;
 use MediaWiki\Extension\Produnto\Store\PackageBuilderError;
+use MediaWiki\Extension\Produnto\Store\PackageMetaAccess;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
 use MediaWiki\JobQueue\JobQueueGroup;
 use MediaWiki\Request\WebRequest;
@@ -33,6 +33,8 @@ class Fetcher {
 	}
 
 	/**
+	 * Queue a job which will fetch a package and report any failure via the DB.
+	 *
 	 * @param string $projectName
 	 * @param string $url
 	 * @param string $version
@@ -50,7 +52,53 @@ class Fetcher {
 		$this->jobQueueGroup->push( FetchJob::newSpec( $package->getId() ) );
 	}
 
-	public function fetch( int $packageId ): bool {
+	/**
+	 * Fetch a package immediately, returning any error status.
+	 *
+	 * @param string $projectName
+	 * @param string $url
+	 * @param string $version
+	 * @param string $ref
+	 * @return FetchStatus
+	 * @throws PackageBuilderError
+	 */
+	public function immediateFetch( $projectName, $url, $version, $ref ) {
+		$package = $this->store->getPackageByName(
+			$projectName, $version, IDBAccessObject::READ_LATEST );
+		if ( $package ) {
+			if ( $package->getState() !== ProduntoStore::STATE_FAILED ) {
+				$status = new FetchStatus;
+				$status->genericError( 'This package was already fetched' );
+				return $status;
+			}
+			$packageBuilder = $this->store->resumePackageBuilder( $package );
+		} else {
+			$packageBuilder = $this->store->createPackageVersion();
+			$package = $packageBuilder
+				->name( $projectName )
+				->fetchedUrl( $url )
+				->version( $version )
+				->upstreamRef( $ref )
+				->accessMeta();
+		}
+		$status = $this->fetchPackage( $package, $packageBuilder );
+		if ( $status->isOK() ) {
+			$packageBuilder->commit();
+		} else {
+			if ( $packageBuilder->isInserted() ) {
+				$packageBuilder->fail( $status );
+			}
+		}
+		return $status;
+	}
+
+	/**
+	 * Fetch a suspended package and store any failure in the DB
+	 *
+	 * @param int $packageId
+	 * @return bool Whether the job should be considered successful
+	 */
+	public function fetchSuspended( int $packageId ): bool {
 		$package = $this->store->getPackageById( $packageId, IDBAccessObject::READ_LOCKING );
 		if ( !$package ) {
 			$this->logger->error( 'Fetcher: no such package ID {packageId}',
@@ -60,7 +108,7 @@ class Fetcher {
 		}
 		$packageBuilder = $this->store->resumePackageBuilder( $package );
 		try {
-			return $this->fetchPackage( $package, $packageBuilder );
+			$status = $this->fetchPackage( $package, $packageBuilder );
 		} catch ( DBError $e ) {
 			// Writing the status is unsafe
 			throw $e;
@@ -71,50 +119,50 @@ class Fetcher {
 			$packageBuilder->fail( $status );
 			throw $e;
 		}
+		if ( $status->isOK() ) {
+			$packageBuilder->commit();
+		} else {
+			$packageBuilder->fail( $status );
+		}
+		return !$status->retry;
 	}
 
 	/**
-	 * Fetch in an exception guarded context
+	 * Fetch in an exception guarded context. Do not commit or fail.
 	 *
-	 * @param PackageAccess $package
+	 * @param PackageMetaAccess $package
 	 * @param PackageBuilder $packageBuilder
-	 * @return bool
+	 * @return FetchStatus
 	 */
-	private function fetchPackage( PackageAccess $package, PackageBuilder $packageBuilder ) {
+	private function fetchPackage( PackageMetaAccess $package, PackageBuilder $packageBuilder ) {
 		$status = new FetchStatus();
 		$server = $this->serverContainer->getServerForUrl( $package->getFetchedUrl() );
 		if ( !$server ) {
 			$this->logger->error( 'Fetcher: server not found for URL {url}',
 				[ 'url' => $package->getFetchedUrl() ] );
 			$status->genericError( 'Server is no longer configured' );
-			$packageBuilder->fail( $status );
-			// Do not retry
-			return true;
+			return $status;
 		}
 		$status = $server->fetch( $package, $packageBuilder );
 		if ( !$status->isOK() ) {
 			$this->logger->error( 'Fetch failure: {status}',
 				[ 'status' => (string)$status ] );
-			$packageBuilder->fail( $status );
 			if ( $status->hasMessage( 'produnto-fetch-server-error' )
 				|| $status->hasMessage( 'produnto-fetch-connect-error' )
 			) {
-				// Retry
-				return false;
-			} else {
-				return true;
+				$status->retry = true;
 			}
+			return $status;
 		}
 
 		$manifestStatus = $this->manifestFactory->parseManifest( $packageBuilder->suspend() );
 		if ( !$manifestStatus->isOK() ) {
-			$packageBuilder->fail( $manifestStatus );
-			return true;
+			$status->merge( $manifestStatus );
+			return $status;
 		}
 
 		$manifestStatus->value->populateProps( $packageBuilder );
-		$packageBuilder->commit();
 
-		return true;
+		return $status;
 	}
 }

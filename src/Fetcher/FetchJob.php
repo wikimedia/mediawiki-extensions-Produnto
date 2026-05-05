@@ -31,6 +31,6 @@ class FetchJob extends Job {
 
 	/** @inheritDoc */
 	public function run() {
-		return $this->fetcher->fetch( $this->packageId );
+		return $this->fetcher->fetchSuspended( $this->packageId );
 	}
 }

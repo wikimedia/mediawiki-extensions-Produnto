@@ -15,6 +15,8 @@ use Wikimedia\Http\HttpStatus;
  * @extends StatusValue<never>
  */
 class FetchStatus extends StatusValue {
+	public bool $retry = false;
+
 	public function genericError( string $message ) {
 		$this->fatal( 'produnto-fetch-error', $message );
 	}

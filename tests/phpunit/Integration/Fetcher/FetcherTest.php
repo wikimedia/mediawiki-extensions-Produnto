@@ -80,6 +80,36 @@ EOT;
 			$package->getDescription( 'en' ) );
 	}
 
+	public function testImmediateFetch() {
+		$this->setupServer();
+		$body = file_get_contents( __DIR__ . '/../../data/archive.zip' );
+		$this->setupHttp( 200, $body );
+
+		$fetcher = $this->getFetcher();
+		$status = $fetcher->immediateFetch(
+			'produnto-test',
+			'https://gitlab.wikimedia.org/tstarling/produnto-test',
+			'1.1',
+			'refs/tags/v1.1'
+		);
+		$this->assertStatusGood( $status );
+
+		$store = $this->getStore();
+		$package = $store->getPackageById( 1 );
+		$this->assertNotNull( $package );
+
+		$status = $fetcher->immediateFetch(
+			'produnto-test',
+			'https://gitlab.wikimedia.org/tstarling/produnto-test',
+			'1.1',
+			'refs/tags/v1.1'
+		);
+		$this->assertSame(
+			'Fetch failed: This package was already fetched',
+			$this->statusToString( $status )
+		);
+	}
+
 	private function getFetcher(): Fetcher {
 		return ( new ProduntoServices( $this->getServiceContainer() ) )->getFetcher();
 	}
@@ -92,7 +122,7 @@ EOT;
 		$fetcher = $this->getFetcher();
 		$logger = new \TestLogger( true );
 		$fetcher->setLogger( $logger );
-		$res = $fetcher->fetch( 1 );
+		$res = $fetcher->fetchSuspended( 1 );
 		$this->assertTrue( $res );
 
 		$entries = $logger->getBuffer();
@@ -110,7 +140,7 @@ EOT;
 			'refs/tags/v1.1'
 		);
 		try {
-			$fetcher->fetch( 1 );
+			$fetcher->fetchSuspended( 1 );
 			$this->fail( 'expected exception' );
 		} catch ( AssertionFailedError $e ) {
 		}
@@ -130,7 +160,7 @@ EOT;
 		return $formatter->getMessage( $status )->text();
 	}
 
-	public function testNoSuchServer() {
+	public function testNoSuchServerAsync() {
 		$fetcher = $this->getFetcher();
 		$fetcher->asyncFetch(
 			'produnto-test',
@@ -141,7 +171,7 @@ EOT;
 		$serverContainer = ( new ProduntoServices )->getServerContainer();
 		$serverContainer->setServersForTesting( [] );
 
-		$res = $fetcher->fetch( 1 );
+		$res = $fetcher->fetchSuspended( 1 );
 		$this->assertTrue( $res );
 		$store = $this->getStore();
 		$package = $store->getPackageById( 1 );
@@ -151,7 +181,22 @@ EOT;
 			$this->statusToString( $status ) );
 	}
 
-	public function testTemporaryServerError() {
+	public function testNoSuchServerSync() {
+		$serverContainer = ( new ProduntoServices )->getServerContainer();
+		$serverContainer->setServersForTesting( [] );
+		$fetcher = $this->getFetcher();
+		$status = $fetcher->immediateFetch(
+			'produnto-test',
+			'https://gitlab.wikimedia.org/tstarling/produnto-test',
+			'1.1',
+			'refs/tags/v1.1'
+		);
+		$this->assertSame(
+			'Fetch failed: Server is no longer configured',
+			$this->statusToString( $status ) );
+	}
+
+	public function testTemporaryServerErrorAsync() {
 		$this->setupServer();
 		$this->setupHttp( 503, 'Try again' );
 		$fetcher = $this->getFetcher();
@@ -162,11 +207,27 @@ EOT;
 			'refs/tags/v1.1'
 		);
 
-		$res = $fetcher->fetch( 1 );
+		$res = $fetcher->fetchSuspended( 1 );
 		$this->assertFalse( $res );
 		$store = $this->getStore();
 		$package = $store->getPackageById( 1 );
 		$status = $package->getStatus();
+		$this->assertSame(
+			'Fetch failed due to a server error: 503 Service Unavailable',
+			$this->statusToString( $status ) );
+	}
+
+	public function testTemporaryServerErrorSync() {
+		$this->setupServer();
+		$this->setupHttp( 503, 'Try again' );
+		$fetcher = $this->getFetcher();
+		$status = $fetcher->immediateFetch(
+			'produnto-test',
+			'https://gitlab.wikimedia.org/tstarling/produnto-test',
+			'1.1',
+			'refs/tags/v1.1'
+		);
+		$this->assertTrue( $status->retry );
 		$this->assertSame(
 			'Fetch failed due to a server error: 503 Service Unavailable',
 			$this->statusToString( $status ) );
@@ -183,7 +244,7 @@ EOT;
 			'refs/tags/v1.1'
 		);
 
-		$res = $fetcher->fetch( 1 );
+		$res = $fetcher->fetchSuspended( 1 );
 		$this->assertTrue( $res );
 		$store = $this->getStore();
 		$package = $store->getPackageById( 1 );
@@ -205,18 +266,13 @@ EOT;
 		$this->installMockHttp( [ $client ] );
 
 		$fetcher = $this->getFetcher();
-		$fetcher->asyncFetch(
+		$status = $fetcher->immediateFetch(
 			'produnto-test',
 			'https://gitlab.wikimedia.org/tstarling/produnto-test',
 			'1.1',
 			'refs/tags/v1.1'
 		);
-
-		$res = $fetcher->fetch( 1 );
-		$this->assertFalse( $res );
-		$store = $this->getStore();
-		$package = $store->getPackageById( 1 );
-		$status = $package->getStatus();
+		$this->assertTrue( $status->retry );
 		$this->assertSame(
 			'Fetch failed due to a server error: connection failed',
 			$this->statusToString( $status ) );
@@ -228,17 +284,13 @@ EOT;
 		$this->setupHttp( 200, $body );
 
 		$fetcher = $this->getFetcher();
-		$fetcher->asyncFetch(
+		$status = $fetcher->immediateFetch(
 			'produnto-test',
 			'https://gitlab.wikimedia.org/tstarling/produnto-test',
 			'1.1',
 			'refs/tags/v1.1'
 		);
-		$res = $fetcher->fetch( 1 );
-		$this->assertTrue( $res );
-		$store = $this->getStore();
-		$package = $store->getPackageById( 1 );
-		$status = $package->getStatus();
+		$this->assertFalse( $status->retry );
 		$this->assertSame(
 			'Error in produnto.json: Syntax error',
 			$this->statusToString( $status ) );

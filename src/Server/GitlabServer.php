@@ -6,10 +6,9 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 use InvalidArgumentException;
 use MediaWiki\Extension\Produnto\Fetcher\FetchStatus;
-use MediaWiki\Extension\Produnto\Store\PackageAccess;
 use MediaWiki\Extension\Produnto\Store\PackageBuilder;
+use MediaWiki\Extension\Produnto\Store\PackageMetaAccess;
 use MediaWiki\Http\HttpRequestFactory;
-use StatusValue;
 use ZipArchive;
 
 /**
@@ -97,11 +96,11 @@ class GitlabServer extends GitServer {
 	/**
 	 * Fetch a package from the server and insert the contents into the database.
 	 *
-	 * @param PackageAccess $package
+	 * @param PackageMetaAccess $package
 	 * @param PackageBuilder $dest
-	 * @return StatusValue
+	 * @return FetchStatus
 	 */
-	public function fetch( PackageAccess $package, PackageBuilder $dest ): StatusValue {
+	public function fetch( PackageMetaAccess $package, PackageBuilder $dest ): FetchStatus {
 		$status = new FetchStatus;
 		$client = $this->createGuzzleClient();
 		$file = tmpfile();
@@ -161,7 +160,7 @@ class GitlabServer extends GitServer {
 	 * @return \GuzzleHttp\Client
 	 */
 	private function createGuzzleClient() {
-		$opts = [];
+		$opts = [ 'http_errors' => false ];
 		if ( $this->proxy !== null ) {
 			$opts['proxy'] = $this->proxy;
 		}

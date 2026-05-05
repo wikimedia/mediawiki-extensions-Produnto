@@ -2,9 +2,9 @@
 
 namespace MediaWiki\Extension\Produnto\Server;
 
-use MediaWiki\Extension\Produnto\Store\PackageAccess;
+use MediaWiki\Extension\Produnto\Fetcher\FetchStatus;
 use MediaWiki\Extension\Produnto\Store\PackageBuilder;
-use StatusValue;
+use MediaWiki\Extension\Produnto\Store\PackageMetaAccess;
 
 /**
  * The base class for server instances. These are clients that encapsulate a
@@ -14,11 +14,11 @@ abstract class BaseServer {
 	/**
 	 * Fetch the contents of the specified package
 	 *
-	 * @param PackageAccess $package
+	 * @param PackageMetaAccess $package
 	 * @param PackageBuilder $dest
-	 * @return StatusValue
+	 * @return FetchStatus
 	 */
-	abstract public function fetch( PackageAccess $package, PackageBuilder $dest ): StatusValue;
+	abstract public function fetch( PackageMetaAccess $package, PackageBuilder $dest ): FetchStatus;
 
 	/**
 	 * Is the URL on this server?

@@ -302,9 +302,35 @@ class PackageBuilder {
 	public function suspend(): PackageAccess {
 		$id = $this->ensureInserted();
 		$this->updateProps( $id );
+		return $this->access();
+	}
+
+	/**
+	 * Access the contents of the package as built
+	 *
+	 * @return PackageAccess
+	 */
+	public function access(): PackageAccess {
 		return new PackageAccess(
 			$this->fileAccess,
-			$id,
+			$this->id,
+			$this->name,
+			$this->version,
+			$this->upstreamRef,
+			$this->fetchedUrl,
+			$this->props,
+			$this->state,
+			null
+		);
+	}
+
+	/**
+	 * Access the package metadata, possibly pre-commit
+	 *
+	 * @return PackageMetaAccess
+	 */
+	public function accessMeta(): PackageMetaAccess {
+		return new PackageMetaAccess(
 			$this->name,
 			$this->version,
 			$this->upstreamRef,
@@ -351,6 +377,15 @@ class PackageBuilder {
 			throw new InvalidArgumentException( 'Invalid status class: ' . $status::class );
 		}
 		$this->updateState( $this->id, ProduntoStore::STATE_FAILED, serialize( $status ) );
+	}
+
+	/**
+	 * Check whether the package has been inserted
+	 *
+	 * @return bool
+	 */
+	public function isInserted(): bool {
+		return $this->id !== null;
 	}
 
 	/**
