@@ -19,4 +19,11 @@ interface FileCollection {
 	 */
 	public function hasFile( string $path ): bool;
 
+	/**
+	 * Get all file paths in the package.
+	 *
+	 * @return string[]
+	 */
+	public function getFilePaths(): array;
+
 }

@@ -22,6 +22,11 @@ class SimpleFileAccess implements FileAccess {
 	}
 
 	/** @inheritDoc */
+	public function getFilePaths( int $packageId ): array {
+		return array_keys( $this->files[$packageId] ?? [] );
+	}
+
+	/** @inheritDoc */
 	public function getFileContents( int $packageId, string $path ): ?string {
 		return $this->files[$packageId][$path] ?? null;
 	}

@@ -38,4 +38,9 @@ class PackageAccess extends PackageMetaAccess implements FileCollection {
 	public function hasFile( string $path ): bool {
 		return $this->fileAccess->hasFile( $this->getId(), $path );
 	}
+
+	/** @inheritDoc */
+	public function getFilePaths(): array {
+		return $this->fileAccess->getFilePaths( $this->getId() );
+	}
 }

@@ -29,7 +29,14 @@ class SqlFileAccess implements FileAccess {
 			return true;
 		}
 
-		$paths = $this->textCache->getWithSetCallback(
+		$paths = $this->getFilePaths( $packageId );
+		return in_array( $path, $paths, true );
+	}
+
+	/** @inheritDoc */
+	public function getFilePaths( int $packageId ): array {
+		$func = __METHOD__;
+		return $this->textCache->getWithSetCallback(
 			$this->textCache->makeKey( self::PATHS, $packageId ),
 			function () use ( $packageId, $func ) {
 				return $this->db->newSelectQueryBuilder()
@@ -41,7 +48,6 @@ class SqlFileAccess implements FileAccess {
 					->fetchFieldValues();
 			}
 		);
-		return in_array( $path, $paths, true );
 	}
 
 	/** @inheritDoc */

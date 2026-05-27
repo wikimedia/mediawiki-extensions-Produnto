@@ -16,6 +16,14 @@ interface FileAccess {
 	public function hasFile( int $packageId, string $path ): bool;
 
 	/**
+	 * Get the paths of all files in a package.
+	 *
+	 * @param int $packageId
+	 * @return string[]
+	 */
+	public function getFilePaths( int $packageId ): array;
+
+	/**
 	 * Get the contents of a file from a package
 	 *
 	 * @param int $packageId

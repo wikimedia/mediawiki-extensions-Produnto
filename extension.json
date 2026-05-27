@@ -31,7 +31,8 @@
 		"LoadExtensionSchemaUpdates": "schema",
 		"ContentHandlerDefaultModelFor": "updater",
 		"JsonValidateSave": "updater",
-		"PageSaveComplete": "updater"
+		"PageSaveComplete": "updater",
+		"getUserPermissionsErrors": "viewer"
 	},
 	"HookHandlers": {
 		"schema": {
@@ -44,6 +45,9 @@
 				"TitleParser",
 				"Produnto.Updater"
 			]
+		},
+		"viewer": {
+			"class": "MediaWiki\\Extension\\Produnto\\RepoViewer\\RepoViewerHooks"
 		}
 	},
 	"DatabaseVirtualDomains": [
@@ -156,10 +160,43 @@
 				"CdxToastContainer",
 				"useToast"
 			]
+		},
+		"ext.produnto.RepoViewer": {
+			"localBasePath": "resources/ext.produnto.RepoViewer",
+			"remoteExtPath": "Produnto/resources/ext.produnto.RepoViewer",
+			"styles": [ "RepoViewer.less" ]
 		}
 	},
 	"ServiceWiringFiles": [
 		"src/ServiceWiring.php"
 	],
+	"namespaces": [
+		{
+			"id": 850,
+			"constant": "NS_PACKAGE",
+			"name": "Package"
+		},
+		{
+			"id": 851,
+			"constant": "NS_PACKAGE_TALK",
+			"name": "Package_talk"
+		}
+	],
+	"ShadowPageProviders": [ {
+		"namespace": 850,
+		"class": "MediaWiki\\Extension\\Produnto\\RepoViewer\\RepoProvider",
+		"services": [
+			"ContentLanguage",
+			"LanguageFallback",
+			"MessageFormatterFactory",
+			"LanguageFactory",
+			"TitleParser",
+			"LinkRenderer",
+			"Produnto.Store"
+		],
+		"optional_services": [
+			"SyntaxHighlight.SyntaxHighlight"
+		]
+	} ],
 	"manifest_version": 2
 }
