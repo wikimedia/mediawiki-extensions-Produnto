@@ -2,6 +2,7 @@
 
 namespace MediaWiki\Extension\Produnto\Runtime;
 
+use MediaWiki\Extension\Produnto\RepoViewer\RepoLinker;
 use MediaWiki\Extension\Produnto\Sandbox\SandboxAccess;
 use MediaWiki\Parser\ParserOutput;
 use Wikimedia\Message\MessageValue;
@@ -13,9 +14,11 @@ class ProduntoRuntime {
 	private bool $wasSandboxUsed = false;
 
 	/**
+	 * @param RepoLinker $repoLinker
 	 * @param Loader[] $loaders
 	 */
 	public function __construct(
+		private RepoLinker $repoLinker,
 		private array $loaders
 	) {
 	}
@@ -69,6 +72,23 @@ class ProduntoRuntime {
 			$parserOutput->addWarningMsgVal(
 				MessageValue::new( 'produnto-sandbox-preview-warning' ),
 			);
+		}
+	}
+
+	/**
+	 * Add a template link to the repo viewer if the file is linkable
+	 *
+	 * @param ParserOutput $parserOutput
+	 * @param string $packageName
+	 * @param string $path
+	 */
+	public function maybeAddDependency(
+		ParserOutput $parserOutput,
+		string $packageName, string $path
+	) {
+		$linkTarget = $this->repoLinker->getFileLinkTarget( $packageName, $path );
+		if ( $linkTarget ) {
+			$parserOutput->addTemplate( $linkTarget, 0, 0 );
 		}
 	}
 }

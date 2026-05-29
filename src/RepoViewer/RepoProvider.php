@@ -12,7 +12,6 @@ use MediaWiki\Page\PageReference;
 use MediaWiki\ShadowPage\BaseShadowPageProvider;
 use MediaWiki\ShadowPage\ShadowPage;
 use MediaWiki\SyntaxHighlight\SyntaxHighlight;
-use MediaWiki\Title\TitleParser;
 use Wikimedia\Parsoid\Core\LinkTarget;
 
 /**
@@ -26,7 +25,7 @@ class RepoProvider extends BaseShadowPageProvider {
 		private LanguageFallback $languageFallback,
 		private MessageFormatterFactory $messageFormatterFactory,
 		private LanguageFactory $languageFactory,
-		private TitleParser $titleParser,
+		private RepoLinker $repoLinker,
 		private LinkRenderer $linkRenderer,
 		private ProduntoStore $store,
 		private ?SyntaxHighlight $syntaxHighlight
@@ -80,7 +79,7 @@ class RepoProvider extends BaseShadowPageProvider {
 			$this->languageFallback,
 			$this->messageFormatterFactory,
 			$this->languageFactory,
-			$this->titleParser,
+			$this->repoLinker,
 			$this->linkRenderer,
 			$this->syntaxHighlight,
 			$this->getParseHelper(),

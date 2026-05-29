@@ -3,6 +3,7 @@
 namespace MediaWiki\Extension\Produnto\Runtime;
 
 use MediaWiki\Context\RequestContext;
+use MediaWiki\Extension\Produnto\RepoViewer\RepoLinker;
 use MediaWiki\Extension\Produnto\Sandbox\SandboxAccess;
 use MediaWiki\Extension\Produnto\Sandbox\SandboxStore;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
@@ -15,7 +16,8 @@ use MediaWiki\Session\Session;
 class RuntimeFactory {
 	public function __construct(
 		private ProduntoStore $store,
-		private SandboxStore $sandboxStore
+		private SandboxStore $sandboxStore,
+		private RepoLinker $repoLinker
 	) {
 	}
 
@@ -32,7 +34,7 @@ class RuntimeFactory {
 			$loaders[] = $sandboxLoader;
 		}
 		$loaders[] = new SqlLoader( $this->store );
-		return new ProduntoRuntime( $loaders );
+		return new ProduntoRuntime( $this->repoLinker, $loaders );
 	}
 
 	/**

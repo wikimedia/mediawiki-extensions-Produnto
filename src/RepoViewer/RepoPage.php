@@ -11,7 +11,6 @@ use MediaWiki\Language\LanguageFactory;
 use MediaWiki\Language\LanguageFallback;
 use MediaWiki\Linker\Linker;
 use MediaWiki\Linker\LinkRenderer;
-use MediaWiki\Linker\LinkTarget;
 use MediaWiki\Message\MessageFormatterFactory;
 use MediaWiki\Page\PageReference;
 use MediaWiki\Parser\ParserOptions;
@@ -19,8 +18,6 @@ use MediaWiki\ShadowPage\BaseShadowPage;
 use MediaWiki\ShadowPage\ParseHelper;
 use MediaWiki\ShadowPage\ShadowPageView;
 use MediaWiki\SyntaxHighlight\SyntaxHighlight;
-use MediaWiki\Title\MalformedTitleException;
-use MediaWiki\Title\TitleParser;
 use MediaWiki\Xml\Xml;
 use UtfNormal\Validator;
 use Wikimedia\HtmlArmor\HtmlArmor;
@@ -40,7 +37,7 @@ class RepoPage extends BaseShadowPage {
 		private LanguageFallback $fallbackProvider,
 		private MessageFormatterFactory $messageFormatterFactory,
 		private LanguageFactory $languageFactory,
-		private TitleParser $titleParser,
+		private RepoLinker $repoLinker,
 		private LinkRenderer $linkRenderer,
 		private ?SyntaxHighlight $syntaxHighlight,
 		private ParseHelper $parseHelper,
@@ -254,48 +251,26 @@ class RepoPage extends BaseShadowPage {
 	 * @return string HTML
 	 */
 	private function getListing() {
-		$baseLinkTarget = $this->titleParser->makeTitleValueSafe( NS_PACKAGE, $this->package->getName() );
-		$baseDbKey = $baseLinkTarget->getDBkey() . '/';
 		$treeView = ( new TreeView )
 			->paths( $this->package->getFilePaths() )
-			->leafLinker( function ( $basePath, $labelHtml ) use ( $baseDbKey ) {
-				$target = $this->makeRepoViewLinkTarget( $baseDbKey . $basePath );
-				if ( !$this->isIndex && $target && $basePath === $this->path ) {
-					return Linker::makeSelfLinkObj( $target, $labelHtml );
-				}
-				if ( $target ) {
-					return $this->linkRenderer->makeKnownLink(
-						$target,
-						new HtmlArmor( $labelHtml )
-					);
-				} else {
+			->leafLinker( function ( $basePath, $labelHtml ) {
+				$target = $this->repoLinker->getFileLinkTarget( $this->package->getName(), $basePath );
+				if ( !$target ) {
 					return $labelHtml;
 				}
+				if ( !$this->isIndex && $basePath === $this->path ) {
+					return Linker::makeSelfLinkObj( $target, $labelHtml );
+				}
+				return $this->linkRenderer->makeKnownLink(
+					$target,
+					new HtmlArmor( $labelHtml )
+				);
 			} );
 		return Html::rawElement(
 			'div',
 			[ 'class' => 'ext-produnto-viewer-listing' ],
 			$treeView->getHtml()
 		);
-	}
-
-	/**
-	 * Try to convert a DB key in the Package namespace to a LinkTarget
-	 * @param string $dbKey
-	 * @return LinkTarget|null
-	 */
-	private function makeRepoViewLinkTarget( $dbKey ): ?LinkTarget {
-		try {
-			$target = $this->titleParser->makeTitleValueSafe( NS_PACKAGE, $dbKey );
-		} catch ( MalformedTitleException ) {
-			return null;
-		}
-
-		if ( $target->getDBkey() === $dbKey ) {
-			return $target;
-		} else {
-			return null;
-		}
 	}
 
 	/**

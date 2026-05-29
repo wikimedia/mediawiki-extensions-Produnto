@@ -2,6 +2,7 @@
 
 use MediaWiki\Extension\Produnto\Fetcher\Fetcher;
 use MediaWiki\Extension\Produnto\Manifest\ManifestFactory;
+use MediaWiki\Extension\Produnto\RepoViewer\RepoLinker;
 use MediaWiki\Extension\Produnto\Runtime\RuntimeFactory;
 use MediaWiki\Extension\Produnto\Sandbox\SandboxStore;
 use MediaWiki\Extension\Produnto\Server\ServerContainer;
@@ -29,10 +30,17 @@ return [
 		return new ManifestFactory();
 	},
 
+	'Produnto.RepoLinker' => static function ( MediaWikiServices $services ) {
+		return new RepoLinker(
+			$services->getTitleParser()
+		);
+	},
+
 	'Produnto.RuntimeFactory' => static function ( MediaWikiServices $services ) {
 		return new RuntimeFactory(
 			$services->get( 'Produnto.Store' ),
-			$services->get( 'Produnto.SandboxStore' )
+			$services->get( 'Produnto.SandboxStore' ),
+			$services->get( 'Produnto.RepoLinker' )
 		);
 	},
 

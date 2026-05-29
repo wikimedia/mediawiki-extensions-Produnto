@@ -190,7 +190,7 @@
 			"LanguageFallback",
 			"MessageFormatterFactory",
 			"LanguageFactory",
-			"TitleParser",
+			"Produnto.RepoLinker",
 			"LinkRenderer",
 			"Produnto.Store"
 		],
