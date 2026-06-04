@@ -25,6 +25,14 @@
 		"ProduntoPackagesTitle": {
 			"value": null,
 			"description": "The title to use for the deployed package list, or null for MediaWiki:Packages.json"
+		},
+		"ProduntoUpdateBatchSizes": {
+			"value": {
+				"link": 1000,
+				"job": 10,
+				"purge": 1000
+			},
+			"description": "Batch sizes to use during the deployment update job. The link batch size needs to be fairly large to avoid duplication of titles in different htmlCacheUpdate jobs and is limited by the desired size of the IN() condition in the query. The job batch size can be small since the performance advantage in batching job pushes is small, and a large batch would use a lot of memory. The purge batch size controls the size of a purge job."
 		}
 	},
 	"Hooks": {
@@ -112,6 +120,17 @@
 			"class": "MediaWiki\\Extension\\Produnto\\Fetcher\\FetchJob",
 			"services": [
 				"Produnto.Fetcher"
+			],
+			"needsPage": false
+		},
+		"ProduntoUpdate": {
+			"class": "MediaWiki\\Extension\\Produnto\\Updater\\UpdateJob",
+			"services": [
+				"Produnto.Store",
+				"Produnto.RepoLinker",
+				"ConnectionProvider",
+				"JobQueueGroup",
+				"MainConfig"
 			],
 			"needsPage": false
 		}

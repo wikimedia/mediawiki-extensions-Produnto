@@ -33,6 +33,14 @@ interface FileAccess {
 	public function getFileContents( int $packageId, string $path ): ?string;
 
 	/**
+	 * Get the hash of the contents of each file in the package indexed by path.
+	 *
+	 * @param int $packageId
+	 * @return array<string,string>
+	 */
+	public function getFileHashes( int $packageId ): array;
+
+	/**
 	 * Get the file contents given the hash of the file
 	 *
 	 * @param string $hash

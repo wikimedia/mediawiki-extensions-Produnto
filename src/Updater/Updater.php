@@ -3,11 +3,16 @@
 namespace MediaWiki\Extension\Produnto\Updater;
 
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
+use MediaWiki\JobQueue\Job;
+use MediaWiki\JobQueue\JobQueueGroup;
+use MediaWiki\JobQueue\JobSpecification;
+use MediaWiki\User\UserIdentity;
 use stdClass;
 
 class Updater {
 	public function __construct(
 		private ProduntoStore $store,
+		private JobQueueGroup $jobQueueGroup,
 	) {
 	}
 
@@ -72,8 +77,11 @@ class Updater {
 	 *
 	 * @param ValidationStatus $status
 	 * @param int $revId The revision ID of the saved JSON page
+	 * @param UserIdentity $user
 	 */
-	public function deploy( ValidationStatus $status, $revId ) {
+	public function deploy( ValidationStatus $status, $revId, UserIdentity $user ) {
+		$prevDeploymentId = $this->store->getActiveDeployment()?->getId() ?? 0;
+
 		$deploymentBuilder = $this->store->createDeployment()
 			->revId( $revId );
 		foreach ( $status->getPackages() as $package ) {
@@ -82,5 +90,16 @@ class Updater {
 		$deploymentBuilder->modules( $status->getModules() );
 		$deployment = $deploymentBuilder->commit();
 		$this->store->activateDeployment( $deployment );
+
+		$this->jobQueueGroup->push( new JobSpecification(
+			'ProduntoUpdate',
+			[
+				'oldId' => $prevDeploymentId,
+				'newId' => $deployment->getId(),
+				'causeAgent' => $user->getName(),
+			] + Job::newRootJobParams(
+				"ProduntoUpdate:$prevDeploymentId:{$deployment->getId()}"
+			)
+		) );
 	}
 }

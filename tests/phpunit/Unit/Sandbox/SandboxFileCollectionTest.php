@@ -37,7 +37,7 @@ class SandboxFileCollectionTest extends \MediaWikiUnitTestCase {
 		$text2 = 'text2';
 		$hash1 = hash( 'sha256', $text1 );
 		$hash2 = hash( 'sha256', $text2 );
-		$fileAccess = new SimpleFileAccess( [], [ $hash1 => $text1 ] );
+		$fileAccess = new SimpleFileAccess( [ 1 => [ 'file1' => $text1 ] ] );
 		return new SandboxFileCollection(
 			$fileAccess,
 			[

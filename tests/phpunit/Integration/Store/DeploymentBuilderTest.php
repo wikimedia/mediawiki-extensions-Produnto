@@ -65,6 +65,14 @@ class DeploymentBuilderTest extends \MediaWikiIntegrationTestCase {
 
 		$this->assertNull( $deployment->getModuleInfo( 'no' ) );
 
+		$this->assertSame(
+			[
+				'foo' => 'foo/init.lua',
+				'bar' => 'bar/init.lua',
+			],
+			$deployment->getModulePaths()
+		);
+
 		$foo = $deployment->getPackageByName( 'foo' );
 		$this->assertSame( 'foo', $foo->getName() );
 		$this->assertSame( '1.0.0', $foo->getVersion() );

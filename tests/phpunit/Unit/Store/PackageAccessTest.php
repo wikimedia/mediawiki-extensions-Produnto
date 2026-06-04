@@ -9,11 +9,13 @@ use MediaWiki\Extension\Produnto\Store\SimpleFileAccess;
  * @covers \MediaWiki\Extension\Produnto\Store\PackageAccess
  */
 class PackageAccessTest extends \MediaWikiUnitTestCase {
-	private function newPackage() {
+	private function newPackage( array $extraFiles = [] ) {
 		return new PackageAccess(
-			new SimpleFileAccess( [ 1 => [
-				'init.lua' => 'return {}'
-			] ] ),
+			new SimpleFileAccess( [
+				1 => [
+					'init.lua' => 'return {}'
+				] + $extraFiles
+			] ),
 			1,
 			'foo',
 			'1.0.0',
@@ -39,5 +41,37 @@ class PackageAccessTest extends \MediaWikiUnitTestCase {
 		$package = $this->newPackage();
 		$this->assertTrue( $package->hasFile( 'init.lua' ) );
 		$this->assertFalse( $package->hasFile( 'nonexistent' ) );
+	}
+
+	public function testGetFileHashes() {
+		$package = $this->newPackage();
+		$this->assertSame(
+			[ 'init.lua' => hash( 'sha256', 'return {}' ) ],
+			$package->getFileHashes()
+		);
+	}
+
+	private function provideGetReadmePath() {
+		return [
+			'empty' => [ [], null ],
+			'README.md' => [ [ 'README.md' => '' ], 'README.md' ],
+			'README.wiki' => [
+				[
+					'README.md' => '...',
+					'README.wiki' => '...'
+				],
+				'README.wiki'
+			]
+		];
+	}
+
+	/**
+	 * @dataProvider provideGetReadmePath
+	 * @param array<string,string> $extraFiles
+	 * @param string|null $expected
+	 */
+	public function testGetReadmePath( $extraFiles, $expected ) {
+		$package = $this->newPackage( $extraFiles );
+		$this->assertSame( $expected, $package->getReadmePath() );
 	}
 }

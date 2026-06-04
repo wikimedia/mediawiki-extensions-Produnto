@@ -66,7 +66,8 @@ return [
 
 	'Produnto.Updater' => static function ( MediaWikiServices $services ) {
 		return new Updater(
-			$services->get( 'Produnto.Store' )
+			$services->get( 'Produnto.Store' ),
+			$services->get( 'JobQueueGroup' )
 		);
 	}
 ];

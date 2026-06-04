@@ -5,6 +5,7 @@ namespace MediaWiki\Extension\Produnto\Tests\Integration\Updater;
 use MediaWiki\Extension\Produnto\ProduntoServices;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
 use MediaWiki\Extension\Produnto\Updater\Updater;
+use MediaWiki\User\UserIdentityValue;
 use StatusValue;
 
 /**
@@ -105,5 +106,15 @@ class UpdaterTest extends \MediaWikiIntegrationTestCase {
 				$this->assertSame( array_key_first( (array)$input ), $package->getName() );
 			}
 		}
+	}
+
+	public function testDeploy() {
+		$input = self::provideValidateDeployment()['good package'][0];
+		$updater = $this->getUpdater();
+		$status = $updater->validateDeployment( $input );
+		$this->assertStatusGood( $status );
+		$updater->deploy( $status, 100, new UserIdentityValue( 1, 'User' ) );
+		$this->assertNotNull( $this->getStore()->getActiveDeployment() );
+		$this->runJobs( [ 'numJobs' => 1 ] );
 	}
 }

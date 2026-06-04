@@ -26,4 +26,10 @@ interface FileCollection {
 	 */
 	public function getFilePaths(): array;
 
+	/**
+	 * Get the hash of the contents of each file indexed by path.
+	 *
+	 * @return array<string,string>
+	 */
+	public function getFileHashes(): array;
 }

@@ -17,7 +17,10 @@ class SandboxBuilderTest extends \MediaWikiIntegrationTestCase {
 		$hash1 = hash( 'sha256', $text1 );
 		$hash2 = hash( 'sha256', $text2 );
 
-		$fileAccess = new SimpleFileAccess( [], [ $hash1 => $text1 ] );
+		$fileAccess = new SimpleFileAccess( [ 1 => [
+			'file1' => $text1,
+			'file2' => $text2,
+		] ] );
 
 		$stash = new HashBagOStuff();
 		$builder = new SandboxBuilder( $fileAccess, $stash, 1, 'sandbox1', [] );

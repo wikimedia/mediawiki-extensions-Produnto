@@ -64,7 +64,7 @@ class DeploymentAccess {
 	 * @return ModuleInfo|null
 	 */
 	public function getModuleInfo( $moduleName ) {
-		$modules = $this->getData( 'modules' );
+		$modules = $this->getData( 'modules' ) ?? [];
 		if ( !array_key_exists( $moduleName, $modules ) ) {
 			return null;
 		}
@@ -78,6 +78,25 @@ class DeploymentAccess {
 			return null;
 		}
 		return new ModuleInfo( $package->getName(), $path, $contents );
+	}
+
+	/**
+	 * Get an array mapping the Lua module name to a slash-separated string
+	 * giving the package name and path.
+	 *
+	 * @return array<string,string>
+	 */
+	public function getModulePaths(): array {
+		$paths = [];
+		$modules = $this->getData( 'modules' ) ?? [];
+		foreach ( $modules as $moduleName => [ $packageId, $path ] ) {
+			$package = $this->getPackageById( $packageId );
+			if ( !$package ) {
+				continue;
+			}
+			$paths[$moduleName] = $package->getName() . '/' . $path;
+		}
+		return $paths;
 	}
 
 	/**

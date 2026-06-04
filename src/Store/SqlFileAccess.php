@@ -21,7 +21,6 @@ class SqlFileAccess implements FileAccess {
 
 	/** @inheritDoc */
 	public function hasFile( int $packageId, string $path ): bool {
-		$func = __METHOD__;
 		$hash = $this->textCache->get( $this->textCache->makeKey( self::HASHES, $packageId, $path ) );
 		if ( $hash === self::MISSING ) {
 			return false;
@@ -85,6 +84,22 @@ class SqlFileAccess implements FileAccess {
 			);
 		}
 		return $row ? $row->pft_text : null;
+	}
+
+	/** @inheritDoc */
+	public function getFileHashes( int $packageId ): array {
+		$res = $this->db->newSelectQueryBuilder()
+			->select( [ 'pf_hash', 'pfn_name' ] )
+			->from( 'produnto_file' )
+			->join( 'produnto_file_name', null, 'pfn_id=pf_name_id' )
+			->where( [ 'pf_package_version' => $packageId ] )
+			->caller( __METHOD__ )
+			->fetchResultSet();
+		$hashes = [];
+		foreach ( $res as $row ) {
+			$hashes[$row->pfn_name] = $row->pf_hash;
+		}
+		return $hashes;
 	}
 
 	/** @inheritDoc */

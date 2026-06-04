@@ -2,6 +2,7 @@
 
 namespace MediaWiki\Extension\Produnto\RepoViewer;
 
+use MediaWiki\Extension\Produnto\Store\PackageAccess;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
 use MediaWiki\Language\Language;
 use MediaWiki\Language\LanguageFactory;
@@ -18,8 +19,6 @@ use Wikimedia\Parsoid\Core\LinkTarget;
  * Handler for content in the Package namespace
  */
 class RepoProvider extends BaseShadowPageProvider {
-	private const README_PATHS = [ 'README.wiki', 'README.md' ];
-
 	public function __construct(
 		private Language $contLang,
 		private LanguageFallback $languageFallback,
@@ -57,15 +56,14 @@ class RepoProvider extends BaseShadowPageProvider {
 		if ( $path === null ) {
 			$isIndex = true;
 			$contents = null;
-			foreach ( self::README_PATHS as $readme ) {
-				if ( $package->hasFile( $readme ) ) {
-					$path = $readme;
-					$contents = $package->getFileContents( $readme );
-				}
+			$readmePath = $package->getReadmePath();
+			if ( $readmePath !== null ) {
+				$path = $readmePath;
+				$contents = $package->getFileContents( $readmePath );
 			}
 			if ( $path === null ) {
 				// Placeholder for message
-				$path = self::README_PATHS[0];
+				$path = PackageAccess::README_PATHS[0];
 			}
 		} else {
 			$isIndex = false;

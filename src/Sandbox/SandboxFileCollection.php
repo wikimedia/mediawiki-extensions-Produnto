@@ -38,4 +38,9 @@ class SandboxFileCollection implements FileCollection {
 	public function getFilePaths(): array {
 		return array_keys( $this->hashesByPath );
 	}
+
+	/** @inheritDoc */
+	public function getFileHashes(): array {
+		return $this->hashesByPath;
+	}
 }

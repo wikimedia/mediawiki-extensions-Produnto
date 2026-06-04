@@ -52,7 +52,10 @@ class SandboxAccessTest extends \MediaWikiUnitTestCase {
 		$hash1 = hash( 'sha256', $text1 );
 		$hash2 = hash( 'sha256', $text2 );
 
-		$fileAccess = new SimpleFileAccess( [], [ $hash1 => $text1 ] );
+		$fileAccess = new SimpleFileAccess( [ 1 => [
+			'file1' => $text1,
+			'file2' => $text2,
+		] ] );
 
 		return new SandboxAccess(
 			$fileAccess,

@@ -91,6 +91,32 @@ class ProduntoStore {
 	}
 
 	/**
+	 * Get the deployment with the given ID, or null if no such deployment exists.
+	 *
+	 * @param int $id
+	 * @param int $recency
+	 * @return DeploymentAccess|null
+	 */
+	public function getDeploymentById( int $id, int $recency = IDBAccessObject::READ_NORMAL
+	): ?DeploymentAccess {
+		$db = $this->getDbFromRecency( $recency );
+		$exists = $db->newSelectQueryBuilder()
+			->select( '1' )
+			->from( 'produnto_deployment' )
+			->where( [ 'pd_id' => $id ] )
+			->caller( __METHOD__ )
+			->fetchField();
+		if ( !$exists ) {
+			return null;
+		}
+		return new DeploymentAccess(
+			$this->getFileAccess( $recency ),
+			$db,
+			$id
+		);
+	}
+
+	/**
 	 * Create a new package version
 	 *
 	 * @return PackageBuilder

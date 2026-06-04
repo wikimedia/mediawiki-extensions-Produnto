@@ -88,7 +88,7 @@ class UpdaterHooks implements
 		if ( !$revId ) {
 			throw new \RuntimeException( 'Completed revision has no ID' );
 		}
-		$this->updater->deploy( $validateStatus, $revId );
+		$this->updater->deploy( $validateStatus, $revId, $user );
 	}
 
 	/**

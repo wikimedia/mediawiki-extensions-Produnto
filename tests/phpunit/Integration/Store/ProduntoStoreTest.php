@@ -46,6 +46,20 @@ class ProduntoStoreTest extends \MediaWikiIntegrationTestCase {
 		);
 	}
 
+	public function testGetDeploymentById() {
+		$store = $this->getStore();
+
+		$this->assertNull(
+			$store->getDeploymentById( 1 )
+		);
+
+		$da = $store->createDeployment()
+			->revId( 100 )
+			->commit();
+		$id = $da->getId();
+		$this->assertSame( $id, $store->getDeploymentById( $id )->getId() );
+	}
+
 	public function testCreatePackageVersion() {
 		$p = $this->getStore()->createPackageVersion()
 			->name( 'test' )
