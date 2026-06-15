@@ -38,6 +38,14 @@ class Updater {
 				$status->fatal( 'produnto-update-missing-package', $name, $version );
 				continue;
 			}
+			if ( $package->getState() === ProduntoStore::STATE_FETCHING ) {
+				$status->fatal( 'produnto-update-fetching-package', $name, $version );
+				continue;
+			}
+			if ( $package->getState() === ProduntoStore::STATE_FAILED ) {
+				$status->fatal( 'produnto-update-failed-package', $name, $version );
+				continue;
+			}
 
 			$packageNamesById[$package->getId()] = $name;
 

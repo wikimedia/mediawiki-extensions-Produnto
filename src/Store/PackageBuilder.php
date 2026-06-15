@@ -370,9 +370,7 @@ class PackageBuilder {
 	 * @param StatusValue $status
 	 */
 	public function fail( StatusValue $status ) {
-		if ( $this->id === null ) {
-			return;
-		}
+		$this->assertInserted( __METHOD__ );
 		if ( !in_array( $status::class, PackageAccess::STATUS_CLASSES ) ) {
 			throw new InvalidArgumentException( 'Invalid status class: ' . $status::class );
 		}
@@ -440,6 +438,18 @@ class PackageBuilder {
 		if ( $this->id !== null ) {
 			throw new \LogicException(
 				"Can't call $func after the produnto_package_version row has been inserted" );
+		}
+	}
+
+	/**
+	 * Throw an exception if the produnto_package_version row has not been inserted.
+	 *
+	 * @param string $func
+	 */
+	private function assertInserted( $func ) {
+		if ( $this->id === null ) {
+			throw new \LogicException(
+				"Can't call $func before the produnto_package_version row has been inserted" );
 		}
 	}
 

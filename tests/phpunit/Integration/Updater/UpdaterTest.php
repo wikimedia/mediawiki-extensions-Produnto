@@ -5,6 +5,7 @@ namespace MediaWiki\Extension\Produnto\Tests\Integration\Updater;
 use MediaWiki\Extension\Produnto\ProduntoServices;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
 use MediaWiki\Extension\Produnto\Updater\Updater;
+use StatusValue;
 
 /**
  * @group Database
@@ -27,6 +28,23 @@ class UpdaterTest extends \MediaWikiIntegrationTestCase {
 			->addFile( 'src/init.lua', 'return {}' )
 			->module( 'test', 'src/init.lua' )
 			->commit();
+		$store->createPackageVersion()
+			->name( 'fetching' )
+			->fetchedUrl( '' )
+			->version( '1.0.0' )
+			->suspend();
+
+		$failed = $store->createPackageVersion()
+			->name( 'failed' )
+			->fetchedUrl( '' )
+			->version( '1.0.0' )
+			->suspend();
+		$store->resumePackageBuilder( $failed )
+			->fail( StatusValue::newFatal(
+				'produnto-fetch-server-error',
+				500,
+				'Server error'
+			) );
 	}
 
 	private function getUpdater(): Updater {
@@ -59,6 +77,14 @@ class UpdaterTest extends \MediaWikiIntegrationTestCase {
 					'test2' => '1.0.0'
 				],
 				'produnto-update-module-conflict'
+			],
+			'package not ready' => [
+				(object)[ 'fetching' => '1.0.0' ],
+				'produnto-update-fetching-package'
+			],
+			'package failed' => [
+				(object)[ 'failed' => '1.0.0' ],
+				'produnto-update-failed-package'
 			],
 		];
 	}
