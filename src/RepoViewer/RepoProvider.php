@@ -66,6 +66,12 @@ class RepoProvider extends BaseShadowPageProvider {
 				$path = PackageAccess::README_PATHS[0];
 			}
 		} else {
+			if ( str_starts_with( $path, '/' ) ) {
+				$path = $this->repoLinker->getPathFromFallback( $package, substr( $path, 1 ) );
+				if ( $path === null ) {
+					return null;
+				}
+			}
 			$isIndex = false;
 			$contents = $package->getFileContents( $path );
 			if ( $contents === null ) {

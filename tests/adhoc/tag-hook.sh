@@ -14,10 +14,10 @@ curl -vvv -w\\n -k https://mw.internal/rest.php/produnto/v1/gitlab/tag \
   "object_kind": "tag_push",
   "event_name": "tag_push",
   "before": "0000000000000000000000000000000000000000",
-  "after": "889c1d5dfc7de780783cf1d4500ba1bcfcfcb8b4",
-  "ref": "refs/tags/v1.3",
+  "after": "74ad0510ddc00c5ef615fa0faf88b5ec22abd8c1",
+  "ref": "refs/tags/v1.7",
   "ref_protected": false,
-  "checkout_sha": "889c1d5dfc7de780783cf1d4500ba1bcfcfcb8b4",
+  "checkout_sha": "74ad0510ddc00c5ef615fa0faf88b5ec22abd8c1",
   "message": "",
   "user_id": 129,
   "user_name": "Tim Starling",
@@ -45,17 +45,17 @@ curl -vvv -w\\n -k https://mw.internal/rest.php/produnto/v1/gitlab/tag \
   },
   "commits": [
     {
-      "id": "889c1d5dfc7de780783cf1d4500ba1bcfcfcb8b4",
-      "message": "Add a JSON file\n",
-      "title": "Add a JSON file",
-      "timestamp": "2026-03-11T14:13:34+11:00",
-      "url": "https://gitlab.wikimedia.org/tstarling/produnto-test/-/commit/889c1d5dfc7de780783cf1d4500ba1bcfcfcb8b4",
+      "id": "74ad0510ddc00c5ef615fa0faf88b5ec22abd8c1",
+      "message": "Add invalid title test case\n",
+      "title": "Add invalid title test case",
+      "timestamp": "2026-06-15T14:06:02+10:00",
+      "url": "https://gitlab.wikimedia.org/tstarling/produnto-test/-/commit/74ad0510ddc00c5ef615fa0faf88b5ec22abd8c1",
       "author": {
         "name": "Tim Starling",
         "email": "[REDACTED]"
       },
       "added": [
-        "src/test.json"
+        "src/invalid-title##.lua"
       ],
       "modified": [],
       "removed": []
