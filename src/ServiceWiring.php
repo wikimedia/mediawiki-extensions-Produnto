@@ -7,11 +7,19 @@ use MediaWiki\Extension\Produnto\Runtime\RuntimeFactory;
 use MediaWiki\Extension\Produnto\Sandbox\SandboxStore;
 use MediaWiki\Extension\Produnto\Server\ServerContainer;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
+use MediaWiki\Extension\Produnto\Updater\AuthorizingPageSaverFactory;
 use MediaWiki\Extension\Produnto\Updater\Updater;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 
 return [
+	'Produnto.AuthorizingPageSaverFactory' => static function ( MediaWikiServices $services ) {
+		return new AuthorizingPageSaverFactory(
+			$services->getPageStore(),
+			$services->getPageUpdaterFactory(),
+			$services->get( 'Produnto.Updater' ),
+		);
+	},
 	'Produnto.Fetcher' => static function ( MediaWikiServices $services ) {
 		return new Fetcher(
 			$services->get( 'Produnto.Store' ),
@@ -66,6 +74,8 @@ return [
 
 	'Produnto.Updater' => static function ( MediaWikiServices $services ) {
 		return new Updater(
+			$services->getMainConfig(),
+			$services->getTitleParser(),
 			$services->get( 'Produnto.Store' ),
 			$services->get( 'JobQueueGroup' )
 		);

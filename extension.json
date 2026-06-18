@@ -33,6 +33,25 @@
 				"purge": 1000
 			},
 			"description": "Batch sizes to use during the deployment update job. The link batch size needs to be fairly large to avoid duplication of titles in different htmlCacheUpdate jobs and is limited by the desired size of the IN() condition in the query. The job batch size can be small since the performance advantage in batching job pushes is small, and a large batch would use a lot of memory. The purge batch size controls the size of a purge job."
+		},
+		"ProduntoApiBatchSizes": {
+			"value": {
+				"packages": 1000
+			},
+			"description": "Batch sizes to use when delivering REST API responses"
+		}
+	},
+	"AvailableRights": [
+		"produnto-update"
+	],
+	"GroupPermissions": {
+		"sysop": {
+			"produnto-update": true
+		}
+	},
+	"GrantPermissions": {
+		"editprotected": {
+			"produnto-update": true
 		}
 	},
 	"Hooks": {
@@ -49,8 +68,6 @@
 		"updater": {
 			"class": "MediaWiki\\Extension\\Produnto\\Updater\\UpdaterHooks",
 			"services": [
-				"MainConfig",
-				"TitleParser",
 				"Produnto.Updater"
 			]
 		},
@@ -62,6 +79,61 @@
 		"virtual-produnto"
 	],
 	"RestRoutes": [
+		{
+			"method": "GET",
+			"path": "/produnto/v1/deployments/recent",
+			"class": "MediaWiki\\Extension\\Produnto\\Rest\\RecentDeploymentsHandler",
+			"services": [
+				"Produnto.Store",
+				"PermissionManager",
+				"ConnectionProvider"
+			]
+		},
+		{
+			"method": "POST",
+			"path": "/produnto/v1/deployment/validate",
+			"class": "MediaWiki\\Extension\\Produnto\\Rest\\ValidateDeploymentHandler",
+			"services": [
+				"Produnto.Updater",
+				"ContentLanguage",
+				"MessageFormatterFactory"
+			]
+		},
+		{
+			"method": "POST",
+			"path": "/produnto/v1/deployment/patch",
+			"class": "MediaWiki\\Extension\\Produnto\\Rest\\PatchDeploymentHandler",
+			"services": [
+				"ContentLanguage",
+				"MessageFormatterFactory",
+				"PageUpdaterFactory",
+				"PageStore",
+				"Produnto.AuthorizingPageSaverFactory",
+				"Produnto.Updater"
+			]
+		},
+		{
+			"method": "GET",
+			"path": "/produnto/v1/packages/all/",
+			"class": "MediaWiki\\Extension\\Produnto\\Rest\\PackagesIndexHandler",
+			"services": [
+				"MainConfig",
+				"Produnto.Store",
+				"PermissionManager"
+			]
+		},
+		{
+			"method": "GET",
+			"path": "/produnto/v1/packages/all/{partition}",
+			"class": "MediaWiki\\Extension\\Produnto\\Rest\\PackagesListHandler",
+			"services": [
+				"MainConfig",
+				"Produnto.Store",
+				"PermissionManager",
+				"ContentLanguage",
+				"MessageFormatterFactory"
+			]
+		},
 		{
 			"method": "POST",
 			"path": "/produnto/v1/gitlab/tag",

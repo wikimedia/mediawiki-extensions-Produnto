@@ -88,6 +88,10 @@ class PackageMetaAccessTest extends \MediaWikiUnitTestCase {
 		$this->assertSame( 'foo', $package->getLocalName( 'fr', null ) );
 	}
 
+	public function testGetLocalNames() {
+		$this->assertSame( [ 'en' => 'Test' ], $this->newPackage()->getLocalNames() );
+	}
+
 	public function testGetDescription() {
 		$package = $this->newPackage();
 		$mockFallback = $this->createMock( LanguageFallback::class );
@@ -95,6 +99,10 @@ class PackageMetaAccessTest extends \MediaWikiUnitTestCase {
 		$this->assertSame( 'A test package', $package->getDescription( 'en', $mockFallback ) );
 		$this->assertSame( 'A test package', $package->getDescription( 'fr', $mockFallback ) );
 		$this->assertNull( $package->getDescription( 'fr', null ) );
+	}
+
+	public function testGetDescriptions() {
+		$this->assertSame( [ 'en' => 'A test package' ], $this->newPackage()->getDescriptions() );
 	}
 
 	public function testGetAuthors() {

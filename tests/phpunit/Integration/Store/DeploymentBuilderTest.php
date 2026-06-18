@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\Produnto\Tests\Integration\Store;
 
 use MediaWiki\Extension\Produnto\ProduntoServices;
 use MediaWiki\Extension\Produnto\Store\DeploymentAccess;
+use MediaWiki\WikiMap\WikiMap;
 
 /**
  * @group Database
@@ -52,6 +53,8 @@ class DeploymentBuilderTest extends \MediaWikiIntegrationTestCase {
 	private function assertFields( DeploymentAccess $deployment ) {
 		$this->assertSame( 1, $deployment->getId() );
 		$this->assertSame( [ 'a' => 'b' ], $deployment->getData( 'data' ) );
+		$this->assertSame( 100, $deployment->getControlRevisionId() );
+		$this->assertSame( WikiMap::getCurrentWikiId(), $deployment->getControlWikiId() );
 
 		$info = $deployment->getModuleInfo( 'foo' );
 		$this->assertSame( 'foo', $info->packageName );

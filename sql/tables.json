@@ -71,7 +71,7 @@
 			{
 				"name": "pd_target_wiki_id",
 				"columns": [ "pd_target_wiki", "pd_id" ],
-				"comment": "For determining the replacement timestamp during purging",
+				"comment": "For determining the replacement timestamp during purging, and for fetching recent deployments for the dashboard.",
 				"unique": false
 			}
 		],

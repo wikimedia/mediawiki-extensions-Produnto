@@ -14,6 +14,8 @@ class DeploymentAccess {
 	 * @param FileAccess $fileAccess
 	 * @param IReadableDatabase $db
 	 * @param int $id
+	 * @param string $controlWikiId The wiki ID of the initiating action
+	 * @param int $controlRevId The rev_id of the change on the control wiki
 	 * @param array|null $dataItems The data items, or null to load from the DB
 	 * @param PackageAccess[]|null $packages The packages indexed by package ID, or null to load from the DB
 	 */
@@ -21,6 +23,8 @@ class DeploymentAccess {
 		private readonly FileAccess $fileAccess,
 		private readonly IReadableDatabase $db,
 		private readonly int $id,
+		private string $controlWikiId,
+		private int $controlRevId,
 		private ?array $dataItems = null,
 		private ?array $packages = null
 	) {
@@ -145,5 +149,13 @@ class DeploymentAccess {
 			return $packages[$this->idsByName[$name]];
 		}
 		return null;
+	}
+
+	public function getControlWikiId(): string {
+		return $this->controlWikiId;
+	}
+
+	public function getControlRevisionId(): int {
+		return $this->controlRevId;
 	}
 }

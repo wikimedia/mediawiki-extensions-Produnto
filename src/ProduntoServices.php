@@ -9,6 +9,7 @@ use MediaWiki\Extension\Produnto\Runtime\RuntimeFactory;
 use MediaWiki\Extension\Produnto\Sandbox\SandboxStore;
 use MediaWiki\Extension\Produnto\Server\ServerContainer;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
+use MediaWiki\Extension\Produnto\Updater\AuthorizingPageSaverFactory;
 use MediaWiki\Extension\Produnto\Updater\Updater;
 use MediaWiki\MediaWikiServices;
 use Wikimedia\Services\ServiceContainer;
@@ -20,6 +21,10 @@ class ProduntoServices {
 		?ServiceContainer $services = null
 	) {
 		$this->services = $services ?? MediaWikiServices::getInstance();
+	}
+
+	public function getAuthorizingPageSaverFactory(): AuthorizingPageSaverFactory {
+		return $this->services->get( 'Produnto.AuthorizingPageSaverFactory' );
 	}
 
 	public function getFetcher(): Fetcher {

@@ -159,8 +159,7 @@ class RepoProviderTest extends \MediaWikiIntegrationTestCase {
 			$deployment = new DeploymentAccess(
 				$fileAccess,
 				$this->createNoOpMock( IReadableDatabase::class ),
-				1,
-				[],
+				1, '', 1, [],
 				[ 1 => $package ]
 			);
 			$store->method( 'getActiveDeployment' )

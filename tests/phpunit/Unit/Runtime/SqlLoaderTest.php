@@ -33,7 +33,7 @@ class SqlLoaderTest extends \MediaWikiUnitTestCase {
 		$deployment = new DeploymentAccess(
 			$fileAccess,
 			$this->createNoOpMock( IReadableDatabase::class ),
-			1,
+			1, '', 1,
 			[ 'modules' => [ 'foo' => [ 1, 'init.lua' ] ] ],
 			[ 1 => $package ]
 		);

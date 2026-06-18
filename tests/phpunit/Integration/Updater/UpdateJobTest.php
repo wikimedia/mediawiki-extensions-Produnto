@@ -289,6 +289,7 @@ class UpdateJobTest extends \MediaWikiIntegrationTestCase {
 			TestingAccessWrapper::newFromObject( $oldDeployment )->fileAccess,
 			$this->getDb(),
 			$this->nextDeploymentId++,
+			'', 1,
 			[],
 			$oldDeployment->getPackages()
 		);
@@ -345,6 +346,7 @@ class UpdateJobTest extends \MediaWikiIntegrationTestCase {
 			new SimpleFileAccess( $filesById ),
 			$this->getDb(),
 			$this->nextDeploymentId++,
+			'', 1,
 			[ 'modules' => $moduleData ],
 			$packages
 		);

@@ -103,6 +103,8 @@ class DeploymentBuilder {
 			$this->fileAccess,
 			$this->dbw,
 			$id,
+			WikiMap::getCurrentWikiId(),
+			$this->revId,
 			$this->dataItems,
 			$this->packages
 		);

@@ -142,11 +142,29 @@ class PackageMetaAccess {
 	}
 
 	/**
+	 * Get all localised package descriptions, indexed by language code
+	 *
+	 * @return array<string,string>
+	 */
+	public function getDescriptions(): array {
+		return $this->props['description'] ?? [];
+	}
+
+	/**
 	 * Get the localised package name, falling back to the canonical name
 	 */
 	public function getLocalName( string $lang, ?LanguageFallback $falllbackProvider = null ): string {
 		return $this->getLocalisedProperty( 'name', $lang, $falllbackProvider )
 			?? $this->getName();
+	}
+
+	/**
+	 * Get all localised packages names, indexed by language code
+	 *
+	 * @return array<string,string>
+	 */
+	public function getLocalNames(): array {
+		return $this->props['name'] ?? [];
 	}
 
 	private function getLocalisedProperty( string $prop, string $lang,

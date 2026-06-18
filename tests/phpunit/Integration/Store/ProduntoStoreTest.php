@@ -60,6 +60,55 @@ class ProduntoStoreTest extends \MediaWikiIntegrationTestCase {
 		$this->assertSame( $id, $store->getDeploymentById( $id )->getId() );
 	}
 
+	public function testGetRecentDeployments() {
+		$store = $this->getStore();
+		$this->assertSame( [], $store->getRecentDeployments() );
+
+		$p1 = $store->createPackageVersion()
+			->name( 'package1' )
+			->fetchedUrl( '' )
+			->version( '1.0' )
+			->commit();
+		$p2 = $store->createPackageVersion()
+			->name( 'package2' )
+			->fetchedUrl( '' )
+			->version( '1.0' )
+			->commit();
+		$store->createPackageVersion()
+			->name( 'package3' )
+			->fetchedUrl( '' )
+			->version( '1.0' )
+			->commit();
+
+		$store->createDeployment()
+			->revId( 100 )
+			->commit();
+		$store->createDeployment()
+			->revId( 100 )
+			->addPackage( $p1 )
+			->commit();
+		$store->createDeployment()
+			->revId( 100 )
+			->addPackage( $p1 )
+			->addPackage( $p2 )
+			->commit();
+
+		$deployments = $store->getRecentDeployments( 3 );
+		$this->assertSame( 3, $deployments[0]->getId() );
+		$this->assertSame( 2, $deployments[1]->getId() );
+		$this->assertSame( 1, $deployments[2]->getId() );
+		$this->assertCount( 2, $deployments[0]->getPackages() );
+		$this->assertCount( 1, $deployments[1]->getPackages() );
+		$this->assertCount( 0, $deployments[2]->getPackages() );
+
+		$deployments = $store->getRecentDeployments( 2 );
+		$this->assertSame( 3, $deployments[0]->getId() );
+		$this->assertSame( 2, $deployments[1]->getId() );
+
+		$deployments = $store->getRecentDeployments( 0 );
+		$this->assertSame( [], $deployments );
+	}
+
 	public function testCreatePackageVersion() {
 		$p = $this->getStore()->createPackageVersion()
 			->name( 'test' )
@@ -102,6 +151,70 @@ class ProduntoStoreTest extends \MediaWikiIntegrationTestCase {
 		$this->assertSame( $packages[0]->getId(), $p->getId() );
 		$p = $store->getPackageByName( 'bar', '1.0' );
 		$this->assertSame( $packages[1]->getId(), $p->getId() );
+	}
+
+	public function testGetMaxPackageId() {
+		$store = $this->getStore();
+		$this->assertNull( $store->getMaxPackageId() );
+
+		$this->getStore()->createPackageVersion()
+			->name( 'test' )
+			->fetchedUrl( '' )
+			->version( '1.0' )
+			->commit();
+
+		$this->assertSame( 1, $store->getMaxPackageId() );
+	}
+
+	public static function provideGetPackagesFromIdRange() {
+		return [
+			[ 0, 0, [] ],
+			[ 0, 1, [ 1 ] ],
+			[ 1, 1, [ 1 ] ],
+			[ 1, 2, [ 1, 2 ] ],
+		];
+	}
+
+	/**
+	 * @dataProvider provideGetPackagesFromIdRange
+	 */
+	public function testGetPackagesFromIdRange( int $start, int $end, array $expect ) {
+		$store = $this->getStore();
+		$this->createTwoPackages( $store );
+		$packages = $store->getPackagesFromIdRange( $start, $end );
+
+		$packageIds = [];
+		foreach ( $packages as $package ) {
+			$packageIds[] = $package->getId();
+		}
+		$this->assertSame( $expect, $packageIds );
+	}
+
+	public static function provideGetPackageStatesFromIdRange() {
+		return [
+			[ 0, 0, [] ],
+			[ 1, 1, [ 1 => ProduntoStore::STATE_READY ] ],
+			[ 1, 2, [ 1 => ProduntoStore::STATE_READY, 2 => ProduntoStore::STATE_FETCHING ] ]
+		];
+	}
+
+	/**
+	 * @dataProvider provideGetPackageStatesFromIdRange
+	 */
+	public function testGetPackageStatesFromIdRange( int $start, int $end, array $expect ) {
+		$store = $this->getStore();
+		$store->createPackageVersion()
+			->name( 'good' )
+			->fetchedUrl( '' )
+			->version( '1.0' )
+			->commit();
+		$store->createPackageVersion()
+			->name( 'bad' )
+			->fetchedUrl( '' )
+			->version( '1.0' )
+			->suspend();
+		$states = $store->getPackageStatesFromIdRange( $start, $end );
+		$this->assertSame( $expect, $states );
 	}
 
 	public static function provideDecodeJson() {

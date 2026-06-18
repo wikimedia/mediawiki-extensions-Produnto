@@ -2,7 +2,6 @@
 
 namespace MediaWiki\Extension\Produnto\Updater;
 
-use MediaWiki\Config\Config;
 use MediaWiki\Content\Hook\JsonValidateSaveHook;
 use MediaWiki\Content\JsonContent;
 use MediaWiki\Logger\LoggerFactory;
@@ -10,8 +9,6 @@ use MediaWiki\Page\PageIdentity;
 use MediaWiki\Revision\Hook\ContentHandlerDefaultModelForHook;
 use MediaWiki\Revision\SlotRecord;
 use MediaWiki\Storage\Hook\PageSaveCompleteHook;
-use MediaWiki\Title\TitleParser;
-use MediaWiki\Title\TitleValue;
 use Psr\Log\LoggerInterface;
 use StatusValue;
 
@@ -21,14 +18,8 @@ class UpdaterHooks implements
 	PageSaveCompleteHook
 {
 	private LoggerInterface $logger;
-	private ?TitleValue $packagesTitle = null;
-
-	/** @var array<string,ValidationStatus> */
-	private array $validationResults = [];
 
 	public function __construct(
-		private readonly Config $config,
-		private readonly TitleParser $titleParser,
 		private readonly Updater $updater,
 	) {
 		$this->logger = LoggerFactory::getInstance( 'Produnto' );
@@ -54,10 +45,13 @@ class UpdaterHooks implements
 			return false;
 		}
 		$data = $jsonStatus->getValue();
-		$validateStatus = $this->updater->validateDeployment( $data );
+
+		// Use the validation status created by AuthorizingPageSaver if any
+		$validateStatus = $this->updater->getValidationResult( $data )
+			?? $this->updater->validateDeployment( $data );
+
 		if ( $validateStatus->isOK() ) {
-			$hash = json_encode( $data );
-			$this->saveValidationResult( $hash, $validateStatus );
+			$this->updater->saveValidationResult( $data, $validateStatus );
 			return true;
 		} else {
 			$status->merge( $validateStatus );
@@ -74,50 +68,33 @@ class UpdaterHooks implements
 		}
 		$content = $revisionRecord->getContent( SlotRecord::MAIN );
 		if ( $content instanceof JsonContent ) {
-			$hash = json_encode( $content->getData()->getValue() );
+			$data = $content->getData()->getValue();
 		} else {
 			$this->logger->error( 'MediaWiki:Packages.json saved but is not JsonContent' );
 			return;
 		}
-		$validateStatus = $this->getValidationResult( $hash );
-		if ( !$validateStatus ) {
+		$updateStatus = $this->updater->getValidationResult( $data );
+		if ( !$updateStatus ) {
 			$this->logger->error( 'MediaWiki.Packages.json saved but we have no validation result' );
+			return;
+		}
+		if ( $updateStatus->isDeployed() ) {
+			// Already done by AuthorizingPageSaver
 			return;
 		}
 		$revId = $revisionRecord->getId();
 		if ( !$revId ) {
 			throw new \RuntimeException( 'Completed revision has no ID' );
 		}
-		$this->updater->deploy( $validateStatus, $revId, $user );
+		$this->updater->deploy( $updateStatus, $revId, $user );
 	}
 
 	/**
 	 * Check if a title is MediaWiki:Packages.json or its configured replacement
 	 */
 	private function isPackagesTitle( PageIdentity $title ): bool {
-		if ( !$this->packagesTitle ) {
-			$titleText = $this->config->get( 'ProduntoPackagesTitle' );
-			if ( $titleText === null ) {
-				$this->packagesTitle = new TitleValue( NS_MEDIAWIKI, 'Packages.json' );
-			} else {
-				$this->packagesTitle = $this->titleParser->parseTitle( $titleText );
-			}
-		}
-		return $this->packagesTitle->getNamespace() === $title->getNamespace()
-			&& $this->packagesTitle->getDBkey() === $title->getDBkey();
-	}
-
-	/**
-	 * Save the validation result pre-save
-	 */
-	private function saveValidationResult( string $hash, ValidationStatus $status ): void {
-		$this->validationResults[$hash] = $status;
-	}
-
-	/**
-	 * Retrieve a validation result post-save
-	 */
-	private function getValidationResult( string $hash ): ?ValidationStatus {
-		return $this->validationResults[$hash] ?? null;
+		$packagesTitle = $this->updater->getPackagesTitleValue();
+		return $packagesTitle->getNamespace() === $title->getNamespace()
+			&& $packagesTitle->getDBkey() === $title->getDBkey();
 	}
 }
