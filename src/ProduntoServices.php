@@ -3,6 +3,7 @@
 namespace MediaWiki\Extension\Produnto;
 
 use MediaWiki\Extension\Produnto\Fetcher\Fetcher;
+use MediaWiki\Extension\Produnto\Manifest\ManifestFactory;
 use MediaWiki\Extension\Produnto\RepoViewer\RepoLinker;
 use MediaWiki\Extension\Produnto\Runtime\RuntimeFactory;
 use MediaWiki\Extension\Produnto\Sandbox\SandboxStore;
@@ -23,6 +24,10 @@ class ProduntoServices {
 
 	public function getFetcher(): Fetcher {
 		return $this->services->get( 'Produnto.Fetcher' );
+	}
+
+	public function getManifestFactory(): ManifestFactory {
+		return $this->services->get( 'Produnto.ManifestFactory' );
 	}
 
 	public function getRepoLinker(): RepoLinker {
