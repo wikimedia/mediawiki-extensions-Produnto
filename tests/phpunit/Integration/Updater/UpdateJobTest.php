@@ -313,8 +313,6 @@ class UpdateJobTest extends \MediaWikiIntegrationTestCase {
 		$packages = [];
 		$filesById = [];
 		$packageNames = array_merge( array_keys( $files ), array_keys( $modules ) );
-		array_unshift( $packageNames, '' );
-		unset( $packageNames[0] );
 		$packageIdsByName = [];
 
 		foreach ( $packageNames as $packageName ) {
