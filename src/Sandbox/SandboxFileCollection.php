@@ -10,9 +10,9 @@ use MediaWiki\Extension\Produnto\Store\FileCollection;
  */
 class SandboxFileCollection implements FileCollection {
 	public function __construct(
-		private FileAccess $fileAccess,
-		private array $hashesByPath,
-		private array $texts
+		private readonly FileAccess $fileAccess,
+		private readonly array $hashesByPath,
+		private readonly array $texts,
 	) {
 	}
 

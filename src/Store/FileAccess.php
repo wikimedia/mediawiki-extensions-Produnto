@@ -8,27 +8,18 @@ namespace MediaWiki\Extension\Produnto\Store;
 interface FileAccess {
 	/**
 	 * Determine whether a package has a file with the given name.
-	 *
-	 * @param int $packageId
-	 * @param string $path
-	 * @return bool
 	 */
 	public function hasFile( int $packageId, string $path ): bool;
 
 	/**
 	 * Get the paths of all files in a package.
 	 *
-	 * @param int $packageId
 	 * @return string[]
 	 */
 	public function getFilePaths( int $packageId ): array;
 
 	/**
 	 * Get the contents of a file from a package
-	 *
-	 * @param int $packageId
-	 * @param string $path
-	 * @return string|null
 	 */
 	public function getFileContents( int $packageId, string $path ): ?string;
 
@@ -42,19 +33,11 @@ interface FileAccess {
 
 	/**
 	 * Get the file contents given the hash of the file
-	 *
-	 * @param string $hash
-	 * @return string|null
 	 */
 	public function getFileContentsByHash( string $hash ): ?string;
 
 	/**
 	 * Update an entry in the text cache
-	 *
-	 * @param int $packageId
-	 * @param string $path
-	 * @param string $hash
-	 * @param string $contents
 	 */
 	public function setCache( int $packageId, string $path, string $hash, string $contents ): void;
 }

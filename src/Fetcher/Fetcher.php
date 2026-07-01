@@ -20,11 +20,11 @@ use Wikimedia\Rdbms\IDBAccessObject;
  */
 class Fetcher {
 	public function __construct(
-		private ProduntoStore $store,
-		private ServerContainer $serverContainer,
-		private JobQueueGroup $jobQueueGroup,
+		private readonly ProduntoStore $store,
+		private readonly ServerContainer $serverContainer,
+		private readonly JobQueueGroup $jobQueueGroup,
 		private LoggerInterface $logger,
-		private ManifestFactory $manifestFactory,
+		private readonly ManifestFactory $manifestFactory,
 	) {
 	}
 
@@ -35,13 +35,9 @@ class Fetcher {
 	/**
 	 * Queue a job which will fetch a package and report any failure via the DB.
 	 *
-	 * @param string $projectName
-	 * @param string $url
-	 * @param string $version
-	 * @param string $ref
 	 * @throws PackageBuilderError
 	 */
-	public function asyncFetch( $projectName, $url, $version, $ref ) {
+	public function asyncFetch( string $projectName, string $url, string $version, string $ref ): void {
 		$packageBuilder = $this->store->createPackageVersion();
 		$package = $packageBuilder
 			->name( $projectName )
@@ -55,14 +51,9 @@ class Fetcher {
 	/**
 	 * Fetch a package immediately, returning any error status.
 	 *
-	 * @param string $projectName
-	 * @param string $url
-	 * @param string $version
-	 * @param string $ref
-	 * @return FetchStatus
 	 * @throws PackageBuilderError
 	 */
-	public function immediateFetch( $projectName, $url, $version, $ref ) {
+	public function immediateFetch( string $projectName, string $url, string $version, string $ref ): FetchStatus {
 		$package = $this->store->getPackageByName(
 			$projectName, $version, IDBAccessObject::READ_LATEST );
 		if ( $package ) {
@@ -95,7 +86,6 @@ class Fetcher {
 	/**
 	 * Fetch a suspended package and store any failure in the DB
 	 *
-	 * @param int $packageId
 	 * @return bool Whether the job should be considered successful
 	 */
 	public function fetchSuspended( int $packageId ): bool {
@@ -128,13 +118,9 @@ class Fetcher {
 	}
 
 	/**
-	 * Fetch in an exception guarded context. Do not commit or fail.
-	 *
-	 * @param PackageMetaAccess $package
-	 * @param PackageBuilder $packageBuilder
-	 * @return FetchStatus
+	 * Fetch in an exception-guarded context. Do not commit or fail.
 	 */
-	private function fetchPackage( PackageMetaAccess $package, PackageBuilder $packageBuilder ) {
+	private function fetchPackage( PackageMetaAccess $package, PackageBuilder $packageBuilder ): FetchStatus {
 		$status = new FetchStatus();
 		$server = $this->serverContainer->getServerForUrl( $package->getFetchedUrl() );
 		if ( !$server ) {

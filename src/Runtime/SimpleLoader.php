@@ -9,8 +9,8 @@ use function array_key_exists;
  */
 class SimpleLoader implements Loader {
 	public function __construct(
-		private array $packages,
-		private array $modules
+		private readonly array $packages,
+		private readonly array $modules,
 	) {
 	}
 

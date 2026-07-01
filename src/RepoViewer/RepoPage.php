@@ -31,21 +31,21 @@ use Wikimedia\Message\ScalarParam;
  * Shadow page for pages in the Package namespace
  */
 class RepoPage extends BaseShadowPage {
-	private const VIEWER_MAX_LENGTH = 1024 * 1024;
+	private const int VIEWER_MAX_LENGTH = 1024 * 1024;
 
 	public function __construct(
-		private LanguageFallback $fallbackProvider,
-		private MessageFormatterFactory $messageFormatterFactory,
-		private LanguageFactory $languageFactory,
-		private RepoLinker $repoLinker,
-		private LinkRenderer $linkRenderer,
-		private ?SyntaxHighlight $syntaxHighlight,
-		private ParseHelper $parseHelper,
-		private bool $isIndex,
-		private PageReference $title,
-		private PackageAccess $package,
-		private string $path,
-		private ?string $contents
+		private readonly LanguageFallback $fallbackProvider,
+		private readonly MessageFormatterFactory $messageFormatterFactory,
+		private readonly LanguageFactory $languageFactory,
+		private readonly RepoLinker $repoLinker,
+		private readonly LinkRenderer $linkRenderer,
+		private readonly ?SyntaxHighlight $syntaxHighlight,
+		private readonly ParseHelper $parseHelper,
+		private readonly bool $isIndex,
+		private readonly PageReference $title,
+		private readonly PackageAccess $package,
+		private readonly string $path,
+		private readonly ?string $contents,
 	) {
 	}
 
@@ -126,9 +126,8 @@ class RepoPage extends BaseShadowPage {
 
 	/**
 	 * Check if the contents is valid HTML
-	 * @return true
 	 */
-	private function isUtf8() {
+	private function isUtf8(): bool {
 		return $this->contents !== null
 			&& mb_check_encoding( $this->contents, 'UTF-8' )
 			&& preg_match( '/^[^\x00-\x08\x0e-\x1f\x7f]*$/', $this->contents );
@@ -136,18 +135,16 @@ class RepoPage extends BaseShadowPage {
 
 	/**
 	 * Check if the contents is too large to be parsed by SyntaxHighlight
-	 * @return bool
 	 */
-	private function isTooLarge() {
+	private function isTooLarge(): bool {
 		return $this->contents !== null
 			&& strlen( $this->contents ) > self::VIEWER_MAX_LENGTH;
 	}
 
 	/**
 	 * Get the file extension
-	 * @return string
 	 */
-	private function getExtension() {
+	private function getExtension(): string {
 		if ( preg_match( '!\.([^/.]+)$!', $this->path, $m ) ) {
 			return $m[1];
 		} else {
@@ -157,11 +154,8 @@ class RepoPage extends BaseShadowPage {
 
 	/**
 	 * Get the header to be used on the package index page
-	 *
-	 * @param ITextFormatter $textFormatter
-	 * @return string
 	 */
-	private function getIndexHeader( ITextFormatter $textFormatter ) {
+	private function getIndexHeader( ITextFormatter $textFormatter ): string {
 		$p = $this->package;
 		$langCode = $textFormatter->getLangCode();
 		$lang = $this->languageFactory->getLanguage( $langCode );
@@ -212,11 +206,8 @@ class RepoPage extends BaseShadowPage {
 	/**
 	 * Get the notice box at the top of the page notifying the user that the
 	 * page is from a package.
-	 *
-	 * @param ITextFormatter $textFormatter
-	 * @return string HTML
 	 */
-	private function getFileInfoHeader( ITextFormatter $textFormatter ) {
+	private function getFileInfoHeader( ITextFormatter $textFormatter ): string {
 		$langCode = $textFormatter->getLangCode();
 		$name = $this->package->getLocalName( $langCode, $this->fallbackProvider );
 		$info = $textFormatter->format( new MessageValue( 'produnto-viewer-package-info' ) );
@@ -250,7 +241,7 @@ class RepoPage extends BaseShadowPage {
 	 * Get the file listing
 	 * @return string HTML
 	 */
-	private function getListing() {
+	private function getListing(): string {
 		$treeView = ( new TreeView )
 			->paths( $this->package->getFilePaths() )
 			->leafLinker( function ( $basePath, $labelHtml ) {
@@ -276,11 +267,9 @@ class RepoPage extends BaseShadowPage {
 	/**
 	 * Get the file view HTML
 	 *
-	 * @param ParserOptions $parserOptions
-	 * @param ShadowPageView $view
 	 * @return string HTML
 	 */
-	private function getFileView( ParserOptions $parserOptions, ShadowPageView $view ) {
+	private function getFileView( ParserOptions $parserOptions, ShadowPageView $view ): string {
 		$fileView = $this->parseHelper->getParsedContentView(
 			$this->getContentForTransclusion() ?? '',
 			$this->title,
@@ -297,11 +286,9 @@ class RepoPage extends BaseShadowPage {
 	/**
 	 * Get the file view container but with a warning message instead of the actual contents
 	 *
-	 * @param ITextFormatter $textFormatter
-	 * @param MessageSpecifier|string $message
 	 * @return string HTML
 	 */
-	private function getFilePlaceholder( ITextFormatter $textFormatter, MessageSpecifier|string $message ) {
+	private function getFilePlaceholder( ITextFormatter $textFormatter, MessageSpecifier|string $message ): string {
 		if ( !( $message instanceof MessageSpecifier ) ) {
 			$message = new MessageValue( $message );
 		}

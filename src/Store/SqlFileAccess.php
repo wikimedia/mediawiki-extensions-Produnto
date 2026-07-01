@@ -6,16 +6,16 @@ use Wikimedia\MapCacheLRU\MapCacheLRU;
 use Wikimedia\Rdbms\IReadableDatabase;
 
 class SqlFileAccess implements FileAccess {
-	private const TEXTS = 'texts';
-	private const PATHS = 'paths';
-	private const HASHES = 'hashes';
+	private const string TEXTS = 'texts';
+	private const string PATHS = 'paths';
+	private const string HASHES = 'hashes';
 
 	/** Marker for missing files */
-	private const MISSING = [];
+	private const array MISSING = [];
 
 	public function __construct(
-		private MapCacheLRU $textCache,
-		private IReadableDatabase $db
+		private readonly MapCacheLRU $textCache,
+		private IReadableDatabase $db,
 	) {
 	}
 

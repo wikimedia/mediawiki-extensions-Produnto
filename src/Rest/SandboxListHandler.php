@@ -10,7 +10,7 @@ use MediaWiki\Rest\Handler;
  */
 class SandboxListHandler extends Handler {
 	public function __construct(
-		private SandboxStore $store
+		private readonly SandboxStore $store,
 	) {
 	}
 

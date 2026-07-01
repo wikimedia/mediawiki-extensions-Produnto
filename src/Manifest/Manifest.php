@@ -10,8 +10,6 @@ use MediaWiki\Extension\Produnto\Store\PackageBuilder;
 interface Manifest {
 	/**
 	 * Copy package properties from the manifest to the PackageBuilder
-	 *
-	 * @param PackageBuilder $builder
 	 */
 	public function populateProps( PackageBuilder $builder );
 

@@ -13,22 +13,16 @@ class SandboxBuilder {
 	private $now = null;
 
 	public function __construct(
-		private FileAccess $fileAccess,
-		private BagOStuff $stash,
-		private int $userId,
-		private string $sandboxId,
-		private array $data
+		private readonly FileAccess $fileAccess,
+		private readonly BagOStuff $stash,
+		private readonly int $userId,
+		private readonly string $sandboxId,
+		private array $data,
 	) {
 	}
 
 	/**
 	 * Add a file with known contents
-	 *
-	 * @param string $package
-	 * @param string $path
-	 * @param string $hash
-	 * @param string $text
-	 * @return $this
 	 */
 	public function addFile( string $package, string $path, string $hash, string $text ): self {
 		$this->data[SandboxStore::HASHES_BY_PACKAGE_PATH][$package][$path] = $hash;
@@ -38,11 +32,6 @@ class SandboxBuilder {
 
 	/**
 	 * Add a file with contents defined somewhere else
-	 *
-	 * @param string $package
-	 * @param string $path
-	 * @param string $hash
-	 * @return $this
 	 */
 	public function addFileReference( string $package, string $path, string $hash ): self {
 		$this->data[SandboxStore::HASHES_BY_PACKAGE_PATH][$package][$path] = $hash;
@@ -51,9 +40,6 @@ class SandboxBuilder {
 
 	/**
 	 * Check whether the hash has already been added with known text
-	 *
-	 * @param string $hash
-	 * @return bool
 	 */
 	public function hasHash( string $hash ): bool {
 		return isset( $this->data[SandboxStore::TEXTS][$hash] );
@@ -63,7 +49,6 @@ class SandboxBuilder {
 	 * Set the map of module names to package and path
 	 *
 	 * @param array<string,array{string,string}> $modules
-	 * @return $this
 	 */
 	public function modules( array $modules ): self {
 		$this->data[SandboxStore::MODULES] = $modules;
@@ -72,8 +57,6 @@ class SandboxBuilder {
 
 	/**
 	 * Access the data which has been added to the builder.
-	 *
-	 * @return SandboxAccess
 	 */
 	public function access(): SandboxAccess {
 		return new SandboxAccess( $this->fileAccess, $this->data );
@@ -81,8 +64,6 @@ class SandboxBuilder {
 
 	/**
 	 * Write the sandbox to the store. Return false if the serialized size is too big.
-	 *
-	 * @return bool
 	 */
 	public function commit(): bool {
 		$size = strlen( serialize( $this->data ) );
@@ -126,28 +107,20 @@ class SandboxBuilder {
 
 	/**
 	 * The current UNIX timestamp
-	 *
-	 * @return int|float
 	 */
-	private function getCurrentUnixTime() {
+	private function getCurrentUnixTime(): int|float {
 		return $this->now ?? time();
 	}
 
-	/**
-	 * @param int|float $time
-	 * @return $this
-	 */
-	public function currentUnixTime( $time ): self {
+	public function currentUnixTime( int|float $time ): self {
 		$this->now = $time;
 		return $this;
 	}
 
 	/**
 	 * Delete old sandboxes until a sandbox of the given size can be accomodated
-	 *
-	 * @param int $newSize
 	 */
-	private function evict( $newSize ) {
+	private function evict( int $newSize ): void {
 		$meta = $this->stash->get( $this->getMetaKey() );
 		if ( !$meta ) {
 			return;

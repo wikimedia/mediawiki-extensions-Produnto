@@ -2,7 +2,9 @@
 
 namespace MediaWiki\Extension\Produnto\Store;
 
+use LogicException;
 use MediaWiki\WikiMap\WikiMap;
+use RuntimeException;
 use Wikimedia\Rdbms\IDatabase;
 
 class DeploymentBuilder {
@@ -25,16 +27,13 @@ class DeploymentBuilder {
 	private array $modules = [];
 
 	public function __construct(
-		private FileAccess $fileAccess,
-		private IDatabase $dbw
+		private readonly FileAccess $fileAccess,
+		private readonly IDatabase $dbw
 	) {
 	}
 
 	/**
 	 * Set the revision ID
-	 *
-	 * @param int $revId
-	 * @return $this
 	 */
 	public function revId( int $revId ): self {
 		$this->revId = $revId;
@@ -45,7 +44,6 @@ class DeploymentBuilder {
 	 * Set the Lua modules
 	 *
 	 * @param array<string,array{int,string}> $modules
-	 * @return $this
 	 */
 	public function modules( array $modules ): self {
 		$this->modules = $modules;
@@ -54,10 +52,6 @@ class DeploymentBuilder {
 
 	/**
 	 * Add arbitrary data associated with the deployment
-	 *
-	 * @param string $name
-	 * @param array $data
-	 * @return $this
 	 */
 	public function addData( string $name, array $data ): self {
 		$id = $this->ensureInserted();
@@ -76,9 +70,6 @@ class DeploymentBuilder {
 
 	/**
 	 * Add a package to the deployment
-	 *
-	 * @param PackageAccess $package
-	 * @return $this
 	 */
 	public function addPackage( PackageAccess $package ): self {
 		$id = $this->ensureInserted();
@@ -92,8 +83,6 @@ class DeploymentBuilder {
 
 	/**
 	 * Finish storing the deployment.
-	 *
-	 * @return DeploymentAccess
 	 */
 	public function commit(): DeploymentAccess {
 		$id = $this->ensureInserted();
@@ -129,7 +118,7 @@ class DeploymentBuilder {
 			return $this->id;
 		}
 		if ( $this->revId === null ) {
-			throw new \LogicException( 'The revision ID must be set' );
+			throw new LogicException( 'The revision ID must be set' );
 		}
 		$wiki = WikiMap::getCurrentWikiId();
 		$this->dbw->newInsertQueryBuilder()
@@ -143,7 +132,7 @@ class DeploymentBuilder {
 			->execute();
 		$id = $this->dbw->insertId();
 		if ( !$id ) {
-			throw new \RuntimeException( 'No insert ID when inserting into produnto_deployment' );
+			throw new RuntimeException( 'No insert ID when inserting into produnto_deployment' );
 		}
 		$this->id = $id;
 		return $id;

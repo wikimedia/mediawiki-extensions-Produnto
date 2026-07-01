@@ -20,9 +20,9 @@ class SandboxPostHandler extends Handler {
 	use TokenAwareHandlerTrait;
 
 	public function __construct(
-		private ProduntoStore $store,
-		private SandboxStore $sandboxStore,
-		private ManifestFactory $manifestFactory,
+		private readonly ProduntoStore $store,
+		private readonly SandboxStore $sandboxStore,
+		private readonly ManifestFactory $manifestFactory,
 	) {
 	}
 

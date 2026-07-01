@@ -2,6 +2,7 @@
 
 namespace MediaWiki\Extension\Produnto\Server;
 
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 use InvalidArgumentException;
@@ -31,8 +32,8 @@ class GitlabServer extends GitServer {
 	 *     (default 10 MiB)
 	 */
 	public function __construct(
-		private HttpRequestFactory $httpRequestFactory,
-		array $config
+		private readonly HttpRequestFactory $httpRequestFactory,
+		array $config,
 	) {
 		$this->url = self::addTrailingSlash( $config['url'] );
 		$this->projectPrefixes = $config['projectPrefixes'];
@@ -42,11 +43,8 @@ class GitlabServer extends GitServer {
 
 	/**
 	 * Add a trailing slash if the string doesn't already have one
-	 *
-	 * @param string $s
-	 * @return string
 	 */
-	private function addTrailingSlash( $s ) {
+	private function addTrailingSlash( string $s ): string {
 		if ( $s === '' ) {
 			return '';
 		} elseif ( !str_ends_with( $s, '/' ) ) {
@@ -58,11 +56,8 @@ class GitlabServer extends GitServer {
 
 	/**
 	 * Extract the package name from a project URL
-	 *
-	 * @param string $url
-	 * @return string|null
 	 */
-	public function urlToName( $url ): ?string {
+	public function urlToName( string $url ): ?string {
 		if ( !str_starts_with( $url, $this->url ) ) {
 			return null;
 		}
@@ -82,11 +77,8 @@ class GitlabServer extends GitServer {
 
 	/**
 	 * Extract the project path from a project URL
-	 *
-	 * @param string $url
-	 * @return string
 	 */
-	private function urlToProjectPath( $url ) {
+	private function urlToProjectPath( string $url ): string {
 		if ( !str_starts_with( $url, $this->url ) ) {
 			throw new InvalidArgumentException( 'URL is not on this server' );
 		}
@@ -95,10 +87,6 @@ class GitlabServer extends GitServer {
 
 	/**
 	 * Fetch a package from the server and insert the contents into the database.
-	 *
-	 * @param PackageMetaAccess $package
-	 * @param PackageBuilder $dest
-	 * @return FetchStatus
 	 */
 	public function fetch( PackageMetaAccess $package, PackageBuilder $dest ): FetchStatus {
 		$status = new FetchStatus;
@@ -156,10 +144,8 @@ class GitlabServer extends GitServer {
 
 	/**
 	 * Get a Guzzle client suitable for fetching from the Gitlab server.
-	 *
-	 * @return \GuzzleHttp\Client
 	 */
-	private function createGuzzleClient() {
+	private function createGuzzleClient(): Client {
 		$opts = [ 'http_errors' => false ];
 		if ( $this->proxy !== null ) {
 			$opts['proxy'] = $this->proxy;
@@ -169,11 +155,8 @@ class GitlabServer extends GitServer {
 
 	/**
 	 * Strip the initial directory from a path
-	 *
-	 * @param string $name
-	 * @return string|null
 	 */
-	private function stripInitialPathSegment( $name ) {
+	private function stripInitialPathSegment( string $name ): ?string {
 		$slashPos = strpos( $name, '/' );
 		if ( $slashPos === false || $slashPos >= strlen( $name ) - 1 ) {
 			return null;

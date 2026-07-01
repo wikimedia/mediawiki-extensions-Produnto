@@ -24,8 +24,6 @@ class PackageAccess extends PackageMetaAccess implements FileCollection {
 
 	/**
 	 * Get the ppv_id value
-	 *
-	 * @return int
 	 */
 	public function getId(): int {
 		return $this->id;
@@ -53,8 +51,6 @@ class PackageAccess extends PackageMetaAccess implements FileCollection {
 
 	/**
 	 * If the package has a README file, return its path
-	 *
-	 * @return string|null
 	 */
 	public function getReadmePath(): ?string {
 		foreach ( self::README_PATHS as $path ) {

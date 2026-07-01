@@ -9,7 +9,7 @@ use Wikimedia\Rdbms\IConnectionProvider;
  */
 class TextStore {
 	public function __construct(
-		private IConnectionProvider $dbProvider
+		private readonly IConnectionProvider $dbProvider,
 	) {
 	}
 

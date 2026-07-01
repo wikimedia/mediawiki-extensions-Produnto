@@ -9,7 +9,7 @@ use MediaWiki\Html\Html;
  */
 class TreeView {
 	/** @var string[] */
-	private $paths;
+	private array $paths;
 
 	/** @var callable(string,string):(string)|null */
 	private $leafLinker;
@@ -56,11 +56,8 @@ class TreeView {
 	 * Convert an array of slash-separated paths to a recursive array
 	 * where the component names are in the keys, and the value is
 	 * either the child path array or true for a leaf node.
-	 *
-	 * @param array $paths
-	 * @return array
 	 */
-	private function toRecursive( array $paths ) {
+	private function toRecursive( array $paths ): array {
 		$root = [];
 		foreach ( $paths as $path ) {
 			$dir =& $root;
@@ -80,8 +77,6 @@ class TreeView {
 
 	/**
 	 * Sort a recursive array
-	 *
-	 * @param array &$paths
 	 */
 	private function sort( array &$paths ) {
 		foreach ( $paths as &$child ) {
@@ -94,13 +89,8 @@ class TreeView {
 
 	/**
 	 * Recursively render a directory
-	 *
-	 * @param string &$html
-	 * @param string $basePath
-	 * @param array $curPaths
-	 * @param int $indent
 	 */
-	private function doPath( &$html, $basePath, $curPaths, $indent ) {
+	private function doPath( string &$html, string $basePath, array $curPaths, int $indent ) {
 		$indentPx = $indent * 16;
 		foreach ( $curPaths as $component => $children ) {
 			$fullPath = $basePath === '' ? $component : $basePath . '/' . $component;

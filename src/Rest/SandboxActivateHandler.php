@@ -17,7 +17,7 @@ class SandboxActivateHandler extends Handler {
 	use TokenAwareHandlerTrait;
 
 	public function __construct(
-		private SandboxStore $store
+		private readonly SandboxStore $store,
 	) {
 	}
 

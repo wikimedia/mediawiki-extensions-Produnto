@@ -27,17 +27,17 @@ class UpdateJob extends Job {
 	private bool $isCdnEnabled;
 
 	/** @var JobSpecification[] Pending jobs to be pushed */
-	private $jobs = [];
+	private array $jobs = [];
 	/** @var string[] Pending URLs to be purged */
-	private $urls = [];
+	private array $urls = [];
 	/** @var LinkTarget[] Pending link targets which have changed */
-	private $linkTargets = [];
+	private array $linkTargets = [];
 
 	/**
 	 * @var array<int,array<string,bool>> Namespace and DB key of link targets
 	 *   we've already processed, for deduplication.
 	 */
-	private $seenLinks = [];
+	private array $seenLinks = [];
 
 	/**
 	 * @param array $params
@@ -51,10 +51,10 @@ class UpdateJob extends Job {
 	 */
 	public function __construct(
 		$params,
-		private ProduntoStore $store,
-		private RepoLinker $repoLinker,
-		private IConnectionProvider $dbProvider,
-		private JobQueueGroup $jobQueueGroup,
+		private readonly ProduntoStore $store,
+		private readonly RepoLinker $repoLinker,
+		private readonly IConnectionProvider $dbProvider,
+		private readonly JobQueueGroup $jobQueueGroup,
 		Config $config,
 	) {
 		parent::__construct( 'ProduntoUpdate', $params );
@@ -95,7 +95,7 @@ class UpdateJob extends Job {
 	 * @param DeploymentAccess|null $oldDeployment
 	 * @param DeploymentAccess $newDeployment
 	 */
-	private function doModuleChanges( $oldDeployment, $newDeployment ) {
+	private function doModuleChanges( ?DeploymentAccess $oldDeployment, DeploymentAccess $newDeployment ): void {
 		$oldModulePaths = $oldDeployment?->getModulePaths() ?? [];
 		$newModulePaths = $newDeployment->getModulePaths();
 		$moduleChanges = array_diff_assoc( $oldModulePaths, $newModulePaths );
@@ -111,11 +111,8 @@ class UpdateJob extends Job {
 	 *
 	 * We don't track links to nonexistent package files, so there's no need to
 	 * purge references to newly created files.
-	 *
-	 * @param DeploymentAccess|null $oldDeployment
-	 * @param DeploymentAccess $newDeployment
 	 */
-	private function doFileChanges( $oldDeployment, $newDeployment ) {
+	private function doFileChanges( ?DeploymentAccess $oldDeployment, DeploymentAccess $newDeployment ): void {
 		$oldPackages = $oldDeployment?->getPackages() ?? [];
 		foreach ( $oldPackages as $packageId => $oldPackage ) {
 			$packageName = $oldPackage->getName();
@@ -154,9 +151,9 @@ class UpdateJob extends Job {
 	 * @param array<string,string> $hashes The content hash of all files in the
 	 *   package, indexed by path. We need this because PackageAccess doesn't
 	 *   have a process cache of it.
-	 * @return string|null
+	 * @return ?string
 	 */
-	private function getReadmeHash( ?PackageAccess $package, array $hashes ) {
+	private function getReadmeHash( ?PackageAccess $package, array $hashes ): ?string {
 		if ( !$package ) {
 			return null;
 		}
@@ -173,7 +170,7 @@ class UpdateJob extends Job {
 	 *
 	 * @param LinkTarget[] $linkTargets
 	 */
-	private function queueJobsForLinks( $linkTargets ) {
+	private function queueJobsForLinks( array $linkTargets ): void {
 		foreach ( $linkTargets as $linkTarget ) {
 			$this->queuePurge( $linkTarget );
 		}
@@ -201,7 +198,7 @@ class UpdateJob extends Job {
 	 * @param array $params The new job parameters
 	 * @return array The new job parameters with cause and root parameters
 	 */
-	private function makeJobParams( $params ) {
+	private function makeJobParams( array $params ): array {
 		return $params + $this->getRootJobParams() + [
 			'causeAction' => 'produnto',
 			'causeAgent' => $this->params['causeAgent'] ?? 'unknown'
@@ -215,7 +212,7 @@ class UpdateJob extends Job {
 	 * @param LinkTarget[] $linkTargets
 	 * @return Generator<array<int,array{int,string}>>
 	 */
-	private function getBacklinkChunks( $linkTargets ) {
+	private function getBacklinkChunks( array $linkTargets ) {
 		$db = $this->dbProvider->getReplicaDatabase();
 
 		$data = [];
@@ -253,7 +250,7 @@ class UpdateJob extends Job {
 		}
 	}
 
-	private function queueJob( JobSpecification $job ) {
+	private function queueJob( JobSpecification $job ): void {
 		$this->jobs[] = $job;
 		if ( count( $this->jobs ) >= $this->jobBatchSize ) {
 			$this->jobQueueGroup->push( $this->jobs );
@@ -261,14 +258,14 @@ class UpdateJob extends Job {
 		}
 	}
 
-	private function flushJobs() {
+	private function flushJobs(): void {
 		if ( count( $this->jobs ) ) {
 			$this->jobQueueGroup->push( $this->jobs );
 			$this->jobs = [];
 		}
 	}
 
-	private function queuePurge( ?LinkTarget $linkTarget ) {
+	private function queuePurge( ?LinkTarget $linkTarget ): void {
 		if ( !$linkTarget ) {
 			return;
 		}
@@ -284,7 +281,7 @@ class UpdateJob extends Job {
 		}
 	}
 
-	private function flushUrls() {
+	private function flushUrls(): void {
 		if ( count( $this->urls ) ) {
 			$this->queueJob( new JobSpecification(
 				'cdnPurge',
@@ -294,7 +291,7 @@ class UpdateJob extends Job {
 		}
 	}
 
-	private function queueLinkTarget( ?LinkTarget $linkTarget ) {
+	private function queueLinkTarget( ?LinkTarget $linkTarget ): void {
 		if ( !$linkTarget ) {
 			return;
 		}
@@ -308,14 +305,14 @@ class UpdateJob extends Job {
 		}
 	}
 
-	private function flushLinkTargets() {
+	private function flushLinkTargets(): void {
 		if ( count( $this->linkTargets ) ) {
 			$this->queueJobsForLinks( $this->linkTargets );
 			$this->linkTargets = [];
 		}
 	}
 
-	private function flushAll() {
+	private function flushAll(): void {
 		$this->flushLinkTargets();
 		$this->flushUrls();
 		$this->flushJobs();

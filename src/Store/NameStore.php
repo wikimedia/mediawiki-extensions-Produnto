@@ -10,15 +10,12 @@ use Wikimedia\Rdbms\IConnectionProvider;
  */
 class NameStore {
 	public function __construct(
-		private IConnectionProvider $dbProvider
+		private readonly IConnectionProvider $dbProvider
 	) {
 	}
 
 	/**
 	 * Add a name and return its ID, or get the ID for an existing name
-	 *
-	 * @param string $name
-	 * @return int
 	 */
 	public function store( string $name ): int {
 		$dbr = $this->dbProvider->getReplicaDatabase( 'virtual-produnto' );

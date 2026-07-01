@@ -14,15 +14,12 @@ class RepoLinker {
 	private ?LinkTarget $cachedPackageLink = null;
 
 	public function __construct(
-		private TitleParser $titleParser
+		private readonly TitleParser $titleParser
 	) {
 	}
 
 	/**
 	 * Get a link to the package index page
-	 *
-	 * @param string $package
-	 * @return LinkTarget|null
 	 */
 	public function getPackageLinkTarget( string $package ): ?LinkTarget {
 		if ( $package === $this->cachedPackage ) {
@@ -36,21 +33,12 @@ class RepoLinker {
 
 	/**
 	 * Get a link to a file in a package
-	 *
-	 * @param string $package
-	 * @param string $path
-	 * @return LinkTarget|null
 	 */
 	public function getFileLinkTarget( string $package, string $path ): ?LinkTarget {
 		return $this->getReadableLinkTarget( $package, $path )
 			?? $this->getFallbackLinkTarget( $package, $path );
 	}
 
-	/**
-	 * @param PackageAccess $package
-	 * @param string $nameHash
-	 * @return string|null
-	 */
 	public function getPathFromFallback( PackageAccess $package, string $nameHash ): ?string {
 		foreach ( $package->getFilePaths() as $path ) {
 			if ( $this->shortHash( $path ) === $nameHash ) {
@@ -73,10 +61,6 @@ class RepoLinker {
 	 * RepoProvider::get() implements the inverse of this mapping. If a path is
 	 * modified by title canonicalization, this function will return null since
 	 * RepoProvider wouldn't be able to uniquely convert the title back to a path.
-	 *
-	 * @param string $package
-	 * @param string $path
-	 * @return LinkTarget|null
 	 */
 	private function getReadableLinkTarget( string $package, string $path ): ?LinkTarget {
 		$packageLink = $this->getPackageLinkTarget( $package );
@@ -106,9 +90,6 @@ class RepoLinker {
 	 * necessary, we just want most paths to be visible in the repo viewer.
 	 * If two paths in the same package have the same hash, pages using both
 	 * will be purged when either is updated, which is harmless.
-	 *
-	 * @param string $path
-	 * @return string
 	 */
 	private function shortHash( string $path ): string {
 		return substr( hash( 'sha256', $path ), 0, 16 );

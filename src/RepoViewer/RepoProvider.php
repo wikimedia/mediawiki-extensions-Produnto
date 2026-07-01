@@ -20,14 +20,14 @@ use Wikimedia\Parsoid\Core\LinkTarget;
  */
 class RepoProvider extends BaseShadowPageProvider {
 	public function __construct(
-		private Language $contLang,
-		private LanguageFallback $languageFallback,
-		private MessageFormatterFactory $messageFormatterFactory,
-		private LanguageFactory $languageFactory,
-		private RepoLinker $repoLinker,
-		private LinkRenderer $linkRenderer,
-		private ProduntoStore $store,
-		private ?SyntaxHighlight $syntaxHighlight
+		private readonly Language $contLang,
+		private readonly LanguageFallback $languageFallback,
+		private readonly MessageFormatterFactory $messageFormatterFactory,
+		private readonly LanguageFactory $languageFactory,
+		private readonly RepoLinker $repoLinker,
+		private readonly LinkRenderer $linkRenderer,
+		private readonly ProduntoStore $store,
+		private readonly ?SyntaxHighlight $syntaxHighlight,
 	) {
 	}
 

@@ -7,9 +7,9 @@ namespace MediaWiki\Extension\Produnto\Store;
  */
 class SimpleFileAccess implements FileAccess {
 	/** @var array<int,array<string,string>> File hash indexed by package and path */
-	private $hashesByPath;
+	private array $hashesByPath;
 	/** @var array<string,string> File contents indexed by content hash */
-	private $filesByHash;
+	private array $filesByHash;
 
 	/**
 	 * @param array<int,array<string,string>> $files File contents indexed by package and path

@@ -31,7 +31,7 @@ class SandboxAccess implements Loader {
 	 * @param array $data The full data array as stored in the stash
 	 */
 	public function __construct(
-		private FileAccess $fileAccess,
+		private readonly FileAccess $fileAccess,
 		array $data
 	) {
 		$this->hashesByPackagePath = $data[SandboxStore::HASHES_BY_PACKAGE_PATH] ?? [];
@@ -41,9 +41,6 @@ class SandboxAccess implements Loader {
 
 	/**
 	 * Check whether a package is present in the sandbox
-	 *
-	 * @param string $packageName
-	 * @return bool
 	 */
 	public function hasPackage( string $packageName ): bool {
 		return $this->getPackage( $packageName ) !== null;
@@ -51,9 +48,6 @@ class SandboxAccess implements Loader {
 
 	/**
 	 * Get the contents of a package in the sandbox, or null if there is no such package.
-	 *
-	 * @param string $packageName
-	 * @return FileCollection|null
 	 */
 	public function getPackage( string $packageName ): ?FileCollection {
 		if ( !isset( $this->hashesByPackagePath[$packageName] ) ) {
@@ -78,9 +72,6 @@ class SandboxAccess implements Loader {
 	/**
 	 * Get module info for a module in the sandbox, or null if there is no such
 	 * module.
-	 *
-	 * @param string $moduleName
-	 * @return ModuleInfo|null
 	 */
 	public function getModuleInfo( string $moduleName ): ?ModuleInfo {
 		$info = $this->modules[$moduleName] ?? null;

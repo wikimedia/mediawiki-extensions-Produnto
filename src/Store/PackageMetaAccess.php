@@ -12,7 +12,7 @@ use Wikimedia\Message\MessageValue;
  * Read-only access to possibly uncommitted package metadata
  */
 class PackageMetaAccess {
-	public const STATUS_CLASSES = [
+	public const array STATUS_CLASSES = [
 		StatusValue::class,
 		FetchStatus::class,
 		ManifestStatus::class,
@@ -32,8 +32,6 @@ class PackageMetaAccess {
 
 	/**
 	 * Get the package name
-	 *
-	 * @return string
 	 */
 	public function getName(): string {
 		return $this->name;
@@ -41,8 +39,6 @@ class PackageMetaAccess {
 
 	/**
 	 * Get the version
-	 *
-	 * @return string
 	 */
 	public function getVersion(): string {
 		return $this->version;
@@ -50,8 +46,6 @@ class PackageMetaAccess {
 
 	/**
 	 * Get the commit hash, or some other server-dependent reference
-	 *
-	 * @return string
 	 */
 	public function getUpstreamRef(): string {
 		return $this->upstreamRef;
@@ -59,8 +53,6 @@ class PackageMetaAccess {
 
 	/**
 	 * Get the URL used for fetching the package
-	 *
-	 * @return string
 	 */
 	public function getFetchedUrl(): string {
 		return $this->fetchedUrl;
@@ -68,8 +60,6 @@ class PackageMetaAccess {
 
 	/**
 	 * Get the package property array
-	 *
-	 * @return array
 	 */
 	public function getProps(): array {
 		return $this->props;
@@ -77,8 +67,6 @@ class PackageMetaAccess {
 
 	/**
 	 * Get the package type, e.g. "scribunto"
-	 *
-	 * @return string|null
 	 */
 	public function getType(): ?string {
 		return $this->props['type'] ?? null;
@@ -86,8 +74,6 @@ class PackageMetaAccess {
 
 	/**
 	 * Get the homepage URL
-	 *
-	 * @return string|null
 	 */
 	public function getHomepageUrl(): ?string {
 		return $this->props['homepage-url'] ?? null;
@@ -95,8 +81,6 @@ class PackageMetaAccess {
 
 	/**
 	 * Get the documentation URL
-	 *
-	 * @return string|null
 	 */
 	public function getDocUrl(): ?string {
 		return $this->props['doc-url'] ?? null;
@@ -104,8 +88,6 @@ class PackageMetaAccess {
 
 	/**
 	 * Get the collab URL, e.g. GitLab project page
-	 *
-	 * @return string|null
 	 */
 	public function getCollabUrl(): ?string {
 		return $this->props['collab-url'] ?? null;
@@ -113,8 +95,6 @@ class PackageMetaAccess {
 
 	/**
 	 * Get the bug tracker URL
-	 *
-	 * @return string|null
 	 */
 	public function getIssueUrl(): ?string {
 		return $this->props['issue-url'] ?? null;
@@ -131,8 +111,6 @@ class PackageMetaAccess {
 
 	/**
 	 * Get the license
-	 *
-	 * @return string|null
 	 */
 	public function getLicense(): ?string {
 		return $this->props['license'] ?? null;
@@ -158,10 +136,6 @@ class PackageMetaAccess {
 
 	/**
 	 * Get the package description in the given language, with optional fallback.
-	 *
-	 * @param string $lang
-	 * @param LanguageFallback|null $fallbackProvider
-	 * @return string|null
 	 */
 	public function getDescription( string $lang, ?LanguageFallback $fallbackProvider = null ): ?string {
 		return $this->getLocalisedProperty( 'description', $lang, $fallbackProvider );
@@ -169,10 +143,6 @@ class PackageMetaAccess {
 
 	/**
 	 * Get the localised package name, falling back to the canonical name
-	 *
-	 * @param string $lang
-	 * @param LanguageFallback|null $falllbackProvider
-	 * @return string
 	 */
 	public function getLocalName( string $lang, ?LanguageFallback $falllbackProvider = null ): string {
 		return $this->getLocalisedProperty( 'name', $lang, $falllbackProvider )
@@ -201,7 +171,6 @@ class PackageMetaAccess {
 
 	/**
 	 * Get the package state, one of the ProduntoStore::STATE_* constants
-	 * @return int
 	 */
 	public function getState(): int {
 		return $this->state;
@@ -209,8 +178,6 @@ class PackageMetaAccess {
 
 	/**
 	 * Get the fetch status
-	 *
-	 * @return StatusValue
 	 */
 	public function getStatus(): StatusValue {
 		if ( $this->error ) {

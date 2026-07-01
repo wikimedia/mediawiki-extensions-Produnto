@@ -10,11 +10,9 @@ use StatusValue;
  */
 class ValidationStatus extends StatusValue {
 	/** @var PackageAccess[] */
-	private $packages = [];
+	private array $packages = [];
 	/** @var array<string,array{int,string}>|null */
 	private ?array $modules = null;
-	/** @var array */
-	private $extensionItems = [];
 
 	/**
 	 * Add a validated package
@@ -30,7 +28,7 @@ class ValidationStatus extends StatusValue {
 	 *
 	 * @return PackageAccess[]
 	 */
-	public function getPackages() {
+	public function getPackages(): array {
 		return $this->packages;
 	}
 
@@ -39,16 +37,16 @@ class ValidationStatus extends StatusValue {
 	 *   modules where the key is the module name and the value is a list of
 	 *   package version ID and the path inside the package.
 	 */
-	public function setModules( $modules ) {
+	public function setModules( array $modules ): void {
 		$this->modules = $modules;
 	}
 
 	/**
-	 * @return array<string,array{int,string}> An associative array of
+	 * @return ?array<string,array{int,string}> An associative array of
 	 *    modules where the key is the module name and the value is a list of
 	 *    package version ID and the path inside the package.
 	 */
-	public function getModules() {
+	public function getModules(): ?array {
 		return $this->modules;
 	}
 }

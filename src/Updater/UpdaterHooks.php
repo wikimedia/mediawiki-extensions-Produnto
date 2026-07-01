@@ -24,12 +24,12 @@ class UpdaterHooks implements
 	private ?TitleValue $packagesTitle = null;
 
 	/** @var array<string,ValidationStatus> */
-	private $validationResults = [];
+	private array $validationResults = [];
 
 	public function __construct(
-		private Config $config,
-		private TitleParser $titleParser,
-		private Updater $updater
+		private readonly Config $config,
+		private readonly TitleParser $titleParser,
+		private readonly Updater $updater,
 	) {
 		$this->logger = LoggerFactory::getInstance( 'Produnto' );
 	}
@@ -93,11 +93,8 @@ class UpdaterHooks implements
 
 	/**
 	 * Check if a title is MediaWiki:Packages.json or its configured replacement
-	 *
-	 * @param PageIdentity $title
-	 * @return bool
 	 */
-	private function isPackagesTitle( PageIdentity $title ) {
+	private function isPackagesTitle( PageIdentity $title ): bool {
 		if ( !$this->packagesTitle ) {
 			$titleText = $this->config->get( 'ProduntoPackagesTitle' );
 			if ( $titleText === null ) {
@@ -112,18 +109,13 @@ class UpdaterHooks implements
 
 	/**
 	 * Save the validation result pre-save
-	 *
-	 * @param string $hash
-	 * @param ValidationStatus $status
 	 */
-	private function saveValidationResult( string $hash, ValidationStatus $status ) {
+	private function saveValidationResult( string $hash, ValidationStatus $status ): void {
 		$this->validationResults[$hash] = $status;
 	}
 
 	/**
 	 * Retrieve a validation result post-save
-	 * @param string $hash
-	 * @return ?ValidationStatus
 	 */
 	private function getValidationResult( string $hash ): ?ValidationStatus {
 		return $this->validationResults[$hash] ?? null;

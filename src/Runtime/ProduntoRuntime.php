@@ -18,18 +18,15 @@ class ProduntoRuntime {
 	 * @param Loader[] $loaders
 	 */
 	public function __construct(
-		private RepoLinker $repoLinker,
-		private array $loaders
+		private readonly RepoLinker $repoLinker,
+		private readonly array $loaders,
 	) {
 	}
 
 	/**
 	 * Get data associated with a Lua module
-	 *
-	 * @param string $moduleName
-	 * @return ModuleInfo|null
 	 */
-	public function getModuleInfo( $moduleName ): ?ModuleInfo {
+	public function getModuleInfo( string $moduleName ): ?ModuleInfo {
 		foreach ( $this->loaders as $loader ) {
 			$info = $loader->getModuleInfo( $moduleName );
 			if ( $info ) {
@@ -44,12 +41,8 @@ class ProduntoRuntime {
 
 	/**
 	 * Get file contents from a package
-	 *
-	 * @param string $packageName
-	 * @param string $path
-	 * @return string|null
 	 */
-	public function getFileContents( $packageName, $path ): ?string {
+	public function getFileContents( string $packageName, string $path ): ?string {
 		foreach ( $this->loaders as $loader ) {
 			if ( $loader->hasPackage( $packageName ) ) {
 				$contents = $loader->getFileContents( $packageName, $path );
@@ -64,10 +57,8 @@ class ProduntoRuntime {
 
 	/**
 	 * If content from the sandbox was used, add a warning to the ParserOutput
-	 *
-	 * @param ParserOutput $parserOutput
 	 */
-	public function maybeAddSandboxWarning( ParserOutput $parserOutput ) {
+	public function maybeAddSandboxWarning( ParserOutput $parserOutput ): void {
 		if ( $this->wasSandboxUsed ) {
 			$parserOutput->addWarningMsgVal(
 				MessageValue::new( 'produnto-sandbox-preview-warning' ),
@@ -77,15 +68,12 @@ class ProduntoRuntime {
 
 	/**
 	 * Add a template link to the repo viewer if the file is linkable
-	 *
-	 * @param ParserOutput $parserOutput
-	 * @param string $packageName
-	 * @param string $path
 	 */
 	public function maybeAddDependency(
 		ParserOutput $parserOutput,
-		string $packageName, string $path
-	) {
+		string $packageName,
+		string $path
+	): void {
 		$linkTarget = $this->repoLinker->getFileLinkTarget( $packageName, $path );
 		if ( $linkTarget ) {
 			$parserOutput->addTemplate( $linkTarget, 0, 0 );

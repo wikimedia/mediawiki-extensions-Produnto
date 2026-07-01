@@ -18,9 +18,9 @@ class DeploymentAccess {
 	 * @param PackageAccess[]|null $packages The packages indexed by package ID, or null to load from the DB
 	 */
 	public function __construct(
-		private FileAccess $fileAccess,
-		private IReadableDatabase $db,
-		private int $id,
+		private readonly FileAccess $fileAccess,
+		private readonly IReadableDatabase $db,
+		private readonly int $id,
 		private ?array $dataItems = null,
 		private ?array $packages = null
 	) {
@@ -28,8 +28,6 @@ class DeploymentAccess {
 
 	/**
 	 * Get the pd_id value
-	 *
-	 * @return int
 	 */
 	public function getId(): int {
 		return $this->id;
@@ -37,11 +35,8 @@ class DeploymentAccess {
 
 	/**
 	 * Get arbitrary data associated with the deployment.
-	 *
-	 * @param string $name
-	 * @return array|null
 	 */
-	public function getData( string $name ) {
+	public function getData( string $name ): ?array {
 		if ( $this->dataItems === null ) {
 			$res = $this->db->newSelectQueryBuilder()
 				->select( [ 'pdd_name', 'pdd_text' ] )
@@ -59,11 +54,8 @@ class DeploymentAccess {
 
 	/**
 	 * Get data associated with a Lua module
-	 *
-	 * @param string $moduleName
-	 * @return ModuleInfo|null
 	 */
-	public function getModuleInfo( $moduleName ) {
+	public function getModuleInfo( string $moduleName ): ?ModuleInfo {
 		$modules = $this->getData( 'modules' ) ?? [];
 		if ( !array_key_exists( $moduleName, $modules ) ) {
 			return null;
@@ -140,9 +132,6 @@ class DeploymentAccess {
 
 	/**
 	 * Get a package by name
-	 *
-	 * @param string $name
-	 * @return PackageAccess|null
 	 */
 	public function getPackageByName( string $name ): ?PackageAccess {
 		$packages = $this->getPackages();

@@ -13,18 +13,11 @@ use MediaWiki\Extension\Produnto\Store\PackageMetaAccess;
 abstract class BaseServer {
 	/**
 	 * Fetch the contents of the specified package
-	 *
-	 * @param PackageMetaAccess $package
-	 * @param PackageBuilder $dest
-	 * @return FetchStatus
 	 */
 	abstract public function fetch( PackageMetaAccess $package, PackageBuilder $dest ): FetchStatus;
 
 	/**
 	 * Is the URL on this server?
-	 *
-	 * @param string $url
-	 * @return bool
 	 */
 	abstract public function hasUrl( string $url ): bool;
 }

@@ -11,7 +11,7 @@ use Wikimedia\ParamValidator\ParamValidator;
  */
 class SandboxDeleteHandler extends Handler {
 	public function __construct(
-		private SandboxStore $store
+		private readonly SandboxStore $store,
 	) {
 	}
 

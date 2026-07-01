@@ -11,8 +11,8 @@ use stdClass;
 
 class Updater {
 	public function __construct(
-		private ProduntoStore $store,
-		private JobQueueGroup $jobQueueGroup,
+		private readonly ProduntoStore $store,
+		private readonly JobQueueGroup $jobQueueGroup,
 	) {
 	}
 
@@ -21,9 +21,8 @@ class Updater {
 	 *
 	 * @param mixed $packages Typically a stdClass unpacked from JSON. If it is
 	 *   anything else, the status will have a suitable error.
-	 * @return ValidationStatus
 	 */
-	public function validateDeployment( $packages ) {
+	public function validateDeployment( $packages ): ValidationStatus {
 		$status = new ValidationStatus;
 		if ( !( $packages instanceof stdClass ) ) {
 			$status->fatal( 'produnto-update-invalid' );
@@ -79,7 +78,7 @@ class Updater {
 	 * @param int $revId The revision ID of the saved JSON page
 	 * @param UserIdentity $user
 	 */
-	public function deploy( ValidationStatus $status, $revId, UserIdentity $user ) {
+	public function deploy( ValidationStatus $status, int $revId, UserIdentity $user ): void {
 		$prevDeploymentId = $this->store->getActiveDeployment()?->getId() ?? 0;
 
 		$deploymentBuilder = $this->store->createDeployment()

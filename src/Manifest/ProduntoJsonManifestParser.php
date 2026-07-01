@@ -36,12 +36,8 @@ class ProduntoJsonManifestParser implements ManifestParser {
 	/**
 	 * Get produnto.json and parse it. Note that existence of the manifest file is
 	 * conventionally already verified by hasManifest().
-	 *
-	 * @param FileCollection $package
-	 * @param ManifestStatus $status
-	 * @return stdClass|null
 	 */
-	private function parseJson( FileCollection $package, ManifestStatus $status ) {
+	private function parseJson( FileCollection $package, ManifestStatus $status ): ?stdClass {
 		$json = $package->getFileContents( 'produnto.json' );
 		// @phan-suppress-next-line PhanTypeMismatchArgumentNullable
 		$jsonStatus = FormatJson::parse( $json );
@@ -57,12 +53,8 @@ class ProduntoJsonManifestParser implements ManifestParser {
 	/**
 	 * Validate the data against the schema. An exception is only thrown if
 	 * the schema itself is invalid.
-	 *
-	 * @param stdClass $data
-	 * @param ManifestStatus $status
-	 * @return bool
 	 */
-	private function validateJson( stdClass $data, ManifestStatus $status ) {
+	private function validateJson( stdClass $data, ManifestStatus $status ): bool {
 		$validator = new Validator;
 		$schema = json_decode(
 			file_get_contents( __DIR__ . '/../../docs/package.schema.json' ),
@@ -81,13 +73,8 @@ class ProduntoJsonManifestParser implements ManifestParser {
 
 	/**
 	 * Validate the modules property, if there is one.
-	 *
-	 * @param stdClass $data
-	 * @param FileCollection $package
-	 * @param ManifestStatus $status
-	 * @return bool
 	 */
-	private function validateModules( stdClass $data, FileCollection $package, ManifestStatus $status ) {
+	private function validateModules( stdClass $data, FileCollection $package, ManifestStatus $status ): bool {
 		if ( !isset( $data->modules ) ) {
 			return true;
 		}

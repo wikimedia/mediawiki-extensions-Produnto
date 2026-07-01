@@ -10,7 +10,7 @@ class SqlLoader implements Loader {
 	private ?DeploymentAccess $deployment;
 
 	public function __construct(
-		private ProduntoStore $store
+		private readonly ProduntoStore $store,
 	) {
 	}
 
@@ -31,10 +31,7 @@ class SqlLoader implements Loader {
 			?->getFileContents( $path );
 	}
 
-	/**
-	 * @return DeploymentAccess|null
-	 */
-	private function getDeployment() {
+	private function getDeployment(): ?DeploymentAccess {
 		if ( !$this->deploymentLoaded ) {
 			$this->deployment = $this->store->getActiveDeployment();
 			$this->deploymentLoaded = true;

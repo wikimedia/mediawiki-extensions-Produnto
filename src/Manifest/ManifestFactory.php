@@ -10,11 +10,7 @@ use MediaWiki\Extension\Produnto\Store\FileCollection;
  * Alternative manifest parsers such as LuaRocks may one day plug in here.
  */
 class ManifestFactory {
-	/**
-	 * @param FileCollection $package
-	 * @return ManifestStatus
-	 */
-	public function parseManifest( FileCollection $package ) {
+	public function parseManifest( FileCollection $package ): ManifestStatus {
 		foreach ( $this->getManifestParsers() as $parser ) {
 			if ( $parser->hasManifest( $package ) ) {
 				return $parser->parse( $package );
@@ -26,7 +22,7 @@ class ManifestFactory {
 	/**
 	 * @return ProduntoJsonManifestParser[]
 	 */
-	private function getManifestParsers() {
+	private function getManifestParsers(): array {
 		return [
 			new ProduntoJsonManifestParser
 		];

@@ -17,11 +17,11 @@ use Wikimedia\Http\HttpStatus;
 class FetchStatus extends StatusValue {
 	public bool $retry = false;
 
-	public function genericError( string $message ) {
+	public function genericError( string $message ): void {
 		$this->fatal( 'produnto-fetch-error', $message );
 	}
 
-	public function httpError( ResponseInterface $response ) {
+	public function httpError( ResponseInterface $response ): void {
 		$code = $response->getStatusCode();
 		if ( $code >= 500 && $code < 600 ) {
 			$message = 'produnto-fetch-server-error';
@@ -41,7 +41,7 @@ class FetchStatus extends StatusValue {
 		);
 	}
 
-	public function guzzleError( GuzzleException $exception ) {
+	public function guzzleError( GuzzleException $exception ): void {
 		$class = get_class( $exception );
 		$reason = match ( $class ) {
 			ConnectException::class => 'connection failed',

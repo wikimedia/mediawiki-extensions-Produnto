@@ -12,21 +12,19 @@ use Wikimedia\Rdbms\IReadableDatabase;
  * Service providing access to the database
  */
 class ProduntoStore {
-	public const STATE_FETCHING = 1;
-	public const STATE_READY = 2;
-	public const STATE_FAILED = 3;
+	public const int STATE_FETCHING = 1;
+	public const int STATE_READY = 2;
+	public const int STATE_FAILED = 3;
 
-	private const TEXT_CACHE_SIZE = 1000;
+	private const int TEXT_CACHE_SIZE = 1000;
 
-	private IConnectionProvider $dbProvider;
 	private TextStore $textStore;
 	private MapCacheLRU $textCache;
 	private NameStore $nameStore;
 
 	public function __construct(
-		IConnectionProvider $dbProvider,
+		private readonly IConnectionProvider $dbProvider,
 	) {
-		$this->dbProvider = $dbProvider;
 		$this->textStore = new TextStore( $dbProvider );
 		$this->textCache = new MapCacheLRU( self::TEXT_CACHE_SIZE );
 		$this->nameStore = new NameStore( $dbProvider );
@@ -34,8 +32,6 @@ class ProduntoStore {
 
 	/**
 	 * Create an object used for creating a deployment
-	 *
-	 * @return DeploymentBuilder
 	 */
 	public function createDeployment(): DeploymentBuilder {
 		return new DeploymentBuilder(
@@ -47,10 +43,8 @@ class ProduntoStore {
 	/**
 	 * Make a previously stored deployment be the active deployment for the
 	 * current wiki.
-	 *
-	 * @param DeploymentAccess $deployment
 	 */
-	public function activateDeployment( DeploymentAccess $deployment ) {
+	public function activateDeployment( DeploymentAccess $deployment ): void {
 		$dbw = $this->dbProvider->getPrimaryDatabase( 'virtual-produnto' );
 		$wiki = WikiMap::getCurrentWikiId();
 		$dbw->newInsertQueryBuilder()
@@ -68,8 +62,6 @@ class ProduntoStore {
 
 	/**
 	 * Get the currently active deployment, if there is one
-	 *
-	 * @return DeploymentAccess|null
 	 */
 	public function getActiveDeployment(): ?DeploymentAccess {
 		$db = $this->getDbFromRecency( IDBAccessObject::READ_NORMAL );
@@ -92,12 +84,9 @@ class ProduntoStore {
 
 	/**
 	 * Get the deployment with the given ID, or null if no such deployment exists.
-	 *
-	 * @param int $id
-	 * @param int $recency
-	 * @return DeploymentAccess|null
 	 */
-	public function getDeploymentById( int $id, int $recency = IDBAccessObject::READ_NORMAL
+	public function getDeploymentById(
+		int $id, int $recency = IDBAccessObject::READ_NORMAL
 	): ?DeploymentAccess {
 		$db = $this->getDbFromRecency( $recency );
 		$exists = $db->newSelectQueryBuilder()
@@ -118,8 +107,6 @@ class ProduntoStore {
 
 	/**
 	 * Create a new package version
-	 *
-	 * @return PackageBuilder
 	 */
 	public function createPackageVersion(): PackageBuilder {
 		return new PackageBuilder(
@@ -132,9 +119,6 @@ class ProduntoStore {
 
 	/**
 	 * Resume building of a package in the fetching state.
-	 *
-	 * @param PackageAccess $package
-	 * @return PackageBuilder
 	 */
 	public function resumePackageBuilder( PackageAccess $package ): PackageBuilder {
 		return PackageBuilder::resume(
@@ -151,7 +135,6 @@ class ProduntoStore {
 	 *
 	 * @param int $id
 	 * @param int $recency One of the READ_xxx constants
-	 * @return PackageAccess|null
 	 */
 	public function getPackageById( $id, $recency = IDBAccessObject::READ_NORMAL ): ?PackageAccess {
 		$db = $this->getDbFromRecency( $recency );
@@ -185,11 +168,6 @@ class ProduntoStore {
 
 	/**
 	 * Get a package by name and specific version
-	 *
-	 * @param string $name
-	 * @param string $version
-	 * @param int $recency
-	 * @return PackageAccess|null
 	 */
 	public function getPackageByName(
 		string $name, string $version, int $recency = IDBAccessObject::READ_NORMAL
@@ -227,10 +205,8 @@ class ProduntoStore {
 
 	/**
 	 * Get a connection using IDBAccessObject recency flags
-	 * @param int $recency
-	 * @return IReadableDatabase
 	 */
-	private function getDbFromRecency( $recency ) {
+	private function getDbFromRecency( int $recency ): IReadableDatabase {
 		if ( $recency & IDBAccessObject::READ_LATEST ) {
 			return $this->dbProvider->getPrimaryDatabase( 'virtual-produnto' );
 		} else {
@@ -238,11 +214,7 @@ class ProduntoStore {
 		}
 	}
 
-	/**
-	 * @param int $recency
-	 * @return SqlFileAccess
-	 */
-	public function getFileAccess( $recency ) {
+	public function getFileAccess( int $recency ): SqlFileAccess {
 		return new SqlFileAccess(
 			$this->textCache,
 			$this->getDbFromRecency( $recency )
@@ -255,7 +227,7 @@ class ProduntoStore {
 	 * @param string[] $hashes
 	 * @return array<string,bool>
 	 */
-	public function hasFileHashBatch( $hashes ) {
+	public function hasFileHashBatch( array $hashes ): array {
 		$db = $this->getDbFromRecency( IDBAccessObject::READ_NORMAL );
 		$results = array_fill_keys( $hashes, false );
 		foreach ( array_chunk( $hashes, 1000 ) as $batchHashes ) {
@@ -278,10 +250,8 @@ class ProduntoStore {
 	 * Decode a JSON array stored internally
 	 *
 	 * @internal
-	 * @param string $json
-	 * @return array
 	 */
-	public static function decodeJson( string $json ) {
+	public static function decodeJson( string $json ): array {
 		if ( $json === '' ) {
 			$json = '{}';
 		}
@@ -292,10 +262,8 @@ class ProduntoStore {
 	 * Encode an array as JSON for internal storage
 	 *
 	 * @internal
-	 * @param array $data
-	 * @return string
 	 */
-	public static function encodeJson( $data ) {
+	public static function encodeJson( array $data ): string {
 		if ( $data === [] ) {
 			return '';
 		}

@@ -9,13 +9,13 @@ use MediaWiki\JobQueue\JobSpecification;
  * Job for deferred source code fetching
  */
 class FetchJob extends Job {
-	public const TYPE = 'ProduntoFetch';
+	public const string TYPE = 'ProduntoFetch';
 
 	private int $packageId;
 
 	public function __construct(
 		array $params,
-		private Fetcher $fetcher
+		private readonly Fetcher $fetcher,
 	) {
 		parent::__construct( self::TYPE, $params );
 		$this->packageId = $params['id'];

@@ -16,9 +16,9 @@ use Wikimedia\ParamValidator\ParamValidator;
 
 class GitlabTagHandler extends Handler {
 	public function __construct(
-		private ServerContainer $serverContainer,
-		private Fetcher $fetcher,
-		private LoggerInterface $logger
+		private readonly ServerContainer $serverContainer,
+		private readonly Fetcher $fetcher,
+		private readonly LoggerInterface $logger,
 	) {
 	}
 

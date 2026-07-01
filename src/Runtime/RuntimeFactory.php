@@ -15,9 +15,9 @@ use MediaWiki\Session\Session;
  */
 class RuntimeFactory {
 	public function __construct(
-		private ProduntoStore $store,
-		private SandboxStore $sandboxStore,
-		private RepoLinker $repoLinker
+		private readonly ProduntoStore $store,
+		private readonly SandboxStore $sandboxStore,
+		private readonly RepoLinker $repoLinker,
 	) {
 	}
 
@@ -25,9 +25,8 @@ class RuntimeFactory {
 	 * Create a runtime instance
 	 *
 	 * @param ParserOptions|null $options The parser options, used for preview detection
-	 * @return ProduntoRuntime
 	 */
-	public function create( ?ParserOptions $options = null ) {
+	public function create( ?ParserOptions $options = null ): ProduntoRuntime {
 		$loaders = [];
 		$sandboxLoader = $this->createSandboxLoader( $options );
 		if ( $sandboxLoader ) {
@@ -39,10 +38,6 @@ class RuntimeFactory {
 
 	/**
 	 * Get the currently active sandbox
-	 *
-	 * @param int $userId
-	 * @param Session $session
-	 * @return SandboxAccess|null
 	 */
 	public function getActiveSandbox( int $userId, Session $session ): ?SandboxAccess {
 		$sandboxId = $session->get( 'ProduntoSandbox' );
@@ -55,9 +50,6 @@ class RuntimeFactory {
 	/**
 	 * Create a Loader for access to the currently active sandbox, if there is
 	 * an active sandbox.
-	 *
-	 * @param ParserOptions|null $options
-	 * @return Loader|null
 	 */
 	private function createSandboxLoader( ?ParserOptions $options ): ?Loader {
 		if ( !$options?->getIsPreview() ) {

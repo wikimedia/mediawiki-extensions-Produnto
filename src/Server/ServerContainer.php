@@ -13,8 +13,8 @@ class ServerContainer {
 	private ?array $servers = null;
 
 	public function __construct(
-		private HttpRequestFactory $httpRequestFactory,
-		private Config $config,
+		private readonly HttpRequestFactory $httpRequestFactory,
+		private readonly Config $config,
 	) {
 	}
 
@@ -31,7 +31,7 @@ class ServerContainer {
 	 * @internal
 	 * @return BaseServer[]
 	 */
-	public function getServers() {
+	public function getServers(): array {
 		if ( $this->servers === null ) {
 			$this->servers = [];
 			foreach ( $this->config->get( 'ProduntoServers' ) as $serverConfig ) {
