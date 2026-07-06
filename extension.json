@@ -185,6 +185,9 @@
 		}
 	],
 	"SpecialPages": {
+		"ProduntoPackages": {
+			"class": "MediaWiki\\Extension\\Produnto\\Dashboard\\SpecialProduntoPackages"
+		},
 		"ProduntoSandbox": "MediaWiki\\Extension\\Produnto\\Sandbox\\ProduntoSandboxPage"
 	},
 	"JobClasses": {
@@ -213,13 +216,77 @@
 		]
 	},
 	"ExtensionMessagesFiles": {
-		"ProduntoAlias": "Produnto.alias.php"
+		"ProduntoAlias": "i18n/Produnto.alias.php"
 	},
 	"ResourceFileModulePaths": {
 		"localBasePath": "resources",
 		"remoteExtPath": "Produnto/resources"
 	},
 	"ResourceModules": {
+		"ext.produnto.Dashboard": {
+			"class": "MediaWiki\\ResourceLoader\\CodexModule",
+			"dependencies": [
+				"mediawiki.DateFormatter",
+				"vue"
+			],
+			"messages": [
+				"produnto-dashboard-init-error",
+				"produnto-dashboard-reload",
+				"produnto-dashboard-deployment",
+				"produnto-dashboard-packages",
+				"produnto-dashboard-summary",
+				"produnto-dashboard-deploy",
+				"diff",
+				"hist",
+				"produnto-dashboard-revert-to-this",
+				"produnto-dashboard-revert-summary",
+				"produnto-dashboard-new-deployment",
+				"produnto-dashboard-active",
+				"produnto-dashboard-byline",
+				"produnto-dashboard-byline-license",
+				"produnto-viewer-index-homepage-url",
+				"produnto-dashboard-homepage",
+				"produnto-dashboard-collab",
+				"produnto-dashboard-docs",
+				"produnto-dashboard-issues",
+				"produnto-dashboard-browse",
+				"produnto-dashboard-deploy-success",
+				"produnto-dashboard-progress",
+				"produnto-dashboard-ignore-warnings"
+			],
+			"lessMessages": [
+				"parentheses-start",
+				"parentheses-end",
+				"pipe-separator",
+				"brackets-start",
+				"brackets-end"
+			],
+			"localBasePath": "resources/ext.produnto.Dashboard",
+			"remoteExtPath": "Produnto/resources/ext.produnto.Dashboard",
+			"packageFiles": [
+				"init.js",
+				"App.vue",
+				"Client.js",
+				"compareVersions.js",
+				"DeploymentBox.vue",
+				"ErrorPage.vue",
+				"MessageList.vue",
+				"PackageCard.vue",
+				"PackageList.vue"
+			],
+			"codexComponents": [
+				"CdxButton",
+				"CdxCheckbox",
+				"CdxField",
+				"CdxLabel",
+				"CdxMessage",
+				"CdxProgressBar",
+				"CdxSearchInput",
+				"CdxSelect",
+				"CdxTextInput",
+				"useModelWrapper"
+			]
+		},
 		"ext.produnto.SpecialProduntoSandbox": {
 			"class": "MediaWiki\\ResourceLoader\\CodexModule",
 			"dependencies": [
