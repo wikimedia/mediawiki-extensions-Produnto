@@ -1,0 +1,14 @@
+{
+	"@metadata": {
+		"authors": [
+			"Beta16"
+		]
+	},
+	"produnto-sandbox-loading": "Caricamento",
+	"produnto-viewer-binary": "Il file non è un file di testo, quindi non può essere mostrato qui.",
+	"produnto-viewer-collab-link": "Contribuisci",
+	"produnto-viewer-index-version": "Versione",
+	"produnto-viewer-index-name": "Nome",
+	"produnto-viewer-index-type": "Tipo",
+	"produnto-viewer-index-requires": "Requisiti"
+}

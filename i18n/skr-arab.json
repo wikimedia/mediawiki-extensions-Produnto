@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": [
+			"Saraiki"
+		]
+	},
+	"produnto-sandbox-activate": "فعال کرو",
+	"produnto-sandbox-deactivate": "غیر فعال  کرو",
+	"produnto-sandbox-inactive": "غیر فعال",
+	"produnto-sandbox-delete": "مٹاؤ",
+	"produnto-viewer-index-license": "لائسنس",
+	"produnto-viewer-index-requires": "ضروریات"
+}

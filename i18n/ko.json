@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Tensama0415"
+		]
+	},
+	"produnto-sandbox-delete": "삭제",
+	"produnto-viewer-index-name": "이름",
+	"produnto-viewer-index-description": "설명",
+	"produnto-viewer-index-authors": "작성자",
+	"produnto-viewer-index-license": "라이선스"
+}

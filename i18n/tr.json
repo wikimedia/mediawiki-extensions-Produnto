@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Hedda"
+		]
+	},
+	"produnto-desc": "Wiki tabanlı yazılım geliştirme için paket yöneticisi",
+	"produnto-fetch-error": "Alma işlemi başarısız: $1",
+	"produnto-fetch-server-error": "Sunucu hatası nedeniyle alma işlemi başarısız: $1 $2",
+	"produnto-fetch-connect-error": "Sunucu hatası nedeniyle alma işlemi başarısız: $1",
+	"produnto-fetch-http-error": "Alma işlemi hatayla sonuçlandı: $1 $2"
+}
