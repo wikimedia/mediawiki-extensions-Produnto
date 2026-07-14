@@ -1,0 +1,22 @@
+{
+	"@metadata": {
+		"authors": [
+			"Volvox"
+		]
+	},
+	"produnto-javascript-required": "JavaScript ass néideg fir dës Säit ze benotzen.",
+	"produnto-sandbox-activate": "Aktivéieren",
+	"produnto-sandbox-deactivate": "Desaktivéieren",
+	"produnto-sandbox-inactive": "Inaktiv",
+	"produnto-sandbox-delete": "Läschen",
+	"produnto-sandbox-size-kb": "Gréisst: $1 KB",
+	"produnto-sandbox-mtime": "Fir d'lescht geännert: $1",
+	"produnto-viewer-binary": "De Fichier ass keen Textfichier, dofir kann en hei net ugewise ginn.",
+	"produnto-viewer-index-version": "Versioun",
+	"produnto-viewer-index-name": "Numm",
+	"produnto-viewer-index-description": "Beschreiwung",
+	"produnto-viewer-index-authors": "Auteuren",
+	"produnto-viewer-index-license": "Lizenz",
+	"produnto-viewer-index-type": "Typ",
+	"produnto-viewer-index-doc-url": "Dokumentatioun"
+}

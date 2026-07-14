@@ -1,12 +1,27 @@
 {
 	"@metadata": {
 		"authors": [
-			"Tensama0415"
+			"Tensama0415",
+			"YeBoy371"
 		]
 	},
+	"produnto-fetch-error": "가져오기 실패: $1",
+	"produnto-fetch-server-error": "서버 오류로 인해 가져오기 실패: $1 $2",
+	"produnto-fetch-connect-error": "서버 오류로 인해 가져오기 실패: $1",
+	"produnto-fetch-http-error": "가져오기 실패/오류 발생: $1 $2",
+	"produnto-fetch-manifest": "produnto.json에서 오류 발생: $1",
+	"produnto-sandbox-activate": "활성화",
+	"produnto-sandbox-deactivate": "비활성화",
 	"produnto-sandbox-delete": "삭제",
+	"produnto-sandbox-size-kb": "크기: $1 KB",
+	"produnto-sandbox-mtime": "마지막 수정: $1",
+	"produnto-sandbox-loading": "불러오는 중",
+	"produnto-viewer-collab-link": "기여",
+	"produnto-viewer-index-package": "패키지",
 	"produnto-viewer-index-name": "이름",
 	"produnto-viewer-index-description": "설명",
 	"produnto-viewer-index-authors": "작성자",
-	"produnto-viewer-index-license": "라이선스"
+	"produnto-viewer-index-license": "라이선스",
+	"produnto-viewer-index-homepage-url": "홈페이지",
+	"produnto-viewer-index-doc-url": "설명문서"
 }

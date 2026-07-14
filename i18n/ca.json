@@ -1,0 +1,15 @@
+{
+	"@metadata": {
+		"authors": [
+			"AlbertRA"
+		]
+	},
+	"produnto-sandbox-loading": "Carregant",
+	"produnto-viewer-index-version": "Versió",
+	"produnto-viewer-index-description": "Descripció",
+	"produnto-viewer-index-license": "Llicència",
+	"produnto-viewer-index-type": "Tipus",
+	"produnto-viewer-index-doc-url": "Documentació",
+	"produnto-viewer-index-collab-url": "Col·laboració",
+	"produnto-viewer-index-requires": "Requeriments"
+}
