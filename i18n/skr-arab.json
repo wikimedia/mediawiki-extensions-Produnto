@@ -8,6 +8,10 @@
 	"produnto-sandbox-deactivate": "غیر فعال  کرو",
 	"produnto-sandbox-inactive": "غیر فعال",
 	"produnto-sandbox-delete": "مٹاؤ",
+	"produnto-sandbox-loading": "لوڈ تھین٘دا پئے",
+	"produnto-viewer-index-version": "ورژن",
+	"produnto-viewer-index-name": "ناں",
 	"produnto-viewer-index-license": "لائسنس",
+	"produnto-viewer-index-type": "قسم",
 	"produnto-viewer-index-requires": "ضروریات"
 }
