@@ -37,4 +37,35 @@ class SandboxListHandler extends Handler {
 		return $response;
 	}
 
+	protected function getResponseBodySchema( string $method ): ?array {
+		return [
+			'type' => 'array',
+			'items' => [
+				'type' => 'object',
+				'required' => [ 'id', 'size', 'mtime', 'active' ],
+				'properties' => [
+					'id' => [
+						'type' => 'integer',
+						'description' => 'The sandbox ID',
+						'example' => 1,
+					],
+					'size' => [
+						'type' => 'integer',
+						'description' => 'The size of the sandbox in bytes, counted towards a per-user limit',
+						'example' => 128599,
+					],
+					'mtime' => [
+						'type' => 'string',
+						'description' => 'The ISO 8601 combined date and time of last modification',
+						'example' => '2026-07-17T06:18:14+00:00',
+					],
+					'active' => [
+						'type' => 'boolean',
+						'description' => 'Whether the sandbox is used on preview',
+					],
+				]
+			]
+		];
+	}
+
 }

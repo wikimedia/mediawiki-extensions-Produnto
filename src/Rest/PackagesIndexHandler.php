@@ -53,4 +53,37 @@ class PackagesIndexHandler extends Handler {
 		}
 		return $this->partitions;
 	}
+
+	/** @inheritDoc */
+	protected function getResponseBodySchema( string $method ): ?array {
+		return [
+			'type' => 'object',
+			'properties' => [
+				'partitions' => [
+					'type' => 'array',
+					'items' => [
+						'type' => 'object',
+						'properties' => [
+							'href' => [
+								'type' => 'string',
+								'description' => 'The relative URL of the partition; ' .
+									'the partition parameter to the list endpoint',
+								'example' => '0',
+							],
+							'start' => [
+								'type' => 'integer',
+								'description' => 'The lowest possible package ID in the partition',
+								'example' => 0,
+							],
+							'end' => [
+								'type' => 'integer',
+								'description' => 'The highest possible package ID in the partition',
+								'example' => 999
+							]
+						]
+					]
+				]
+			]
+		];
+	}
 }

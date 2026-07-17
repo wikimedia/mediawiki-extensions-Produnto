@@ -83,4 +83,18 @@ class RecentDeploymentsHandler extends Handler {
 		}
 		return $this->activeId;
 	}
+
+	/** @inheritDoc */
+	protected function getResponseBodySchema( string $method ): ?array {
+		return [
+			'type' => 'object',
+			'required' => [ 'deployments' ],
+			'properties' => [
+				'deployments' => [
+					'type' => 'array',
+					'items' => Schema::DEPLOYMENT,
+				]
+			]
+		];
+	}
 }

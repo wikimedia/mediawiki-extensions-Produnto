@@ -34,6 +34,7 @@ class SandboxDeactivateHandler extends Handler {
 				self::PARAM_SOURCE => 'path',
 				ParamValidator::PARAM_TYPE => 'string',
 				ParamValidator::PARAM_REQUIRED => true,
+				self::PARAM_DESCRIPTION => 'The sandbox ID',
 			],
 		];
 	}
@@ -52,6 +53,14 @@ class SandboxDeactivateHandler extends Handler {
 	public function validate( Validator $restValidator ) {
 		parent::validate( $restValidator );
 		$this->validateToken();
+	}
+
+	/** @inheritDoc */
+	protected function getResponseBodySchema( string $method ): ?array {
+		return [
+			'type' => 'object',
+			'properties' => [],
+		];
 	}
 
 }

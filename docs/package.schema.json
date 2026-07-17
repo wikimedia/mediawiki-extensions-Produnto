@@ -44,7 +44,7 @@
 		},
 		"url": {
 			"type": "string",
-			"description": "The URL of the package homepage. Optional: use source-url and doc-url if there is no separate homepage."
+			"description": "The URL of the package homepage. Optional: use collab-url and doc-url if there is no separate homepage."
 		},
 		"collab-url": {
 			"type": "string",

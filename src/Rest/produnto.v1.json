@@ -1,0 +1,145 @@
+{
+	"mwapi": "1.1.0",
+	"info": {
+		"title": "Produnto",
+		"version": "1.0.0"
+	},
+	"moduleId": "produnto/v1",
+	"paths": {
+		"/deployments/recent": {
+			"get": {
+				"description": "Get a list of recent deployments, including the active deployment if any.",
+				"handler": {
+					"class": "MediaWiki\\Extension\\Produnto\\Rest\\RecentDeploymentsHandler",
+					"services": [
+						"Produnto.Store",
+						"PermissionManager",
+						"ConnectionProvider"
+					]
+				}
+			}
+		},
+		"/deployment/validate": {
+			"post": {
+				"description": "Validate a proposed new set of package versions.",
+				"handler": {
+					"class": "MediaWiki\\Extension\\Produnto\\Rest\\ValidateDeploymentHandler",
+					"services": [
+						"Produnto.Updater",
+						"ContentLanguage",
+						"MessageFormatterFactory"
+					]
+				}
+			}
+		},
+		"/deployment/patch": {
+			"post": {
+				"description": "Make changes to the deployed set of package versions.",
+				"handler": {
+					"class": "MediaWiki\\Extension\\Produnto\\Rest\\PatchDeploymentHandler",
+					"services": [
+						"ContentLanguage",
+						"MessageFormatterFactory",
+						"PageUpdaterFactory",
+						"PageStore",
+						"Produnto.AuthorizingPageSaverFactory",
+						"Produnto.Updater"
+					]
+				}
+			}
+		},
+		"/packages/all/": {
+			"get": {
+				"description": "The index to a list of all fetched package versions.",
+				"handler": {
+					"class": "MediaWiki\\Extension\\Produnto\\Rest\\PackagesIndexHandler",
+					"services": [
+						"MainConfig",
+						"Produnto.Store",
+						"PermissionManager"
+					]
+				}
+			}
+		},
+		"/packages/all/{partition}": {
+			"get": {
+				"description": "A list of fetched package versions within a partition.",
+				"handler": {
+					"class": "MediaWiki\\Extension\\Produnto\\Rest\\PackagesListHandler",
+					"services": [
+						"MainConfig",
+						"Produnto.Store",
+						"PermissionManager",
+						"ContentLanguage",
+						"MessageFormatterFactory"
+					]
+				}
+			}
+		},
+		"/gitlab/tag": {
+			"post": {
+				"description": "A GitLab webhook handler for the tag event. See [the GitLab documentation](https://docs.gitlab.com/user/project/integrations/webhook_events/#tag-events).",
+				"handler": {
+					"class": "MediaWiki\\Extension\\Produnto\\Rest\\GitlabTagHandler",
+					"services": [
+						"Produnto.ServerContainer",
+						"Produnto.Fetcher",
+						"Produnto.Logger"
+					]
+				}
+			}
+		},
+		"/sandbox": {
+			"get": {
+				"description": "List the sandboxes for the current user.",
+				"handler": {
+					"class": "MediaWiki\\Extension\\Produnto\\Rest\\SandboxListHandler",
+					"services": [
+						"Produnto.SandboxStore"
+					]
+				}
+			}
+		},
+		"/sandbox/{id}": {
+			"post": {
+				"description": "Create or modify a sandbox in the current user session.",
+				"handler": {
+					"class": "MediaWiki\\Extension\\Produnto\\Rest\\SandboxPostHandler",
+					"services": [
+						"Produnto.Store",
+						"Produnto.SandboxStore",
+						"Produnto.ManifestFactory"
+					]
+				}
+			},
+			"delete": {
+				"description": "Delete a sandbox from the current user session.",
+				"handler": {
+					"class": "MediaWiki\\Extension\\Produnto\\Rest\\SandboxDeleteHandler",
+					"services": [
+						"Produnto.SandboxStore"
+					]
+				}
+			}
+		},
+		"/sandbox/{id}/activate": {
+			"post": {
+				"description": "Activate a sandbox in the session context so that its packages will be used on preview.",
+				"handler": {
+					"class": "MediaWiki\\Extension\\Produnto\\Rest\\SandboxActivateHandler",
+					"services": [
+						"Produnto.SandboxStore"
+					]
+				}
+			}
+		},
+		"/sandbox/{id}/deactivate": {
+			"post": {
+				"description": "Deactivate a sandbox so that its packages will no longer be used on preview.",
+				"handler": {
+					"class": "MediaWiki\\Extension\\Produnto\\Rest\\SandboxDeactivateHandler"
+				}
+			}
+		}
+	}
+}

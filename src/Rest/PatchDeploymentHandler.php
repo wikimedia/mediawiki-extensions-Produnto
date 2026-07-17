@@ -75,16 +75,24 @@ class PatchDeploymentHandler extends Handler {
 				self::PARAM_SOURCE => 'body',
 				ParamValidator::PARAM_TYPE => 'string',
 				ParamValidator::PARAM_REQUIRED => true,
+				self::PARAM_DESCRIPTION => 'JSON serialized object mapping package names to ' .
+					'versions. If a deployed package is absent, it will remain unchanged. ' .
+					'If a version is null or the empty string, that package will be undeployed.',
+				self::PARAM_EXAMPLE => '{"some-package":"1.0"}',
 			],
 			'summary' => [
 				self::PARAM_SOURCE => 'body',
 				ParamValidator::PARAM_TYPE => 'string',
 				ParamValidator::PARAM_REQUIRED => false,
+				self::PARAM_DESCRIPTION => 'A comment for the revision.',
+				self::PARAM_EXAMPLE => 'Updated some-package from 1.0 to 2.0',
 			],
 			'ignoreWarnings' => [
 				self::PARAM_SOURCE => 'body',
 				ParamValidator::PARAM_TYPE => 'boolean',
 				ParamValidator::PARAM_REQUIRED => false,
+				self::PARAM_DESCRIPTION => 'Whether to ignore validation warnings, ' .
+					'such as package requirements not satisfied.',
 			],
 		] + $this->getTokenParamDefinition();
 	}
@@ -98,5 +106,29 @@ class PatchDeploymentHandler extends Handler {
 	public function validate( Validator $restValidator ) {
 		parent::validate( $restValidator );
 		$this->validateToken();
+	}
+
+	protected function getResponseBodySchema( string $method ): ?array {
+		return [
+			'type' => 'object',
+			'required' => [ 'ok' ],
+			'properties' => [
+				'ok' => [
+					'type' => 'boolean',
+					'description' => 'Whether the deployment was successful',
+				],
+				'warnings' => [
+					'type' => 'array',
+					'description' => 'Validation warnings',
+					'items' => Schema::MESSAGE,
+				],
+				'errors' => [
+					'type' => 'array',
+					'description' => 'Fatal errors',
+					'items' => Schema::MESSAGE,
+				],
+				'deployment' => Schema::DEPLOYMENT,
+			]
+		];
 	}
 }

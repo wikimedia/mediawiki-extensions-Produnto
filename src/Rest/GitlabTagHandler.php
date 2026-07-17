@@ -87,16 +87,19 @@ class GitlabTagHandler extends Handler {
 				self::PARAM_SOURCE => 'body',
 				ParamValidator::PARAM_TYPE => [ 'tag_push' ],
 				ParamValidator::PARAM_REQUIRED => true,
+				self::PARAM_EXAMPLE => 'tag_push',
 			],
 			'event_name' => [
 				self::PARAM_SOURCE => 'body',
 				ParamValidator::PARAM_TYPE => [ 'tag_push' ],
 				ParamValidator::PARAM_REQUIRED => true,
+				self::PARAM_EXAMPLE => 'tag_push',
 			],
 			'ref' => [
 				self::PARAM_SOURCE => 'body',
 				ParamValidator::PARAM_TYPE => 'string',
 				ParamValidator::PARAM_REQUIRED => true,
+				self::PARAM_EXAMPLE => 'refs/tags/v1.0.0',
 			],
 			'project' => [
 				self::PARAM_SOURCE => 'body',
@@ -105,9 +108,19 @@ class GitlabTagHandler extends Handler {
 					[ 'web_url' => 'string' ],
 					[],
 					true
-				)
+				),
+				self::PARAM_EXAMPLE => [
+					'web_url' => 'http://example.com/jsmith/example',
+				],
 			],
 		];
+	}
+
+	protected function generateResponseSpec( string $method ): array {
+		$spec = parent::generateResponseSpec( $method );
+		unset( $spec['200'] );
+		$spec['202']['description'] = 'Accepted';
+		return $spec;
 	}
 
 	protected function detectExtraneousBodyFields( Validator $restValidator ) {

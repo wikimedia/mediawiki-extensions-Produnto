@@ -37,7 +37,16 @@ class SandboxDeleteHandler extends Handler {
 				self::PARAM_SOURCE => 'path',
 				ParamValidator::PARAM_TYPE => 'string',
 				ParamValidator::PARAM_REQUIRED => true,
+				self::PARAM_DESCRIPTION => 'The sandbox ID',
 			]
+		];
+	}
+
+	public function generateResponseSpec( string $method ): array {
+		$parentSpec = parent::generateResponseSpec( $method );
+		return [
+			204 => [ 'description' => 'OK (no response body)' ],
+			'default' => $parentSpec['default'],
 		];
 	}
 

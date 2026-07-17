@@ -34,4 +34,41 @@ class ValidateDeploymentHandler extends Handler {
 			'errors' => $messageTranslator->formatMessages( $status->getMessages( 'error' ) ),
 		];
 	}
+
+	protected function getRequestBodySchema( string $mediaType ): array {
+		return [
+			'type' => 'object',
+			'description' => 'Map of package names to versions. All packages to be deployed ' .
+				'must be included, including packages which will be unchanged.',
+			'additionalProperties' => [
+				'type' => 'string'
+			],
+			'example' => [ 'some-package' => '1.0' ],
+		];
+	}
+
+	protected function getResponseBodySchema( string $method ): ?array {
+		return [
+			'type' => 'object',
+			'properties' => [
+				'ok' => [
+					'type' => 'boolean',
+					'description' => 'This will be true if there were no errors, even if there ' .
+						'were warnings. Warnings are significant and need to be acknowledged by ' .
+						'the user before deployment.'
+				],
+				'warnings' => [
+					'type' => 'array',
+					'description' => 'An array of warnings. This should be empty before ' .
+						'proceeding with an automated deployment.',
+					'items' => Schema::MESSAGE,
+				],
+				'errors' => [
+					'type' => 'array',
+					'description' => 'An array of errors.',
+					'items' => Schema::MESSAGE,
+				],
+			]
+		];
+	}
 }

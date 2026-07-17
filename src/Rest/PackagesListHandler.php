@@ -138,6 +138,22 @@ class PackagesListHandler extends Handler {
 				self::PARAM_SOURCE => 'path',
 				ParamValidator::PARAM_TYPE => 'integer',
 				ParamValidator::PARAM_REQUIRED => true,
+				self::PARAM_DESCRIPTION => 'The partition number',
+			]
+		];
+	}
+
+	/** @inheritDoc */
+	protected function getResponseBodySchema( string $method ): ?array {
+		return [
+			'type' => 'object',
+			'required' => [ 'packages' ],
+			'properties' => [
+				'packages' => [
+					'type' => 'array',
+					'items' => Schema::PACKAGE,
+					'description' => 'A list of all fetched package versions in the partition',
+				]
 			]
 		];
 	}
