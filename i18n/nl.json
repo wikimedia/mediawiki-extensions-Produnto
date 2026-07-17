@@ -1,0 +1,20 @@
+{
+	"@metadata": {
+		"authors": [
+			"Siebrand"
+		]
+	},
+	"produnto-desc": "Pakketbeheerder voor softwareontwikkeling op de wiki",
+	"produnto-fetch-error": "Ophalen mislukt: $1",
+	"produnto-fetch-server-error": "Ophalen mislukt vanwege een serverfout: $1 $2",
+	"produnto-fetch-connect-error": "Ophalen mislukt vanwege een serverfout: $1",
+	"produnto-fetch-http-error": "Ophalen mislukt met een fout: $1 $2",
+	"produnto-fetch-no-manifest": "Het pakket bevatte geen manifestbestand.",
+	"produnto-fetch-manifest": "Fout in produnto.json: $1",
+	"produnto-fetch-manifest-schema": "Schemavalidatiefout in produnto.json: [$1] $2",
+	"produnto-fetch-module-missing": "Het pakketmanifest verwijst naar een module \"$1\" met pad \"$2\", maar dat pad bestaat niet.",
+	"produnto-update-invalid": "Kan de pakkettenpagina niet opslaan: geen geldige pakketlijst",
+	"produnto-update-json-error": "Kan de pakkettenpagina niet opslaan: $1",
+	"produnto-sandbox-error": "Fout bij het aanmaken van de sandbox: $1",
+	"produnto-sandbox-preview-warning": "Deze voorvertoning gebruikte een pakket uit uw lokale werkkopie. Het kan er anders uitzien na het opslaan."
+}

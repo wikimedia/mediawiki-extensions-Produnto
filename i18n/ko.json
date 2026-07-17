@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": [
+			"Tensama0415",
+			"YeBoy371"
+		]
+	},
+	"produnto-fetch-error": "가져오기 실패: $1",
+	"produnto-fetch-server-error": "서버 오류로 인해 가져오기 실패: $1 $2",
+	"produnto-fetch-connect-error": "서버 오류로 인해 가져오기 실패: $1",
+	"produnto-fetch-http-error": "가져오기 실패/오류 발생: $1 $2",
+	"produnto-fetch-manifest": "produnto.json에서 오류 발생: $1"
+}

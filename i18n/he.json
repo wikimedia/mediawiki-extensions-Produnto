@@ -1,0 +1,20 @@
+{
+	"@metadata": {
+		"authors": [
+			"Amire80"
+		]
+	},
+	"produnto-desc": "מנהל חבילות לפיתוח תוכנה על גבי הוויקי",
+	"produnto-fetch-error": "השליפה נכשלה: $1",
+	"produnto-fetch-server-error": "השליפה נכשלה בגלל שגיאת שרת: $1 $2",
+	"produnto-fetch-connect-error": "השליפה נכשלה בגלל שגיאת שרת: $1",
+	"produnto-fetch-http-error": "השליפה נכשלה עם שגיאה: $1 $2",
+	"produnto-fetch-no-manifest": "החבילה לא הכילה קובץ מצהר (manifest).",
+	"produnto-fetch-manifest": "הקובץ produnto.json יש שגיאה: $1",
+	"produnto-fetch-manifest-schema": "בקובץ produnto.json יש שגיאת בדיקת תקינות סכמה: [$1] $2",
+	"produnto-fetch-module-missing": "מצהר החבילה מתייחס ליחידה \"$1\" עם נתיב \"$2\", אבל נתיב כזה לא קיים.",
+	"produnto-update-invalid": "לא ניתן לשמור את דף החבילות: לא רשימת חבילות תקינה",
+	"produnto-update-json-error": "לא ניתן לשמור רשימת חבילות: $1",
+	"produnto-sandbox-error": "שגיאה ביצירת ארגז חול: $1",
+	"produnto-sandbox-preview-warning": "התצוגה המקדימה הזאת השתמשה בחבילה מעותק העבודה המקומי שלך. ייתכן שזה ייראה אחרת אחרי שמירה."
+}

@@ -1,0 +1,20 @@
+{
+	"@metadata": {
+		"authors": [
+			"Toliño"
+		]
+	},
+	"produnto-desc": "Xestor de paquetes para o desenvolvemento de software no wiki",
+	"produnto-fetch-error": "Fallou a consulta: $1",
+	"produnto-fetch-server-error": "Fallou a consulta debido a un erro do servidor: $1 $2",
+	"produnto-fetch-connect-error": "Fallou a consulta debido a un erro do servidor: $1",
+	"produnto-fetch-http-error": "Fallou a consulta cun erro: $1 $2",
+	"produnto-fetch-no-manifest": "O paquete non contiña un ficheiro de manifesto.",
+	"produnto-fetch-manifest": "Erro en «produnto.json»: $1",
+	"produnto-fetch-manifest-schema": "Erro de validación do esquema en «produnto.json»: [$1] $2",
+	"produnto-fetch-module-missing": "O manifesto do paquete fai referencia a un módulo «$1» coa ruta «$2», pero non existe tal ruta.",
+	"produnto-update-invalid": "Non se pode gardar a páxina de paquetes: non é unha lista de paquetes válida",
+	"produnto-update-json-error": "Non se pode gardar a páxina de paquetes: $1",
+	"produnto-sandbox-error": "Produciuse un erro ao crear a zona de probas: $1",
+	"produnto-sandbox-preview-warning": "Esta vista previa usou un paquete da túa copia de traballo local. Se cadra non ten o mesmo aspecto unha vez gardada."
+}
