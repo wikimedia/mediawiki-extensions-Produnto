@@ -1,0 +1,21 @@
+{
+	"@metadata": {
+		"authors": [
+			"Bashir Gwanki"
+		]
+	},
+	"produnto-dashboard-special-desc": "Fakitin Produnto",
+	"produnto-dashboard-deployment": "Tura-ture",
+	"produnto-dashboard-packages": "Fakiti",
+	"produnto-dashboard-summary": "Taƙaitaccen Bayani",
+	"produnto-dashboard-revert-to-this": "Komawa\nzuwa wannan ƙaddamarwa",
+	"produnto-dashboard-new-deployment": "Sabuwar turawa",
+	"produnto-dashboard-active": "$1 (aiki)",
+	"produnto-dashboard-homepage": "Shafin Farko",
+	"produnto-dashboard-collab": "Gudummawa",
+	"produnto-dashboard-browse": "Bincika",
+	"produnto-dashboard-reload": "Sake ɗorawa",
+	"produnto-dashboard-revert-summary": "Mayar da\nzuwa ƙaddamarwa kamar $1",
+	"produnto-dashboard-progress": "Ana ci gaba da tura kayan aiki",
+	"produnto-dashboard-ignore-warnings": "Ka yi watsi da"
+}
