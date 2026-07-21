@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\Produnto\Updater;
 
 use MediaWiki\Config\Config;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
+use MediaWiki\HookContainer\HookContainer;
 use MediaWiki\JobQueue\Job;
 use MediaWiki\JobQueue\JobQueueGroup;
 use MediaWiki\JobQueue\JobSpecification;
@@ -25,6 +26,7 @@ class Updater {
 		private readonly TitleParser $titleParser,
 		private readonly ProduntoStore $store,
 		private readonly JobQueueGroup $jobQueueGroup,
+		private readonly HookContainer $hookContainer,
 	) {
 	}
 
@@ -35,52 +37,7 @@ class Updater {
 	 *   anything else, the status will have a suitable error.
 	 */
 	public function validateDeployment( $packages ): UpdateStatus {
-		$status = new UpdateStatus;
-		if ( !( $packages instanceof stdClass ) ) {
-			$status->fatal( 'produnto-update-invalid' );
-			return $status;
-		}
-		$status->setData( $packages );
-
-		$modules = [];
-		$packageNamesById = [];
-		foreach ( $packages as $name => $version ) {
-			if ( !is_string( $name ) || !is_string( $version ) ) {
-				$status->fatal( 'produnto-update-invalid' );
-				continue;
-			}
-
-			$package = $this->store->getPackageByName( $name, $version );
-			if ( !$package ) {
-				$status->fatal( 'produnto-update-missing-package', $name, $version );
-				continue;
-			}
-			if ( $package->getState() === ProduntoStore::STATE_FETCHING ) {
-				$status->fatal( 'produnto-update-fetching-package', $name, $version );
-				continue;
-			}
-			if ( $package->getState() === ProduntoStore::STATE_FAILED ) {
-				$status->fatal( 'produnto-update-failed-package', $name, $version );
-				continue;
-			}
-
-			$packageNamesById[$package->getId()] = $name;
-
-			foreach ( $package->getModules() as $moduleName => $path ) {
-				if ( array_key_exists( $moduleName, $modules ) ) {
-					$conflictId = $modules[$moduleName][0];
-					$conflictName = $packageNamesById[$conflictId];
-					$status->warning( 'produnto-update-module-conflict',
-						$package->getName(), $moduleName, $conflictName );
-					continue;
-				}
-				$modules[$moduleName] = [ $package->getId(), $path ];
-			}
-
-			$status->addPackage( $package );
-		}
-		$status->setModules( $modules );
-		return $status;
+		return ( new Validator( $this->store, $this->hookContainer, $packages ) )->validate();
 	}
 
 	/**

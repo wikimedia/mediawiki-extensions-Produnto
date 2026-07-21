@@ -77,7 +77,8 @@ return [
 			$services->getMainConfig(),
 			$services->getTitleParser(),
 			$services->get( 'Produnto.Store' ),
-			$services->get( 'JobQueueGroup' )
+			$services->getJobQueueGroup(),
+			$services->getHookContainer()
 		);
 	}
 ];

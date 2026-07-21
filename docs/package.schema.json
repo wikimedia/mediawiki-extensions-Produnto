@@ -80,7 +80,7 @@
 		},
 		"modules": {
 			"type": "object",
-			"description": "A map of each global Scribunto module name to its implementing file, relative to the package root.",
+			"description": "A map of each global Scribunto module name to its implementing file, relative to the package root.\n\nModule names should typically be composed of a set of dot-separated components where the first component is the package name. Subsequent dots should be mapped to path separators.",
 			"patternProperties": {
 				".*": { "type": "string" }
 			}
