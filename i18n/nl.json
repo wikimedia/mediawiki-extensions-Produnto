@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Mainframe98",
 			"Siebrand"
 		]
 	},
@@ -51,5 +52,7 @@
 	"produnto-viewer-index-doc-url": "Documentatie",
 	"produnto-viewer-index-collab-url": "Samenwerking",
 	"produnto-viewer-index-issue-url": "Issuetracker",
-	"produnto-viewer-index-requires": "Vereisten"
+	"produnto-viewer-index-requires": "Vereisten",
+	"produnto-dashboard-docs": "Documentatie",
+	"produnto-dashboard-reload": "Vernieuwen"
 }
