@@ -1,0 +1,18 @@
+{
+	"@metadata": {
+		"authors": []
+	},
+	"produnto-desc": "Paketmanager für die Softwareentwicklung auf Wikis",
+	"produnto-fetch-error": "Abruf fehlgeschlagen: $1",
+	"produnto-fetch-server-error": "Abruf aufgrund eines Serverfehlers fehlgeschlagen: $1 $2",
+	"produnto-fetch-connect-error": "Abruf aufgrund eines Serverfehlers fehlgeschlagen: $1",
+	"produnto-fetch-http-error": "Der Abruf ist mit einem Fehler fehlgeschlagen: $1 $2",
+	"produnto-fetch-no-manifest": "Das Paket enthielt keine Manifestdatei.",
+	"produnto-fetch-manifest": "Fehler in produnto.json: $1",
+	"produnto-fetch-manifest-schema": "Schemavalidierungsfehler in produnto.json: [$1] $2",
+	"produnto-fetch-module-missing": "Im Paketmanifest wird auf ein Modul „$1“ mit Pfad „$2“ verwiesen, aber ein solcher Pfad existiert nicht.",
+	"produnto-update-invalid": "Paket-Seite kann nicht gespeichert werden: Keine gültige Paketliste",
+	"produnto-update-json-error": "Paket-Seite kann nicht gespeichert werden: $1",
+	"produnto-sandbox-error": "Fehler beim Erstellen der Sandbox: $1",
+	"produnto-sandbox-preview-warning": "Für diese Vorschau wurde ein Paket aus deiner lokalen Arbeitskopie verwendet. Nach dem Speichern sieht das Ergebnis möglicherweise anders aus."
+}
