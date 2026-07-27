@@ -1,6 +1,8 @@
 {
 	"@metadata": {
-		"authors": []
+		"authors": [
+			"Brettchenweber"
+		]
 	},
 	"produnto-desc": "Paketmanager für die Softwareentwicklung auf Wikis",
 	"produnto-fetch-error": "Abruf fehlgeschlagen: $1",
@@ -17,6 +19,8 @@
 	"produnto-update-fetching-package": "Das Paket $1 $2 wird noch vom Server abgerufen.",
 	"produnto-update-failed-package": "Das Abrufen des Pakets $1 $2 ist fehlgeschlagen, daher kann das Paket nicht bereitgestellt werden.",
 	"produnto-update-module-conflict": "Das Modul „$2“ ist sowohl in „$1“ als auch in „$3“ vorhanden.",
+	"produnto-update-requires-missing": "Das Paket $1 erfordert $2, aber es fehlt.",
+	"produnto-update-requires-unsatisfied-platform": "Paket $1 erfordert $2 $3, aber es sind nur $2 $4 verfügbar.",
 	"produnto-update-failed-generic": "Die Pakete konnten nicht gespeichert werden.",
 	"produnto-update-null-edit": "Die Bereitstellung ist fehlgeschlagen: Du hast keine Änderungen vorgenommen. Möglicherweise hat jemand anderes zur gleichen Zeit dieselbe Änderung vorgenommen.",
 	"action-produnto-update": "Produnto-Pakete verteilen",

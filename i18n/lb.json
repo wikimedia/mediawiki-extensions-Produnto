@@ -21,7 +21,7 @@
 	"produnto-viewer-index-doc-url": "Dokumentatioun",
 	"produnto-dashboard-summary": "Resümmee",
 	"produnto-dashboard-active": "$1 (aktiv)",
-	"produnto-dashboard-byline": "{{PLURAL:$2|Vum $1|Vun: $1}}.",
+	"produnto-dashboard-byline": "Vum $1.",
 	"produnto-dashboard-docs": "Dokumentatioun",
 	"produnto-dashboard-issues": "Problemer",
 	"produnto-dashboard-reload": "Nei lueden",
