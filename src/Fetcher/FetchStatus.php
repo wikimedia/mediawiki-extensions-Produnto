@@ -51,4 +51,19 @@ class FetchStatus extends StatusValue {
 		$this->fatal( 'produnto-fetch-connect-error', $reason );
 		$this->retry = true;
 	}
+
+	public function toJsonArray(): array {
+		$data = parent::toJsonArray();
+		if ( $this->retry ) {
+			$data['retry'] = $this->retry;
+		}
+		return $data;
+	}
+
+	/** @inheritDoc */
+	public static function newFromJsonArray( array $json ) {
+		 $status = parent::newFromJsonArray( $json );
+		 $status->retry = $json['retry'] ?? false;
+		 return $status;
+	}
 }

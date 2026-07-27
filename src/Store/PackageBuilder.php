@@ -2,9 +2,9 @@
 
 namespace MediaWiki\Extension\Produnto\Store;
 
-use InvalidArgumentException;
 use LogicException;
 use StatusValue;
+use Wikimedia\JsonCodec\JsonCodec;
 use Wikimedia\Rdbms\IDatabase;
 use function array_key_exists;
 
@@ -297,10 +297,12 @@ class PackageBuilder {
 	 */
 	public function fail( StatusValue $status ): void {
 		$this->assertInserted( __METHOD__ );
-		if ( !in_array( $status::class, PackageAccess::STATUS_CLASSES ) ) {
-			throw new InvalidArgumentException( 'Invalid status class: ' . $status::class );
-		}
-		$this->updateState( $this->id, ProduntoStore::STATE_FAILED, serialize( $status ) );
+		$codec = new JsonCodec();
+		$this->updateState(
+			$this->id,
+			ProduntoStore::STATE_FAILED,
+			$codec->toJsonString( $status )
+		);
 	}
 
 	/**

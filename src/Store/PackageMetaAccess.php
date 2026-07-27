@@ -2,23 +2,14 @@
 
 namespace MediaWiki\Extension\Produnto\Store;
 
-use MediaWiki\Extension\Produnto\Fetcher\FetchStatus;
-use MediaWiki\Extension\Produnto\Manifest\ManifestStatus;
 use MediaWiki\Language\LanguageFallback;
 use StatusValue;
-use Wikimedia\Message\MessageValue;
+use Wikimedia\JsonCodec\JsonCodec;
 
 /**
  * Read-only access to possibly uncommitted package metadata
  */
 class PackageMetaAccess {
-	public const array STATUS_CLASSES = [
-		StatusValue::class,
-		FetchStatus::class,
-		ManifestStatus::class,
-		MessageValue::class
-	];
-
 	public function __construct(
 		private string $name,
 		private string $version,
@@ -199,10 +190,15 @@ class PackageMetaAccess {
 	 */
 	public function getStatus(): StatusValue {
 		if ( $this->error ) {
-			return unserialize(
-				$this->error,
-				[ 'allowed_classes' => self::STATUS_CLASSES ]
-			);
+			$codec = new JsonCodec();
+			$status = $codec->newFromJsonString( $this->error, StatusValue::class );
+			if ( $status === null ) {
+				return StatusValue::newFatal(
+					'produnto-fetch-error',
+					'unknown error'
+				);
+			}
+			return $status;
 		} else {
 			return StatusValue::newGood();
 		}

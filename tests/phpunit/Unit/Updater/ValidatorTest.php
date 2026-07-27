@@ -8,6 +8,7 @@ use MediaWiki\Extension\Produnto\Store\SimpleFileAccess;
 use MediaWiki\Extension\Produnto\Updater\Validator;
 use MediaWiki\HookContainer\HookContainer;
 use StatusValue;
+use Wikimedia\JsonCodec\JsonCodec;
 
 /**
  * @covers \MediaWiki\Extension\Produnto\Updater\Validator
@@ -152,7 +153,8 @@ class ValidatorTest extends \MediaWikiUnitTestCase {
 			1 => [ 'src/init.lua' => '' ],
 			2 => [ 'src/init.lua' => '' ],
 		] );
-		$serializedError = $error ? serialize( $error ) : null;
+		$codec = new JsonCodec();
+		$serializedError = $error ? $codec->toJsonString( $error ) : null;
 		$id = $this->nextId++;
 		return new PackageAccess(
 			$files, $id, $name, $version, '', '',
