@@ -6,6 +6,7 @@ use MediaWiki\Extension\Produnto\Updater\Updater;
 use MediaWiki\Language\Language;
 use MediaWiki\Message\MessageFormatterFactory;
 use MediaWiki\Rest\Handler;
+use Wikimedia\Message\MessageValue;
 
 class ValidateDeploymentHandler extends Handler {
 	public function __construct(
@@ -38,8 +39,7 @@ class ValidateDeploymentHandler extends Handler {
 	protected function getRequestBodySchema( string $mediaType ): array {
 		return [
 			'type' => 'object',
-			'description' => 'Map of package names to versions. All packages to be deployed ' .
-				'must be included, including packages which will be unchanged.',
+			'description' => new MessageValue( 'rest-param-desc-produnto-validate-packages' ),
 			'additionalProperties' => [
 				'type' => 'string'
 			],
@@ -53,19 +53,16 @@ class ValidateDeploymentHandler extends Handler {
 			'properties' => [
 				'ok' => [
 					'type' => 'boolean',
-					'description' => 'This will be true if there were no errors, even if there ' .
-						'were warnings. Warnings are significant and need to be acknowledged by ' .
-						'the user before deployment.'
+					'x-i18n-description' => 'rest-property-desc-produnto-validate-ok',
 				],
 				'warnings' => [
 					'type' => 'array',
-					'description' => 'An array of warnings. This should be empty before ' .
-						'proceeding with an automated deployment.',
+					'x-i18n-description' => 'rest-property-desc-produnto-validate-warnings',
 					'items' => Schema::MESSAGE,
 				],
 				'errors' => [
 					'type' => 'array',
-					'description' => 'An array of errors.',
+					'x-i18n-description' => 'rest-property-desc-produnto-validate-errors',
 					'items' => Schema::MESSAGE,
 				],
 			]

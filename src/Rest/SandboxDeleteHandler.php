@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\Produnto\Rest;
 
 use MediaWiki\Extension\Produnto\Sandbox\SandboxStore;
 use MediaWiki\Rest\Handler;
+use Wikimedia\Message\MessageValue;
 use Wikimedia\ParamValidator\ParamValidator;
 
 /**
@@ -37,7 +38,7 @@ class SandboxDeleteHandler extends Handler {
 				self::PARAM_SOURCE => 'path',
 				ParamValidator::PARAM_TYPE => 'string',
 				ParamValidator::PARAM_REQUIRED => true,
-				self::PARAM_DESCRIPTION => 'The sandbox ID',
+				self::PARAM_DESCRIPTION => new MessageValue( 'rest-param-desc-produnto-sandbox-id' ),
 			]
 		];
 	}

@@ -8,6 +8,7 @@ use MediaWiki\Language\Language;
 use MediaWiki\Message\MessageFormatterFactory;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\Rest\Handler;
+use Wikimedia\Message\MessageValue;
 use Wikimedia\ParamValidator\ParamValidator;
 
 class PackagesListHandler extends Handler {
@@ -138,7 +139,7 @@ class PackagesListHandler extends Handler {
 				self::PARAM_SOURCE => 'path',
 				ParamValidator::PARAM_TYPE => 'integer',
 				ParamValidator::PARAM_REQUIRED => true,
-				self::PARAM_DESCRIPTION => 'The partition number',
+				self::PARAM_DESCRIPTION => new MessageValue( 'rest-param-desc-produnto-partition' ),
 			]
 		];
 	}
@@ -152,7 +153,7 @@ class PackagesListHandler extends Handler {
 				'packages' => [
 					'type' => 'array',
 					'items' => Schema::PACKAGE,
-					'description' => 'A list of all fetched package versions in the partition',
+					'x-i18n-description' => 'rest-property-desc-produnto-packages',
 				]
 			]
 		];

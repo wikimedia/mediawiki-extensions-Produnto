@@ -7,6 +7,7 @@ use MediaWiki\Rest\RequestInterface;
 use MediaWiki\Rest\TokenAwareHandlerTrait;
 use MediaWiki\Rest\Validator\Validator;
 use stdClass;
+use Wikimedia\Message\MessageValue;
 use Wikimedia\ParamValidator\ParamValidator;
 
 /**
@@ -34,7 +35,7 @@ class SandboxDeactivateHandler extends Handler {
 				self::PARAM_SOURCE => 'path',
 				ParamValidator::PARAM_TYPE => 'string',
 				ParamValidator::PARAM_REQUIRED => true,
-				self::PARAM_DESCRIPTION => 'The sandbox ID',
+				self::PARAM_DESCRIPTION => new MessageValue( 'rest-param-desc-produnto-sandbox-id' ),
 			],
 		];
 	}

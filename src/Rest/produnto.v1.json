@@ -1,14 +1,16 @@
 {
 	"mwapi": "1.1.0",
 	"info": {
-		"title": "Produnto",
-		"version": "1.0.0"
+		"title": "Produnto API",
+		"version": "1.0.0",
+		"x-i18n-title": "rest-module-produnto.v1-title",
+		"x-i18n-description": "rest-module-produnto.v1-description"
 	},
 	"moduleId": "produnto/v1",
 	"paths": {
 		"/deployments/recent": {
 			"get": {
-				"description": "Get a list of recent deployments, including the active deployment if any.",
+				"x-i18n-description": "rest-endpoint-desc-get-produnto-deployments-recent",
 				"handler": {
 					"class": "MediaWiki\\Extension\\Produnto\\Rest\\RecentDeploymentsHandler",
 					"services": [
@@ -21,7 +23,7 @@
 		},
 		"/deployment/validate": {
 			"post": {
-				"description": "Validate a proposed new set of package versions.",
+				"x-i18n-description": "rest-endpoint-desc-post-produnto-deployments-validate",
 				"handler": {
 					"class": "MediaWiki\\Extension\\Produnto\\Rest\\ValidateDeploymentHandler",
 					"services": [
@@ -34,7 +36,7 @@
 		},
 		"/deployment/patch": {
 			"post": {
-				"description": "Make changes to the deployed set of package versions.",
+				"x-i18n-description": "rest-endpoint-desc-post-produnto-deployment-patch",
 				"handler": {
 					"class": "MediaWiki\\Extension\\Produnto\\Rest\\PatchDeploymentHandler",
 					"services": [
@@ -50,7 +52,7 @@
 		},
 		"/packages/all/": {
 			"get": {
-				"description": "The index to a list of all fetched package versions.",
+				"x-i18n-description": "rest-endpoint-desc-get-produnto-packages-all-index",
 				"handler": {
 					"class": "MediaWiki\\Extension\\Produnto\\Rest\\PackagesIndexHandler",
 					"services": [
@@ -63,7 +65,7 @@
 		},
 		"/packages/all/{partition}": {
 			"get": {
-				"description": "A list of fetched package versions within a partition.",
+				"x-i18n-description": "rest-endpoint-desc-get-produnto-packages-all-partition",
 				"handler": {
 					"class": "MediaWiki\\Extension\\Produnto\\Rest\\PackagesListHandler",
 					"services": [
@@ -78,7 +80,7 @@
 		},
 		"/gitlab/tag": {
 			"post": {
-				"description": "A GitLab webhook handler for the tag event. See [the GitLab documentation](https://docs.gitlab.com/user/project/integrations/webhook_events/#tag-events).",
+				"x-i18n-description": "rest-endpoint-desc-post-produnto-gitlab-tag",
 				"handler": {
 					"class": "MediaWiki\\Extension\\Produnto\\Rest\\GitlabTagHandler",
 					"services": [
@@ -91,7 +93,7 @@
 		},
 		"/sandbox": {
 			"get": {
-				"description": "List the sandboxes for the current user.",
+				"x-i18n-description": "rest-endpoint-desc-get-produnto-sandbox-list",
 				"handler": {
 					"class": "MediaWiki\\Extension\\Produnto\\Rest\\SandboxListHandler",
 					"services": [
@@ -102,7 +104,7 @@
 		},
 		"/sandbox/{id}": {
 			"post": {
-				"description": "Create or modify a sandbox in the current user session.",
+				"x-i18n-description": "rest-endpoint-desc-post-produnto-sandbox",
 				"handler": {
 					"class": "MediaWiki\\Extension\\Produnto\\Rest\\SandboxPostHandler",
 					"services": [
@@ -113,7 +115,7 @@
 				}
 			},
 			"delete": {
-				"description": "Delete a sandbox from the current user session.",
+				"x-i18n-description": "rest-endpoint-desc-delete-produnto-sandbox",
 				"handler": {
 					"class": "MediaWiki\\Extension\\Produnto\\Rest\\SandboxDeleteHandler",
 					"services": [
@@ -124,7 +126,7 @@
 		},
 		"/sandbox/{id}/activate": {
 			"post": {
-				"description": "Activate a sandbox in the session context so that its packages will be used on preview.",
+				"x-i18n-description": "rest-endpoint-desc-post-produnto-sandbox-activate",
 				"handler": {
 					"class": "MediaWiki\\Extension\\Produnto\\Rest\\SandboxActivateHandler",
 					"services": [
@@ -135,7 +137,7 @@
 		},
 		"/sandbox/{id}/deactivate": {
 			"post": {
-				"description": "Deactivate a sandbox so that its packages will no longer be used on preview.",
+				"x-i18n-description": "rest-endpoint-desc-post-produnto-sandbox-deactivate",
 				"handler": {
 					"class": "MediaWiki\\Extension\\Produnto\\Rest\\SandboxDeactivateHandler"
 				}

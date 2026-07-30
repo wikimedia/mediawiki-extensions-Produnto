@@ -109,7 +109,8 @@
 	},
 	"MessagesDirs": {
 		"Produnto": [
-			"i18n"
+			"i18n",
+			"src/Rest/i18n"
 		]
 	},
 	"ExtensionMessagesFiles": {

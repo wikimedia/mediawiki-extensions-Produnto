@@ -46,22 +46,22 @@ class SandboxListHandler extends Handler {
 				'properties' => [
 					'id' => [
 						'type' => 'integer',
-						'description' => 'The sandbox ID',
+						'x-i18n-description' => 'rest-property-desc-produnto-sandbox-id',
 						'example' => 1,
 					],
 					'size' => [
 						'type' => 'integer',
-						'description' => 'The size of the sandbox in bytes, counted towards a per-user limit',
+						'x-i18n-description' => 'rest-property-desc-produnto-sandbox-size',
 						'example' => 128599,
 					],
 					'mtime' => [
 						'type' => 'string',
-						'description' => 'The ISO 8601 combined date and time of last modification',
+						'x-i18n-description' => 'rest-property-desc-produnto-sandbox-mtime',
 						'example' => '2026-07-17T06:18:14+00:00',
 					],
 					'active' => [
 						'type' => 'boolean',
-						'description' => 'Whether the sandbox is used on preview',
+						'x-i18n-description' => 'rest-property-desc-produnto-sandbox-active',
 					],
 				]
 			]

@@ -13,6 +13,7 @@ use MediaWiki\Rest\RequestInterface;
 use MediaWiki\Rest\TokenAwareHandlerTrait;
 use MediaWiki\Rest\Validator\Validator;
 use MediaWiki\Storage\PageUpdaterFactory;
+use Wikimedia\Message\MessageValue;
 use Wikimedia\ParamValidator\ParamValidator;
 use Wikimedia\Timestamp\TimestampFormat;
 
@@ -75,24 +76,24 @@ class PatchDeploymentHandler extends Handler {
 				self::PARAM_SOURCE => 'body',
 				ParamValidator::PARAM_TYPE => 'string',
 				ParamValidator::PARAM_REQUIRED => true,
-				self::PARAM_DESCRIPTION => 'JSON serialized object mapping package names to ' .
-					'versions. If a deployed package is absent, it will remain unchanged. ' .
-					'If a version is null or the empty string, that package will be undeployed.',
+				self::PARAM_DESCRIPTION =>
+					new MessageValue( 'rest-param-desc-produnto-patch-packages' ),
 				self::PARAM_EXAMPLE => '{"some-package":"1.0"}',
 			],
 			'summary' => [
 				self::PARAM_SOURCE => 'body',
 				ParamValidator::PARAM_TYPE => 'string',
 				ParamValidator::PARAM_REQUIRED => false,
-				self::PARAM_DESCRIPTION => 'A comment for the revision.',
+				self::PARAM_DESCRIPTION =>
+					new MessageValue( 'rest-param-desc-produnto-patch-summary' ),
 				self::PARAM_EXAMPLE => 'Updated some-package from 1.0 to 2.0',
 			],
 			'ignoreWarnings' => [
 				self::PARAM_SOURCE => 'body',
 				ParamValidator::PARAM_TYPE => 'boolean',
 				ParamValidator::PARAM_REQUIRED => false,
-				self::PARAM_DESCRIPTION => 'Whether to ignore validation warnings, ' .
-					'such as package requirements not satisfied.',
+				self::PARAM_DESCRIPTION =>
+					new MessageValue( 'rest-param-desc-produnto-patch-ignore-warnings' ),
 			],
 		] + $this->getTokenParamDefinition();
 	}
@@ -115,16 +116,16 @@ class PatchDeploymentHandler extends Handler {
 			'properties' => [
 				'ok' => [
 					'type' => 'boolean',
-					'description' => 'Whether the deployment was successful',
+					'x-i18n-description' => 'rest-property-desc-produnto-patch-ok',
 				],
 				'warnings' => [
 					'type' => 'array',
-					'description' => 'Validation warnings',
+					'x-i18n-description' => 'rest-property-desc-produnto-patch-warnings',
 					'items' => Schema::MESSAGE,
 				],
 				'errors' => [
 					'type' => 'array',
-					'description' => 'Fatal errors',
+					'x-i18n-description' => 'rest-property-desc-produnto-patch-errors',
 					'items' => Schema::MESSAGE,
 				],
 				'deployment' => Schema::DEPLOYMENT,

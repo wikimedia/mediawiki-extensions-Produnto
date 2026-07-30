@@ -12,43 +12,43 @@ class Schema {
 		'properties' => [
 			'id' => [
 				'type' => 'integer',
-				'description' => 'The ID of the deployment, pd_id.',
+				'x-i18n-description' => 'rest-property-desc-produnto-deployment-id',
 				'example' => 1,
 			],
 			'controlWiki' => [
 				'type' => 'string',
-				'description' => 'The wiki ID of the initiating action.',
+				'x-i18n-description' => 'rest-property-desc-produnto-deployment-control-wiki',
 				'example' => 'enwiki',
 			],
 			'revision' => [
 				'type' => 'integer',
-				'description' => 'The revision ID of the initiating action.',
+				'x-i18n-description' => 'rest-property-desc-produnto-deployment-revision',
 				'example' => 1,
 			],
 			'active' => [
 				'type' => 'boolean',
-				'description' => 'Whether the deployment is active by default on the wiki.',
+				'x-i18n-description' => 'rest-property-desc-produnto-deployment-active',
 			],
 			'packages' => [
 				'type' => 'object',
-				'description' => 'Map of package name to deployed version.',
+				'x-i18n-description' => 'rest-property-desc-produnto-deployment-packages',
 				'additionalProperties' => [ 'type' => 'string' ],
 				'example' => [ 'some-package' => '1.0' ],
 			],
 			'userText' => [
 				'type' => 'string',
-				'description' => 'The name of the initiating user.',
+				'x-i18n-description' => 'rest-property-desc-produnto-deployment-user-text',
+				'description' => '',
 				'example' => 'Some user',
 			],
 			'timestamp' => [
 				'type' => 'string',
-				'description' => 'The ISO-8601 combined date and time of when ' .
-					'the deployment was created.',
+				'x-i18n-description' => 'rest-property-desc-produnto-deployment-timestamp',
 				'example' => '2026-07-16T05:22:29Z',
 			],
 			'summary' => [
 				'type' => 'string',
-				'description' => 'The edit summary or comment supplied by the initiating user.',
+				'x-i18n-description' => 'rest-property-desc-produnto-deployment-summary',
 				'example' => 'Updated some-package from 1.0 to 2.0',
 			],
 		]
@@ -60,121 +60,111 @@ class Schema {
 		'properties' => [
 			'name' => [
 				'type' => 'string',
-				'description' => 'The name of the package.',
+				'x-i18n-description' => 'rest-property-desc-produnto-package-name',
 				'example' => 'produnto-test',
 			],
 			'version' => [
 				'type' => 'string',
-				'description' => 'The package version.',
+				'x-i18n-description' => 'rest-property-desc-produnto-package-version',
 				'example' => '1.0',
 			],
 			'id' => [
 				'type' => 'integer',
-				'description' => 'The package ID (ppv_id) identifying the name/version pair.',
+				'x-i18n-description' => 'rest-property-desc-produnto-package-id',
 				'example' => 1,
 			],
 			'fetchedUrl' => [
 				'type' => 'string',
-				'description' => 'An internal URL used when the package was fetched. ' .
-					'May be an empty string or otherwise invalid.',
+				'x-i18n-description' => 'rest-property-desc-produnto-package-fetched-url',
 				'example' => 'https://gitlab.wikimedia.org/tstarling/produnto-test',
 			],
 			'upstreamRef' => [
 				'type' => 'string',
-				'description' => 'A string identifying the upstream package version. ' .
-					'For packages fetched from Git, this will be a git ref. ' .
-					'For packages fetched from elsewhere, this may be an empty string ' .
-					'or otherwise not unique.',
+				'x-i18n-description' => 'rest-property-desc-produnto-package-upstream-ref',
 				'example' => 'refs/tags/v1.2',
 			],
 			'localName' => [
 				'type' => 'object',
-				'description' => 'The localised package name.',
+				'x-i18n-description' => 'rest-property-desc-produnto-package-local-name',
 				'additionalProperties' => [ 'type' => 'string' ],
 				'example' => [ 'en' => 'Produnto test' ],
 			],
 			'description' => [
 				'type' => 'object',
-				'description' => 'A short localised description of the package.',
+				'x-i18n-description' => 'rest-property-desc-produnto-package-description',
 				'additionalProperties' => [ 'type' => 'string' ],
 				'example' => [ 'en' => 'A test package for testing the package manager.' ],
 			],
 			'type' => [
 				'type' => 'string',
-				'description' => 'The type of the package.',
+				'x-i18n-description' => 'rest-property-desc-produnto-package-type',
 				'enum' => [ 'scribunto' ],
 			],
 			'homepageUrl' => [
 				'type' => 'string',
-				'description' => 'The URL of the package homepage. Optional: use collabUrl ' .
-					'and docUrl if there is no separate homepage. This is the `url` property ' .
-					'from the package manifest.',
+				'x-i18n-description' => 'rest-property-desc-produnto-package-homepage-url',
 				'example' => 'https://www.mediawiki.org/wiki/Extension:Produnto',
 			],
 			'collabUrl' => [
 				'type' => 'string',
-				'description' => 'The URL of a human-readable entry point for source code ' .
-					'review and contributions. For example, a GitLab project page.',
+				'x-i18n-description' => 'rest-property-desc-produnto-package-collab-url',
 				'example' => 'https://gitlab.wikimedia.org/tstarling/produnto-test',
 			],
 			'docUrl' => [
 				'type' => 'string',
-				'description' => 'The URL of the documentation page.',
+				'x-i18n-description' => 'rest-property-desc-produnto-package-doc-url',
 				'example' => 'https://www.mediawiki.org/wiki/Extension:Produnto',
 			],
 			'issueUrl' => [
 				'type' => 'string',
-				'description' => 'The URL of the package\'s bug tracker.',
+				'x-i18n-description' => 'rest-property-desc-produnto-package-issue-url',
 				'example' => 'https://phabricator.wikimedia.org/project/view/8472/',
 			],
 			'authors' => [
 				'type' => 'array',
 				'items' => [ 'type' => 'string' ],
-				'description' => 'The package\'s authors.',
+				'x-i18n-description' => 'rest-property-desc-produnto-package-authors',
 				'example' => [ 'C. Scott Ananian', 'Subramanya Sastry', 'Tim Starling' ],
 			],
 			'license' => [
 				'type' => 'string',
-				'description' => 'SPDX identifier for the license under which ' .
-					'the package is released.',
+				'x-i18n-description' => 'rest-property-desc-produnto-package-license',
 				'example' => 'GPL-2.0-or-later'
 			],
 			'requires' => [
 				'type' => 'object',
-				'description' => 'The dependencies of the package',
+				'x-i18n-description' => 'rest-property-desc-produnto-package-requires',
 				'properties' => [
 					'Lua' => [
 						'type' => 'string',
-						'description' => 'The Lua version required'
+						'x-i18n-description' => 'rest-property-desc-produnto-package-requires-lua',
 					],
 					'MediaWiki' => [
 						'type' => 'string',
-						'description' => 'The MediaWiki version required'
+						'x-i18n-description' => 'rest-property-desc-produnto-package-requires-mediawiki',
 					],
 				],
 				'patternProperties' => [ '.*' => [
 					'type' => 'string',
-					'description' => 'Required package versions'
+					'x-i18n-description' => 'rest-property-desc-produnto-package-requires-other',
 				] ],
 				'example' => [ 'some-package' => '>1.0' ],
 			],
 			'modules' => [
 				'type' => 'object',
-				'description' => 'A map of each global Scribunto module name to ' .
-					'its implementing file, relative to the package root.',
+				'x-i18n-description' => 'rest-property-desc-produnto-package-modules',
 				'patternProperties' => [ '.*' => [ 'type' => 'string' ] ],
 				'example' => [ 'produnto_test' => 'src/init.lua' ],
 			],
 			'state' => [
 				'type' => 'string',
-				'description' => 'The fetch state of the package',
+				'x-i18n-description' => 'rest-property-desc-produnto-package-state',
 				'enum' => [ 'ready', 'fetching', 'failed' ],
 				'default' => 'ready'
 			],
 			'errors' => [
 				'type' => 'array',
-				'description' => 'Errors which occurred while fetching the package ' .
-					'and parsing its manifest file',
+				'x-i18n-description' => 'rest-property-desc-produnto-package-errors',
 				'items' => self::MESSAGE
 			]
 		]
@@ -185,17 +175,16 @@ class Schema {
 		'properties' => [
 			'key' => [
 				'type' => 'string',
-				'description' => 'The MediaWiki message key',
+				'x-i18n-description' => 'rest-property-desc-produnto-message-key',
 				'example' => 'produnto-fetch-manifest'
 			],
 			'translations' => [
 				'type' => 'object',
-				'description' => 'An array mapping the MediaWiki language code ' .
-					'to the translation in that language. ',
+				'x-i18n-description' => 'rest-property-desc-produnto-message-translations',
 				'required' => [ 'en' ],
 				'additionalProperties' => [
 					'type' => 'string',
-					'description' => 'The string in each language',
+					'x-i18n-description' => 'rest-property-desc-produnto-message-translation',
 				],
 				'example' => [
 					'en' => 'Error in produnto.json: invalid JSON'

@@ -13,6 +13,7 @@ use MediaWiki\Rest\TokenAwareHandlerTrait;
 use MediaWiki\Rest\Validator\Validator;
 use Psr\Http\Message\UploadedFileInterface;
 use StatusValue;
+use Wikimedia\Message\MessageValue;
 use Wikimedia\ParamValidator\ParamValidator;
 
 class SandboxPostHandler extends Handler {
@@ -149,8 +150,7 @@ class SandboxPostHandler extends Handler {
 				self::PARAM_SOURCE => 'path',
 				ParamValidator::PARAM_TYPE => 'string',
 				ParamValidator::PARAM_REQUIRED => true,
-				self::PARAM_DESCRIPTION => 'An arbitrary user-scoped identifier for the ' .
-					'sandbox being created or updated.',
+				self::PARAM_DESCRIPTION => new MessageValue( 'rest-param-desc-produnto-sandbox-post-id' ),
 				self::PARAM_EXAMPLE => 'sandbox1',
 			]
 		];
@@ -162,11 +162,8 @@ class SandboxPostHandler extends Handler {
 			'hash' => [
 				self::PARAM_SOURCE => 'body',
 				ParamValidator::PARAM_TYPE => 'array',
-				self::PARAM_DESCRIPTION => 'An associative array of associative arrays, with ' .
-					'the package name in the first key, the path in the second key and the ' .
-					'lowercase hexadecimal SHA-256 hash of the file contents of that path as ' .
-					'the value. For example `?hash[package1][src/init.lua]=' .
-					'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`',
+				self::PARAM_DESCRIPTION =>
+					new MessageValue( 'rest-param-desc-produnto-sandbox-hash' ),
 			]
 		] + $this->getTokenParamDefinition();
 	}
@@ -176,15 +173,7 @@ class SandboxPostHandler extends Handler {
 			'type' => 'object',
 			'properties' => [
 				'hash' => [
-					'description' => 'An associative array of associative arrays, with ' .
-						'the package name in the first key, the path in the second key and the ' .
-						'lowercase hexadecimal SHA-256 hash of the file contents of that path as ' .
-						'the value. For example `hash[package1][src/init.lua]=' .
-						"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`\n\n" .
-						'All hashes present in the sandbox must be sent in every request. ' .
-						"File deletion is done by omitting a hash.\n\n" .
-						'NOTE: OpenAPI and Swagger do not support this format. We present a ' .
-						'schema here as a rough human-readable explanation of the request body.',
+					'description' => new MessageValue( 'rest-param-desc-produnto-sandbox-hash' ),
 					'type' => 'object',
 					'additionalProperties' => [
 						'type' => 'object',
@@ -195,14 +184,7 @@ class SandboxPostHandler extends Handler {
 					'example' => 'one does not simply create a sandbox with Swagger',
 				],
 				'file' => [
-					'description' => 'An array of files posted as multipart, where the name ' .
-						'of each file is of the form `file[<hash>]` where `<hash>` is the ' .
-						"SHA-256 hash of the content as referenced in the `hash` parameter.\n\n" .
-						'It is optional to post the contents of a file. The server will respond ' .
-						'with a list of missing hashes so that the client can post them on ' .
-						"demand.\n\n" .
-						'NOTE: OpenAPI and Swagger do not support this format. We present a ' .
-						'schema here as a rough human-readable explanation of the request body.',
+					'description' => new MessageValue( 'rest-param-desc-produnto-sandbox-file' ),
 					'type' => 'object',
 					'additionalProperties' => [
 						'type' => 'string',
@@ -232,15 +214,13 @@ class SandboxPostHandler extends Handler {
 			'properties' => [
 				'ok' => [
 					'type' => 'boolean',
-					'description' => 'Whether the sandbox has all file contents and ' .
-						'is ready to use.',
+					'x-i18n-description' => 'rest-property-desc-produnto-sandbox-ok',
 					'example' => false,
 				],
 				'missingHashes' => [
 					'type' => 'array',
 					'items' => [ 'type' => 'string' ],
-					'description' => 'The hashes of files that were not found in the ' .
-						'database or in previously posted sandbox update requests.',
+					'x-i18n-description' => 'rest-property-desc-produnto-sandbox-missing-hashes',
 					'example' => [ 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca' .
 						'495991b7852b855' ],
 				]

@@ -66,18 +66,17 @@ class PackagesIndexHandler extends Handler {
 						'properties' => [
 							'href' => [
 								'type' => 'string',
-								'description' => 'The relative URL of the partition; ' .
-									'the partition parameter to the list endpoint',
+								'x-i18n-description' => 'rest-property-desc-produnto-partition-href',
 								'example' => '0',
 							],
 							'start' => [
 								'type' => 'integer',
-								'description' => 'The lowest possible package ID in the partition',
+								'x-i18n-description' => 'rest-property-desc-produnto-partition-start',
 								'example' => 0,
 							],
 							'end' => [
 								'type' => 'integer',
-								'description' => 'The highest possible package ID in the partition',
+								'x-i18n-description' => 'rest-property-desc-produnto-partition-end',
 								'example' => 999
 							]
 						]
