@@ -9,6 +9,7 @@ use MediaWiki\Extension\Produnto\Store\PackageBuilder;
 use MediaWiki\Extension\Produnto\Store\PackageBuilderError;
 use MediaWiki\Extension\Produnto\Store\PackageMetaAccess;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
+use MediaWiki\Extension\Produnto\Store\VersionAlreadyExistsError;
 use MediaWiki\JobQueue\JobQueueGroup;
 use MediaWiki\Request\WebRequest;
 use Psr\Log\LoggerInterface;
@@ -38,13 +39,33 @@ class Fetcher {
 	 * @throws PackageBuilderError
 	 */
 	public function asyncFetch( string $projectName, string $url, string $version, string $ref ): void {
-		$packageBuilder = $this->store->createPackageVersion();
-		$package = $packageBuilder
-			->name( $projectName )
-			->fetchedUrl( $url )
-			->version( $version )
-			->upstreamRef( $ref )
-			->suspend();
+		try {
+			$packageBuilder = $this->store->createPackageVersion();
+			$package = $packageBuilder
+				->name( $projectName )
+				->fetchedUrl( $url )
+				->version( $version )
+				->upstreamRef( $ref )
+				->suspend();
+		} catch ( VersionAlreadyExistsError $e ) {
+			// Allow refetching of failed packages
+			$package = $this->store->getPackageByName( $projectName, $version );
+			if ( !$package ) {
+				$package = $this->store->getPackageByName(
+					$projectName, $version, IDBAccessObject::READ_LATEST );
+				if ( !$package ) {
+					throw $e;
+				}
+			}
+			if ( $package->getState() !== ProduntoStore::STATE_FAILED ) {
+				throw $e;
+			}
+			$packageBuilder = $this->store->refetchPackage( $package );
+			if ( !$packageBuilder ) {
+				// Another fetch request must have occurred simultaneously
+				throw $e;
+			}
+		}
 		$this->jobQueueGroup->push( FetchJob::newSpec( $package->getId() ) );
 	}
 

@@ -110,6 +110,46 @@ EOT;
 		);
 	}
 
+	/**
+	 * Refetching of a package that previously failed should be allowed
+	 */
+	public function testRefetchFailed() {
+		$this->setupServer();
+		$this->setupHttp( 404, 'Not found' );
+
+		$fetcher = $this->getFetcher();
+		$fetcher->asyncFetch(
+			'produnto-test',
+			'https://gitlab.wikimedia.org/tstarling/produnto-test',
+			'1.1',
+			'refs/tags/v1.1'
+		);
+		$this->runJobs();
+
+		$store = $this->getStore();
+		$package = $store->getPackageById( 1 );
+		$this->assertNotNull( $package );
+		$this->assertSame( ProduntoStore::STATE_FAILED, $package->getState() );
+
+		$body = file_get_contents( __DIR__ . '/../../data/archive.zip' );
+		$this->setupHttp( 200, $body );
+		$fetcher = $this->getFetcher();
+		$fetcher->asyncFetch(
+			'produnto-test',
+			'https://gitlab.wikimedia.org/tstarling/produnto-test',
+			'1.1',
+			'refs/tags/v1.1'
+		);
+
+		$package = $store->getPackageById( 1 );
+		$this->assertSame( ProduntoStore::STATE_FETCHING, $package->getState() );
+
+		$this->runJobs();
+
+		$package = $store->getPackageById( 1 );
+		$this->assertSame( ProduntoStore::STATE_READY, $package->getState() );
+	}
+
 	private function getFetcher(): Fetcher {
 		return ( new ProduntoServices( $this->getServiceContainer() ) )->getFetcher();
 	}

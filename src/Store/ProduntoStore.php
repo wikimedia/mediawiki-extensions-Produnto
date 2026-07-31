@@ -216,6 +216,33 @@ class ProduntoStore {
 	}
 
 	/**
+	 * Resume a failed package, setting its state to fetching.
+	 *
+	 * @param PackageAccess $package
+	 * @return PackageBuilder|null The resumed package builder, or null if the
+	 *  package could not be atomically acquired.
+	 */
+	public function refetchPackage( PackageAccess $package ): ?PackageBuilder {
+		$db = $this->dbProvider->getPrimaryDatabase( 'virtual-produnto' );
+		$db->newUpdateQueryBuilder()
+			->update( 'produnto_package_version' )
+			->set( [
+				'ppv_state' => self::STATE_FETCHING,
+				'ppv_error' => null,
+			] )
+			->where( [
+				'ppv_id' => $package->getId(),
+				'ppv_state' => self::STATE_FAILED
+			] )
+			->caller( __METHOD__ )
+			->execute();
+		if ( !$db->affectedRows() ) {
+			return null;
+		}
+		return $this->resumePackageBuilder( $package );
+	}
+
+	/**
 	 * Get the package version with the specified ID, or null if there is no such package.
 	 *
 	 * @param int $id
