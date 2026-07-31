@@ -29,16 +29,16 @@
 				v-if="homepageUrl || collabUrl || docUrl || issueUrl || repoViewerUrl"
 				class="ext-produnto-package__info__links"
 			>
-				<span v-if="homepageUrl">
+				<span v-if="isValidUrl( homepageUrl )">
 					<a :href="homepageUrl">{{ msg( 'produnto-dashboard-homepage' ) }}</a>
 				</span>
-				<span v-if="collabUrl">
+				<span v-if="isValidUrl( collabUrl )">
 					<a :href="collabUrl">{{ msg( 'produnto-dashboard-collab' ) }}</a>
 				</span>
-				<span v-if="docUrl">
+				<span v-if="isValidUrl( docUrl )">
 					<a :href="docUrl">{{ msg( 'produnto-dashboard-docs' ) }}</a>
 				</span>
-				<span v-if="issueUrl">
+				<span v-if="isValidUrl( issueUrl )">
 					<a :href="issueUrl">{{ msg( 'produnto-dashboard-issues' ) }}</a>
 				</span>
 				<span v-if="repoViewerUrl">
@@ -133,6 +133,7 @@ module.exports = defineComponent( {
 			} ),
 			wrappedSelected,
 			repoViewerUrl,
+			isValidUrl: ( url ) => /^https?:\/\//.test( url ),
 		};
 	}
 } );

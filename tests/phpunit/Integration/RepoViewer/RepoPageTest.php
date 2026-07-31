@@ -138,6 +138,20 @@ class RepoPageTest extends \MediaWikiIntegrationTestCase {
 					'test'
 				]
 			],
+			'valid URL' => [
+				[
+					'dbKey' => 'Package1',
+					'collabUrl' => 'http://collab/',
+				],
+				[ 'href="http://collab/"' ]
+			],
+			'invalid URL' => [
+				[
+					'dbKey' => 'Package1',
+					'collabUrl' => 'collab://collab/',
+				],
+				[ '<td>collab://collab/</td>' ]
+			],
 		];
 	}
 
@@ -181,7 +195,9 @@ class RepoPageTest extends \MediaWikiIntegrationTestCase {
 			'1.0.0',
 			'refs/tags/v1.0.0',
 			'http://example.com/package1',
-			[],
+			[
+				'collab-url' => $options['collabUrl'] ?? null
+			],
 			ProduntoStore::STATE_READY,
 			null
 		);

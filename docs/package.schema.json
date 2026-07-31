@@ -44,19 +44,23 @@
 		},
 		"url": {
 			"type": "string",
-			"description": "The URL of the package homepage. Optional: use collab-url and doc-url if there is no separate homepage."
+			"description": "The URL of the package homepage. Optional: use collab-url and doc-url if there is no separate homepage.",
+			"pattern": "^https?://"
 		},
 		"collab-url": {
 			"type": "string",
-			"description": "The URL of a human-readable entry point for source code review and contributions. For example, a GitLab project page."
+			"description": "The URL of a human-readable entry point for source code review and contributions. For example, a GitLab project page.",
+			"pattern": "^https?://"
 		},
 		"doc-url": {
 			"type": "string",
-			"description": "The URL of the documentation page."
+			"description": "The URL of the documentation page.",
+			"pattern": "^https?://"
 		},
 		"issue-url": {
 			"type": "string",
-			"description": "The URL of the package's bug tracker."
+			"description": "The URL of the package's bug tracker.",
+			"pattern": "^https?://"
 		},
 		"requires": {
 			"type": "object",

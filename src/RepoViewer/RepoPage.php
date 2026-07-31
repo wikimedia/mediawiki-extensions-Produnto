@@ -179,7 +179,9 @@ class RepoPage extends BaseShadowPage {
 		foreach ( $data as $name => $value ) {
 			if ( $value === null ) {
 				$formattedValue = null;
-			} elseif ( str_ends_with( $name, '-url' ) ) {
+			} elseif ( str_ends_with( $name, '-url' )
+				&& $this->isValidUrl( $value )
+			) {
 				$formattedValue = Html::linkButton( $value, [ 'href' => $value ] );
 			} elseif ( $name === 'requires' && $value !== [] ) {
 				$parts = [];
@@ -204,6 +206,15 @@ class RepoPage extends BaseShadowPage {
 	}
 
 	/**
+	 * The manifest schema allows only HTTP or HTTPS protocols, but for safety
+	 * we will also validate that here. If the URL is not valid, the string will
+	 * still be shown as a literal.
+	 */
+	private function isValidUrl( ?string $url ): bool {
+		return $url !== null && preg_match( '!^https?://!', $url );
+	}
+
+	/**
 	 * Get the notice box at the top of the page notifying the user that the
 	 * page is from a package.
 	 */
@@ -222,7 +233,7 @@ class RepoPage extends BaseShadowPage {
 			$infoHtml
 		);
 		$url = $this->package->getCollabUrl();
-		if ( $url ) {
+		if ( $this->isValidUrl( $url ) ) {
 			$html .= ' ' .
 			Html::rawElement(
 				'div',
