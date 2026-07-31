@@ -25,6 +25,7 @@ class FetchStatus extends StatusValue {
 		$code = $response->getStatusCode();
 		if ( $code >= 500 && $code < 600 ) {
 			$message = 'produnto-fetch-server-error';
+			$this->retry = true;
 		} else {
 			$message = 'produnto-fetch-http-error';
 		}
@@ -48,5 +49,6 @@ class FetchStatus extends StatusValue {
 			default => $class
 		};
 		$this->fatal( 'produnto-fetch-connect-error', $reason );
+		$this->retry = true;
 	}
 }

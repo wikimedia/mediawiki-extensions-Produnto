@@ -133,11 +133,6 @@ class Fetcher {
 		if ( !$status->isOK() ) {
 			$this->logger->error( 'Fetch failure: {status}',
 				[ 'status' => (string)$status ] );
-			if ( $status->hasMessage( 'produnto-fetch-server-error' )
-				|| $status->hasMessage( 'produnto-fetch-connect-error' )
-			) {
-				$status->retry = true;
-			}
 			return $status;
 		}
 
