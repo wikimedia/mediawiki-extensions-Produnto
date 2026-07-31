@@ -2,6 +2,7 @@
 
 namespace MediaWiki\Extension\Produnto\Rest;
 
+use MediaWiki\Context\RequestContext;
 use MediaWiki\Extension\Produnto\Fetcher\Fetcher;
 use MediaWiki\Extension\Produnto\Server\GitlabServer;
 use MediaWiki\Extension\Produnto\Server\ServerContainer;
@@ -28,6 +29,7 @@ class GitlabTagHandler extends Handler {
 		'@phan-var array $body';
 		$ref = $body['ref'];
 		$projectUrl = $body['project']['web_url'];
+
 		$server = $this->serverContainer->getServerForUrl( $projectUrl );
 		if ( !$server ) {
 			$this->logger->info( "GitLab web hook received unknown project URL {url}",
@@ -37,6 +39,7 @@ class GitlabTagHandler extends Handler {
 				400
 			);
 		}
+
 		if ( !( $server instanceof GitlabServer ) ) {
 			$this->logger->info( 'GitLab web hook received non-GitLab project URL {url}',
 				[ 'url' => $projectUrl ] );
@@ -45,6 +48,18 @@ class GitlabTagHandler extends Handler {
 				400
 			);
 		}
+
+		$clientIp = RequestContext::getMain()->getRequest()->getIP();
+		if ( !$server->isWebhookIp( $clientIp ) ) {
+			$this->logger->info( 'GitLab web hook received request from invalid IP {ip}',
+				[ 'ip' => $clientIp ] );
+			throw new HttpException(
+				'Unauthorized client IP. ' .
+				'Add your IP to $wgProduntoServers[...][\'webhookIps\']',
+				403
+			);
+		}
+
 		$name = $server->urlToName( $projectUrl );
 		if ( $name === null ) {
 			$this->logger->info( 'GitLab web hook received non-project URL {url}',

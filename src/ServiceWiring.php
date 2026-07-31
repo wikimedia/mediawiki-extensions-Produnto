@@ -20,6 +20,11 @@ return [
 			$services->get( 'Produnto.Updater' ),
 		);
 	},
+
+	'Produnto.DnsResolver' => static function ( MediaWikiServices $services ) {
+		return gethostbynamel( ... );
+	},
+
 	'Produnto.Fetcher' => static function ( MediaWikiServices $services ) {
 		return new Fetcher(
 			$services->get( 'Produnto.Store' ),
@@ -55,6 +60,7 @@ return [
 	'Produnto.ServerContainer' => static function ( MediaWikiServices $services ) {
 		return new ServerContainer(
 			$services->getHttpRequestFactory(),
+			$services->get( 'Produnto.DnsResolver' ),
 			$services->getMainConfig()
 		);
 	},

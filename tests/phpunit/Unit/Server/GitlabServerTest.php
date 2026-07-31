@@ -68,6 +68,7 @@ class GitlabServerTest extends \MediaWikiUnitTestCase {
 		$http = $this->createNoOpMock( HttpRequestFactory::class );
 		$server = new GitlabServer(
 			$http,
+			$this->makeFakeResolver(),
 			[
 				'type' => 'gitlab',
 				'url' => $baseUrl,
@@ -99,11 +100,79 @@ class GitlabServerTest extends \MediaWikiUnitTestCase {
 	public function testStripInitialPathSegment( $path, $expected ) {
 		$server = new GitlabServer(
 			$this->createNoOpMock( HttpRequestFactory::class ),
+			$this->makeFakeResolver(),
 			[ 'type' => 'gitlab', 'url' => '', 'projectPrefixes' => [] ]
 		);
 		/** @var GitlabServer $testServer */
 		$testServer = TestingAccessWrapper::newFromObject( $server );
 		$result = $testServer->stripInitialPathSegment( $path );
 		$this->assertSame( $expected, $result );
+	}
+
+	public static function provideIsWebhookIp() {
+		yield from self::provideIsWebhookIpViaDns();
+		yield from [
+			'IPv4 network allow' => [ '127.0.0.0/24', '127.0.0.1', true ],
+			'IPv4 network deny' => [ '127.0.0.0/24', '127.0.1.1', false ],
+			'IPv6 network allow' => [ '::/64', '::1', true ],
+			'IPv6 network deny' => [ '::/64', '1::1', false ],
+			'Two ranges allow' => [ [ '::/64', '127.0.0.0/24' ], '::1', true ],
+			'Two ranges deny' => [ [ '::/64', '127.0.0.0/24' ], '1::1', false ],
+		];
+	}
+
+	/**
+	 * @dataProvider provideIsWebhookIp
+	 * @param string|string[] $ranges
+	 * @param string $ip
+	 * @param bool $expected
+	 */
+	public function testIsWebhookIp( $ranges, string $ip, bool $expected ) {
+		$http = $this->createNoOpMock( HttpRequestFactory::class );
+		$server = new GitlabServer(
+			$http,
+			$this->makeFakeResolver(),
+			[
+				'url' => 'https://localhost/',
+				'projectPrefixes' => [ '' ],
+				'webhookIps' => $ranges
+			]
+		);
+		$result = $server->isWebhookIp( $ip );
+		$this->assertSame( $expected, $result );
+	}
+
+	public static function provideIsWebhookIpViaDns() {
+		return [
+			'single IP allow' => [ '127.0.0.1', '127.0.0.1', true ],
+			'single IP deny' => [ '127.0.0.1', '127.0.0.2', false ],
+			'multiple IP allow' => [ [ '127.0.0.1', '127.0.0.2' ], '127.0.0.2', true ],
+			'multiple IP deny' => [ [ '127.0.0.1', '127.0.0.2' ], '127.0.0.3', false ],
+		];
+	}
+
+	/**
+	 * @dataProvider provideIsWebhookIpViaDns
+	 * @param string|string[] $allowedIps
+	 * @param string $ip
+	 * @param bool $expected
+	 */
+	public function testIsWebhookIpViaDns( $allowedIps, $ip, $expected ) {
+		$http = $this->createNoOpMock( HttpRequestFactory::class );
+		$server = new GitlabServer(
+			$http,
+			static fn ( $host ) => (array)$allowedIps,
+			[
+				'url' => 'https://localhost/',
+				'projectPrefixes' => [ '' ]
+			]
+		);
+
+		$result = $server->isWebhookIp( $ip );
+		$this->assertSame( $expected, $result );
+	}
+
+	private function makeFakeResolver() {
+		return static fn ( $host ) => [ '10.1.1.1' ];
 	}
 }

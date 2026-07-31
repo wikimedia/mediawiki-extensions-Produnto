@@ -12,8 +12,14 @@ use MediaWiki\Http\HttpRequestFactory;
 class ServerContainer {
 	private ?array $servers = null;
 
+	/**
+	 * @param HttpRequestFactory $httpRequestFactory
+	 * @param callable $dnsResolver
+	 * @param Config $config
+	 */
 	public function __construct(
 		private readonly HttpRequestFactory $httpRequestFactory,
+		private $dnsResolver,
 		private readonly Config $config,
 	) {
 	}
@@ -38,6 +44,7 @@ class ServerContainer {
 				if ( $serverConfig['type'] === 'gitlab' ) {
 					$this->servers[] = new GitlabServer(
 						$this->httpRequestFactory,
+						$this->dnsResolver,
 						$serverConfig
 					);
 				} else {

@@ -10,6 +10,7 @@ use MediaWiki\Extension\Produnto\Fetcher\FetchStatus;
 use MediaWiki\Extension\Produnto\Store\PackageBuilder;
 use MediaWiki\Extension\Produnto\Store\PackageMetaAccess;
 use MediaWiki\Http\HttpRequestFactory;
+use Wikimedia\IPUtils;
 use ZipArchive;
 
 /**
@@ -20,9 +21,12 @@ class GitlabServer extends GitServer {
 	private array $projectPrefixes;
 	private ?string $proxy;
 	private float|int $maxFileSize;
+	private ?array $webhookIps = null;
 
 	/**
 	 * @param HttpRequestFactory $httpRequestFactory
+	 * @param callable $dnsResolver A function which takes a string hostname and
+	 *   returns an array of IP addresses.
 	 * @param array $config Associative array:
 	 *   - url: The base URL of the GitLab installation (external_url)
 	 *   - projectPrefixes: An array of strings specifying allowable project
@@ -30,15 +34,22 @@ class GitlabServer extends GitServer {
 	 *   - proxy: The HTTP proxy to use to contact GitLab
 	 *   - maxFileSize: The maximum size of each file in a package in bytes
 	 *     (default 10 MiB)
+	 *   - webhookIps: A string or array of strings giving IP addresses or
+	 *     ranges which are allowed to post to the GitLab webhook; the GitLab
+	 *     server IP. By default, look up the host part of the URL.
 	 */
 	public function __construct(
 		private readonly HttpRequestFactory $httpRequestFactory,
+		private $dnsResolver,
 		array $config,
 	) {
 		$this->url = self::addTrailingSlash( $config['url'] );
 		$this->projectPrefixes = $config['projectPrefixes'];
 		$this->proxy = $config['proxy'] ?? null;
 		$this->maxFileSize = $config['maxFileSize'] ?? 10 * 1024 * 1024;
+		if ( isset( $config['webhookIps'] ) ) {
+			$this->webhookIps = (array)$config['webhookIps'];
+		}
 	}
 
 	/**
@@ -162,5 +173,29 @@ class GitlabServer extends GitServer {
 			return null;
 		}
 		return substr( $name, $slashPos + 1 );
+	}
+
+	/**
+	 * Check whether an IP address is allowed to post to the webhook endpoint
+	 */
+	public function isWebhookIp( string $ip ): bool {
+		if ( $this->webhookIps === null ) {
+			$host = parse_url( $this->url, PHP_URL_HOST );
+			if ( $host === null || $host === '' ) {
+				throw new \RuntimeException( 'Invalid configured GitLab URL' );
+			}
+			$allowedRanges = ( $this->dnsResolver )( $host );
+			if ( !$allowedRanges ) {
+				throw new \RuntimeException( 'Could not resolve host for GitLab URL' );
+			}
+		} else {
+			$allowedRanges = $this->webhookIps;
+		}
+		foreach ( $allowedRanges as $net ) {
+			if ( IPUtils::isInRange( $ip, $net ) ) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

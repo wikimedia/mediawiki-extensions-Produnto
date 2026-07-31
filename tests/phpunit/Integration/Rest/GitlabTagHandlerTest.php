@@ -134,6 +134,9 @@ class GitlabTagHandlerTest extends \MediaWikiIntegrationTestCase {
 				'projectPrefixes' => [ 'tstarling' ]
 			]
 		] );
+		$this->setService( 'Produnto.DnsResolver',
+			static fn () =>
+			static fn ( $host ) => [ '127.0.0.1' ] );
 	}
 
 	private function getHandler() {

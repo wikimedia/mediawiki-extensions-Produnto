@@ -37,6 +37,7 @@ class ServerContainerTest extends \MediaWikiUnitTestCase {
 	public function testGetServerForUrl( $url, $expectedIndex ) {
 		$serverContainer = new ServerContainer(
 			$this->createNoOpMock( HttpRequestFactory::class ),
+			static fn ( $name ) => [ '127.0.0.1' ],
 			new HashConfig( [
 				'ProduntoServers' => []
 			] )
