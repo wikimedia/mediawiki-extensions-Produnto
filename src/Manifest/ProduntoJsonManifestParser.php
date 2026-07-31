@@ -8,6 +8,8 @@ use MediaWiki\Json\FormatJson;
 use stdClass;
 
 class ProduntoJsonManifestParser implements ManifestParser {
+	private ?stdClass $schema = null;
+
 	/** @inheritDoc */
 	public function hasManifest( FileCollection $package ): bool {
 		return $package->getFileContents( 'produnto.json' ) !== null;
@@ -56,11 +58,7 @@ class ProduntoJsonManifestParser implements ManifestParser {
 	 */
 	private function validateJson( stdClass $data, ManifestStatus $status ): bool {
 		$validator = new Validator;
-		$schema = json_decode(
-			file_get_contents( __DIR__ . '/../../docs/package.schema.json' ),
-			flags: JSON_THROW_ON_ERROR
-		);
-		$validator->validate( $data, $schema );
+		$validator->validate( $data, $this->getSchema() );
 		if ( !$validator->isValid() ) {
 			foreach ( $validator->getErrors() as $error ) {
 				$status->fatal( 'produnto-fetch-manifest-schema', $error['property'],
@@ -86,5 +84,15 @@ class ProduntoJsonManifestParser implements ManifestParser {
 			}
 		}
 		return $ok;
+	}
+
+	private function getSchema(): stdClass {
+		if ( !$this->schema ) {
+			$this->schema = json_decode(
+				file_get_contents( __DIR__ . '/../../docs/package.schema.json' ),
+				flags: JSON_THROW_ON_ERROR
+			);
+		}
+		return $this->schema;
 	}
 }

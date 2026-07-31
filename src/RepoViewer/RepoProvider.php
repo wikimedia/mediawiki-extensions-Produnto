@@ -2,6 +2,7 @@
 
 namespace MediaWiki\Extension\Produnto\RepoViewer;
 
+use MediaWiki\Extension\Produnto\Store\DeploymentAccess;
 use MediaWiki\Extension\Produnto\Store\PackageAccess;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
 use MediaWiki\Language\Language;
@@ -19,6 +20,9 @@ use Wikimedia\Parsoid\Core\LinkTarget;
  * Handler for content in the Package namespace
  */
 class RepoProvider extends BaseShadowPageProvider {
+
+	private DeploymentAccess|null|false $deployment = false;
+
 	public function __construct(
 		private readonly Language $contLang,
 		private readonly LanguageFallback $languageFallback,
@@ -40,7 +44,7 @@ class RepoProvider extends BaseShadowPageProvider {
 			$packageName = $parts[0];
 			$path = null;
 		}
-		$deployment = $this->store->getActiveDeployment();
+		$deployment = $this->getDeployment();
 		if ( !$deployment ) {
 			return null;
 		}
@@ -93,7 +97,7 @@ class RepoProvider extends BaseShadowPageProvider {
 
 	/** @inheritDoc */
 	public function existsForLink( LinkTarget $link ): bool {
-		$deployment = $this->store->getActiveDeployment();
+		$deployment = $this->getDeployment();
 		if ( !$deployment ) {
 			return false;
 		}
@@ -114,5 +118,12 @@ class RepoProvider extends BaseShadowPageProvider {
 			return $package !== null;
 		}
 		return (bool)$package?->hasFile( $path );
+	}
+
+	private function getDeployment(): ?DeploymentAccess {
+		if ( $this->deployment === false ) {
+			$this->deployment = $this->store->getActiveDeployment();
+		}
+		return $this->deployment;
 	}
 }
