@@ -1,0 +1,20 @@
+{
+	"@metadata": {
+		"authors": [
+			"AhmedG612"
+		]
+	},
+	"produnto-desc": "Maareeyaha xirmooyinka ee horumarinta software-ka gudaha wiki-ga",
+	"produnto-fetch-error": "Soo qaadistu way fashilantay: $1",
+	"produnto-fetch-server-error": "Soo qaadistu way fashilantay sababo la xiriira qalad ka yimid adeega: $1 $2",
+	"produnto-fetch-connect-error": "Soo qaadistu way fashilantay sababo la xiriira qalad ka yimid adeega: $1",
+	"produnto-fetch-http-error": "Soo qaadistu way fashilantay iyadoo uu dhacay qalad: $1 $2",
+	"produnto-fetch-no-manifest": "Xirmadu kuma jirin faylka caddayn.",
+	"produnto-fetch-manifest": "Qalad ayaa ku jira produnto.json: $1",
+	"produnto-fetch-manifest-schema": "Qalad xaqiijinta qaab dhismeedka ayaa ku jira produnto.json: [$1] $2",
+	"produnto-fetch-module-missing": "Faylka caddaynta xirmada wuxuu tixraacayaa module \"$1\" oo leh waddo \"$2\", balse waddadaas ma jirto.",
+	"produnto-update-invalid": "Lama kaydin karo bogga xirmooyinka: ma aha liiska xirmooyin sax ah",
+	"produnto-update-json-error": "Lama kaydin karo bogga xirmooyinka: $1",
+	"produnto-sandbox-error": "Qalad ayaa ka dhacay abuurista bacaadka: $1",
+	"produnto-sandbox-preview-warning": "Horudhacan wuxuu isticmaalay xirmo ka timid nuqulkaaga shaqada ee maxalliga ah. Waxaa laga yaabaa inuusan u ekaan isku mid marka la kaydiyo."
+}

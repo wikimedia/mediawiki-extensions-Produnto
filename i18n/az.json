@@ -1,0 +1,20 @@
+{
+	"@metadata": {
+		"authors": [
+			"Nemoralis"
+		]
+	},
+	"produnto-desc": "Viki əsaslı proqram təminatı tərtibatı üçün paket meneceri",
+	"produnto-fetch-error": "Yükləmə uğursuz oldu: $1",
+	"produnto-fetch-server-error": "Server xətası səbəbindən yükləmə uğursuz oldu: $1 $2",
+	"produnto-fetch-connect-error": "Server xətası səbəbindən yükləmə uğursuz oldu: $1",
+	"produnto-fetch-http-error": "Yükləmə uğursuz oldu. Xəta: $1 $2",
+	"produnto-fetch-no-manifest": "Paketdə manifest faylı yox idi.",
+	"produnto-fetch-manifest": "produnto.json faylında xəta: $1",
+	"produnto-fetch-manifest-schema": "produnto.json-da sxem doğrulama xətası: [$1] $2",
+	"produnto-fetch-module-missing": "Paket manifesti \"$2\" ünvanında olan \"$1\" moduluna istinad edir, lakin belə bir ünvan mövcud deyil.",
+	"produnto-update-invalid": "Paketlər səhifəsi yadda saxlanıla bilmir: etibarlı paket siyahısı deyil",
+	"produnto-update-json-error": "Paketlər səhifəsini yadda saxlamaq mümkün deyil: $1",
+	"produnto-sandbox-error": "Test mühiti yaradılarkən xəta: $1",
+	"produnto-sandbox-preview-warning": "Bu önizləmə lokal işləyən nüsxənizdən bir paket istifadə edir. Yadda saxlanıldıqdan sonra eyni görünməyə bilər."
+}
