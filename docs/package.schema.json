@@ -16,7 +16,8 @@
 					"type": "string",
 					"description": "The package name in the specified language."
 				}
-			}
+			},
+			"additionalProperties": false
 		},
 		"description": {
 			"type": "object",
@@ -26,7 +27,8 @@
 					"type": "string",
 					"description": "The package description in the specified language."
 				}
-			}
+			},
+			"additionalProperties": false
 		},
 		"author": {
 			"type": [
