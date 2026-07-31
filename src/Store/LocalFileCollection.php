@@ -13,6 +13,9 @@ class LocalFileCollection implements FileCollection {
 
 	/** @inheritDoc */
 	public function getFileContents( string $path ): ?string {
+		if ( !$this->isSafePath( $path ) ) {
+			return null;
+		}
 		if ( !array_key_exists( $path, $this->cache ) ) {
 			$fullPath = "{$this->path}/$path";
 			if ( file_exists( $fullPath ) ) {
@@ -27,7 +30,7 @@ class LocalFileCollection implements FileCollection {
 	/** @inheritDoc */
 	public function hasFile( string $path ): bool {
 		return isset( $this->cache[$path] )
-			|| file_exists( "{$this->path}/$path" );
+			|| ( $this->isSafePath( $path ) && file_exists( "{$this->path}/$path" ) );
 	}
 
 	/** @inheritDoc */
@@ -55,5 +58,15 @@ class LocalFileCollection implements FileCollection {
 			$hashes[$path] = hash( 'sha256', $this->getFileContents( $path ) ?? '' );
 		}
 		return $hashes;
+	}
+
+	private function isSafePath( string $path ): bool {
+		$components = explode( '/', str_replace( '\\', '/', $path ) );
+		foreach ( $components as $component ) {
+			if ( $component === '.' || $component === '..' ) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
