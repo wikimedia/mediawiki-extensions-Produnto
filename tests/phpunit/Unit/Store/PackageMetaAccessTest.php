@@ -17,7 +17,7 @@ class PackageMetaAccessTest extends \MediaWikiUnitTestCase {
 			'http://example.com/foo',
 			[
 				'type' => 'test',
-				'name' => [
+				'local-name' => [
 					'en' => 'Test',
 				],
 				'homepage-url' => 'http://http://example.com/homepage/foo',

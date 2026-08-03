@@ -19,7 +19,7 @@ class ProduntoJsonManifestTest extends \MediaWikiUnitTestCase {
 		$json = <<<JSON
 {
 	"type": "scribunto",
-	"name": { "en": "Test" },
+	"local-name": { "en": "Test" },
 	"description": { "en": "Test" },
 	"author": [ "Alice", "Bob" ],
 	"license": "PDHPE",

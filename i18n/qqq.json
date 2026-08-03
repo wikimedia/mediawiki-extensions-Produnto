@@ -50,7 +50,7 @@
 	"produnto-viewer-edit-denied": "Permission error displayed when editing a repo viewer page.",
 	"produnto-viewer-index-package": "Package information header label for internal machine readable name",
 	"produnto-viewer-index-version": "Package information header label",
-	"produnto-viewer-index-name": "Package information header label for localised name",
+	"produnto-viewer-index-local-name": "Package information header label for localised name",
 	"produnto-viewer-index-description": "Package information header label",
 	"produnto-viewer-index-authors": "Package information header label",
 	"produnto-viewer-index-license": "Package information header label",

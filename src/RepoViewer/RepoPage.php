@@ -162,7 +162,7 @@ class RepoPage extends BaseShadowPage {
 		$data = [
 			'package' => $p->getName(),
 			'version' => $p->getVersion(),
-			'name' => $p->getLocalName( $langCode, $this->fallbackProvider ),
+			'local-name' => $p->getLocalName( $langCode, $this->fallbackProvider ),
 			'description' => $p->getDescription( $langCode, $this->fallbackProvider ),
 			'authors' => $lang->commaList( $p->getAuthors() ),
 			'license' => $p->getLicense(),

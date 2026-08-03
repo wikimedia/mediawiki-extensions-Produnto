@@ -8,7 +8,7 @@
 			"description": "The type of the package.",
 			"enum": [ "scribunto" ]
 		},
-		"name": {
+		"local-name": {
 			"type": "object",
 			"description": "The localised package name.",
 			"patternProperties": {

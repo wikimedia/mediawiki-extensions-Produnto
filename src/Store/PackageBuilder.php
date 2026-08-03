@@ -129,7 +129,7 @@ class PackageBuilder {
 	 * Add a localised name of the package
 	 */
 	public function localName( string $lang, string $name ): self {
-		return $this->setSubProperty( 'name', $lang, $name );
+		return $this->setSubProperty( 'local-name', $lang, $name );
 	}
 
 	/**

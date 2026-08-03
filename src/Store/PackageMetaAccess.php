@@ -145,7 +145,7 @@ class PackageMetaAccess {
 	 * Get the localised package name, falling back to the canonical name
 	 */
 	public function getLocalName( string $lang, ?LanguageFallback $falllbackProvider = null ): string {
-		return $this->getLocalisedProperty( 'name', $lang, $falllbackProvider )
+		return $this->getLocalisedProperty( 'local-name', $lang, $falllbackProvider )
 			?? $this->getName();
 	}
 
@@ -155,7 +155,7 @@ class PackageMetaAccess {
 	 * @return array<string,string>
 	 */
 	public function getLocalNames(): array {
-		return $this->props['name'] ?? [];
+		return $this->props['local-name'] ?? [];
 	}
 
 	private function getLocalisedProperty( string $prop, string $lang,

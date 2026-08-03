@@ -48,7 +48,7 @@
 	"produnto-viewer-edit-denied": "This page can't be edited on the wiki. Upload and deploy a new package version to make content appear here.",
 	"produnto-viewer-index-package": "Package",
 	"produnto-viewer-index-version": "Version",
-	"produnto-viewer-index-name": "Name",
+	"produnto-viewer-index-local-name": "Name",
 	"produnto-viewer-index-description": "Description",
 	"produnto-viewer-index-authors": "Authors",
 	"produnto-viewer-index-license": "License",

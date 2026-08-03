@@ -26,8 +26,8 @@ class ProduntoJsonManifest implements Manifest {
 			$builder->type( $this->data->type );
 		}
 
-		if ( isset( $this->data->name ) ) {
-			foreach ( $this->data->name as $lang => $text ) {
+		if ( isset( $this->data->{'local-name'} ) ) {
+			foreach ( $this->data->{'local-name'} as $lang => $text ) {
 				$builder->localName( $lang, $text );
 			}
 		}
