@@ -47,7 +47,7 @@
 	"produnto-viewer-edit-denied": "Diese Seite kann im Wiki nicht bearbeitet werden. Lade eine neue Paketversion hoch und stelle sie bereit, damit der Inhalt hier angezeigt wird.",
 	"produnto-viewer-index-package": "Paket",
 	"produnto-viewer-index-version": "Version",
-	"produnto-viewer-index-name": "Name",
+	"produnto-viewer-index-local-name": "Name",
 	"produnto-viewer-index-description": "Beschreibung",
 	"produnto-viewer-index-authors": "Autoren",
 	"produnto-viewer-index-license": "Lizenz",

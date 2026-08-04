@@ -49,7 +49,7 @@
 	"produnto-viewer-edit-denied": "Deze pagina kan niet bewerkt worden op de wiki. Upload en rol een nieuwe pakketversie uit om hier inhoud weer te geven.",
 	"produnto-viewer-index-package": "Pakket",
 	"produnto-viewer-index-version": "Versie",
-	"produnto-viewer-index-name": "Naam",
+	"produnto-viewer-index-local-name": "Naam",
 	"produnto-viewer-index-description": "Beschrijving",
 	"produnto-viewer-index-authors": "Auteurs",
 	"produnto-viewer-index-license": "Licentie",

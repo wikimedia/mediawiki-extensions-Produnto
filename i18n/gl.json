@@ -48,7 +48,7 @@
 	"produnto-viewer-edit-denied": "Esta páxina non se pode editar no wiki. Sube e desprega unha versión nova do paquete para que o contido apareza aquí.",
 	"produnto-viewer-index-package": "Paquete",
 	"produnto-viewer-index-version": "Versión",
-	"produnto-viewer-index-name": "Nome",
+	"produnto-viewer-index-local-name": "Nome",
 	"produnto-viewer-index-description": "Descrición",
 	"produnto-viewer-index-authors": "Autores",
 	"produnto-viewer-index-license": "Licenza",

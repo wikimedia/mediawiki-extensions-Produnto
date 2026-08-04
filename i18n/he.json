@@ -41,7 +41,7 @@
 	"produnto-viewer-edit-denied": "לא ניתן לערוך את הקובץ הזה בוויקי. יש להעלות ולפרוס גרסה חדשה של החבילה כדי שהתוכן יופיע כאן.",
 	"produnto-viewer-index-package": "חבילה",
 	"produnto-viewer-index-version": "גרסה",
-	"produnto-viewer-index-name": "שם",
+	"produnto-viewer-index-local-name": "שם",
 	"produnto-viewer-index-description": "תיאור",
 	"produnto-viewer-index-authors": "מחברים",
 	"produnto-viewer-index-license": "רישיון",

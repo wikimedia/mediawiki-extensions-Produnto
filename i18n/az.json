@@ -48,7 +48,7 @@
 	"produnto-viewer-edit-denied": "Bu səhifə vikidə redaktə edilə bilməz. Məzmunun burada görünməsi üçün yeni paket versiyasını yükləyin və quraşdırın.",
 	"produnto-viewer-index-package": "Paket",
 	"produnto-viewer-index-version": "Versiya",
-	"produnto-viewer-index-name": "Ad",
+	"produnto-viewer-index-local-name": "Ad",
 	"produnto-viewer-index-description": "Açıqlama",
 	"produnto-viewer-index-authors": "Müəlliflər",
 	"produnto-viewer-index-license": "Lisenziya",
