@@ -1,15 +1,20 @@
 {
 	"@metadata": {
 		"authors": [
+			"Suleiman the Magnificent Television",
 			"Tensama0415",
 			"YeBoy371"
 		]
 	},
-	"produnto-fetch-error": "가져오기 실패: $1",
+	"produnto-desc": "위키 내 소프트웨어 개발을 위한 패키지 관리자",
+	"produnto-fetch-error": "검색 실패: $1",
 	"produnto-fetch-server-error": "서버 오류로 인해 가져오기 실패: $1 $2",
-	"produnto-fetch-connect-error": "서버 오류로 인해 가져오기 실패: $1",
+	"produnto-fetch-connect-error": "서버 오류로 인해 가져오기에 실패했습니다: $1",
 	"produnto-fetch-http-error": "가져오기 실패/오류 발생: $1 $2",
+	"produnto-fetch-no-manifest": "패키지에는 매니페스트 파일이 포함되어 있지 않았습니다.",
 	"produnto-fetch-manifest": "produnto.json에서 오류 발생: $1",
+	"produnto-fetch-manifest-schema": "produnto.json의 스키마 검증 오류: [$1] $2",
+	"produnto-fetch-module-missing": "패키지 매니페스트에서 경로 “$2”를 가진 모듈 “$1”을 참조하고 있지만, 해당 경로는 존재하지 않습니다.",
 	"produnto-sandbox-activate": "활성화",
 	"produnto-sandbox-deactivate": "비활성화",
 	"produnto-sandbox-delete": "삭제",
