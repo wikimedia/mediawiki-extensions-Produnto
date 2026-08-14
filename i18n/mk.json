@@ -1,0 +1,20 @@
+{
+	"@metadata": {
+		"authors": [
+			"Bjankuloski06"
+		]
+	},
+	"produnto-desc": "Управувач со пакети за програмска разработка на вики",
+	"produnto-fetch-error": "Не успеав да преземам: $1",
+	"produnto-fetch-server-error": "Не успеав да преземам поради грешка во опслужувачот: $1 $2",
+	"produnto-fetch-connect-error": "Не успеав да преземам поради грешка во опслужувачот: $1",
+	"produnto-fetch-http-error": "Не успеав да преземам со грешка: $1 $2",
+	"produnto-fetch-no-manifest": "Пакетот не содржеше манифестна податотека.",
+	"produnto-fetch-manifest": "Грешка во produnto.json: $1",
+	"produnto-fetch-manifest-schema": "Грешка при заверката на шемата во produnto.json: [$1] $2",
+	"produnto-fetch-module-missing": "Манифестот на пакетот се однесува на модул „$1“ со патека „$2“, но таква патека не постои.",
+	"produnto-update-invalid": "Не можев да ја зачувам страницата за пакети: не претставува важечки список на пакети",
+	"produnto-update-json-error": "Не можам да ја зачувам страницата за пакети: $1",
+	"produnto-sandbox-error": "Грешка при создавање на песочникот: $1",
+	"produnto-sandbox-preview-warning": "Овој преглед користеше пакет од вашиот месен работен примерок. Може да не изгледа исто кога ќе се зачува."
+}

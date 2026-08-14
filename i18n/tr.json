@@ -8,5 +8,13 @@
 	"produnto-fetch-error": "Alma işlemi başarısız: $1",
 	"produnto-fetch-server-error": "Sunucu hatası nedeniyle alma işlemi başarısız: $1 $2",
 	"produnto-fetch-connect-error": "Sunucu hatası nedeniyle alma işlemi başarısız: $1",
-	"produnto-fetch-http-error": "Alma işlemi hatayla sonuçlandı: $1 $2"
+	"produnto-fetch-http-error": "Alma işlemi hatayla sonuçlandı: $1 $2",
+	"produnto-fetch-no-manifest": "Paket, bir bildirim dosyası içermiyordu.",
+	"produnto-fetch-manifest": "produnto.json dosyasında hata: $1",
+	"produnto-fetch-manifest-schema": "produnto.json dosyasında şema doğrulama hatası: [$1] $2",
+	"produnto-fetch-module-missing": "Paket bildirimi, yolu \"$2\" olan \"$1\" modülüne başvuruyor ancak böyle bir yol mevcut değil.",
+	"produnto-update-invalid": "Paketler sayfası kaydedilemiyor: geçerli bir paket listesi değil.",
+	"produnto-update-json-error": "Paketler sayfası kaydedilemiyor: $1",
+	"produnto-sandbox-error": "Korumalı alan oluşturulurken hata oluştu: $1",
+	"produnto-sandbox-preview-warning": "Bu önizlemede yerel çalışma kopyanızdaki bir paket kullanıldı. Kaydedildiğinde aynı görünmeyebilir."
 }
