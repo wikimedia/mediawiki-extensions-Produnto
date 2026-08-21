@@ -1,0 +1,20 @@
+{
+	"@metadata": {
+		"authors": [
+			"GuoPC"
+		]
+	},
+	"produnto-desc": "用于wiki内软件开发的程序包管理器",
+	"produnto-fetch-error": "获取失败：$1",
+	"produnto-fetch-server-error": "因服务器错误获取失败：$1 $2",
+	"produnto-fetch-connect-error": "因服务器错误获取失败：$1",
+	"produnto-fetch-http-error": "获取失败，错误信息为：$1 $2",
+	"produnto-fetch-no-manifest": "该程序包不包含清单文件。",
+	"produnto-fetch-manifest": "produnto.json存在错误：$1",
+	"produnto-fetch-manifest-schema": "produnto.json架构验证错误：[$1] $2",
+	"produnto-fetch-module-missing": "程序包清单引用了路径为“$2”的模块“$1”，但路径不存在。",
+	"produnto-update-invalid": "无法保存程序包页面：程序包列表无效",
+	"produnto-update-json-error": "无法保存程序包页面：$1",
+	"produnto-sandbox-error": "创建沙盒出错：$1",
+	"produnto-sandbox-preview-warning": "此预览使用了您本地工作副本中的程序包。保存后的效果可能有所差异。"
+}
