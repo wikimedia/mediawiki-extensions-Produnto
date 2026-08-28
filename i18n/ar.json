@@ -1,0 +1,20 @@
+{
+	"@metadata": {
+		"authors": [
+			"Meno25"
+		]
+	},
+	"produnto-desc": "مدير حزم لتطوير البرامج على مواقع الويكي",
+	"produnto-fetch-error": "فشل جلب البيانات: $1",
+	"produnto-fetch-server-error": "فشل جلب البيانات بسبب خطأ في الخادم: $1 $2",
+	"produnto-fetch-connect-error": "فشل جلب البيانات بسبب خطأ في الخادم: $1",
+	"produnto-fetch-http-error": "فشلت عملية الجلب بسبب الخطأ: $1 $2",
+	"produnto-fetch-no-manifest": "لم تحتوي الحزمة على ملف بيان.",
+	"produnto-fetch-manifest": "خطأ في ملف produnto.json: $1",
+	"produnto-fetch-manifest-schema": "خطأ في التحقق من صحة المخطط في produnto.json: [ $1 ] $2",
+	"produnto-fetch-module-missing": "يشير بيان الحزمة إلى وحدة نمطية \" $1 \" مع المسار \" $2 \"، ولكن لا يوجد مثل هذا المسار.",
+	"produnto-update-invalid": "لا يمكن حفظ صفحة الحزم: قائمة الحزم غير صالحة",
+	"produnto-update-json-error": "صفحة تعذر حفظ الحزم: $1",
+	"produnto-sandbox-error": "خطأ في إنشاء بيئة الاختبار: $1",
+	"produnto-sandbox-preview-warning": "استخدمت هذه المعاينة حزمة من نسختك المحلية. قد لا تبدو كما هي عند حفظها."
+}
