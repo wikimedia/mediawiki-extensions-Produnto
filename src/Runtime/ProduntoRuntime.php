@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\Produnto\Runtime;
 
 use MediaWiki\Extension\Produnto\RepoViewer\RepoLinker;
 use MediaWiki\Extension\Produnto\Sandbox\SandboxAccess;
+use MediaWiki\Language\Language;
 use MediaWiki\Parser\ParserOutput;
 use Wikimedia\Message\MessageValue;
 
@@ -14,10 +15,12 @@ class ProduntoRuntime {
 	private bool $wasSandboxUsed = false;
 
 	/**
+	 * @param Language $contLang
 	 * @param RepoLinker $repoLinker
 	 * @param Loader[] $loaders
 	 */
 	public function __construct(
+		private readonly Language $contLang,
 		private readonly RepoLinker $repoLinker,
 		private readonly array $loaders,
 	) {
@@ -37,6 +40,45 @@ class ProduntoRuntime {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * If the string starts with "Package:" and looks like a RepoViewer title
+	 * pointing to a package file, canonicalise the title and get the contents.
+	 *
+	 * This isn't MediaWiki title parsing, in a way it's more strict (with no
+	 * whitespace normalisation), and in another way it's more loose (allowing
+	 * characters that are invalid in titles).
+	 */
+	public function getFileInfoByTitle( string $titleText ): ?ModuleInfo {
+		if ( !preg_match( '!([^:]+):([^/]+)/(.*)!', $titleText, $m ) ) {
+			return null;
+		}
+		[ , $nsText, $packageName, $path ] = $m;
+
+		// Ensure that the prefix was Package:
+		$ns = $this->contLang->getNsIndex( $nsText );
+		if ( $ns !== NS_PACKAGE ) {
+			return null;
+		}
+
+		$contents = $this->getFileContents( $packageName, $path );
+		if ( $contents === null ) {
+			// Initial letter is case-insensitive -- try lcfirst
+			$lcPackageName = $this->contLang->lcfirst( $packageName );
+			if ( $lcPackageName !== $packageName ) {
+				$contents = $this->getFileContents( $lcPackageName, $path );
+				if ( $contents === null ) {
+					return null;
+				} else {
+					$packageName = $lcPackageName;
+				}
+			} else {
+				return null;
+			}
+		}
+
+		return new ModuleInfo( $packageName, $path, $contents );
 	}
 
 	/**

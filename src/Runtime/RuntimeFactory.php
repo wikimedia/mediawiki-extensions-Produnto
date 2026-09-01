@@ -7,6 +7,7 @@ use MediaWiki\Extension\Produnto\RepoViewer\RepoLinker;
 use MediaWiki\Extension\Produnto\Sandbox\SandboxAccess;
 use MediaWiki\Extension\Produnto\Sandbox\SandboxStore;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
+use MediaWiki\Language\Language;
 use MediaWiki\Parser\ParserOptions;
 use MediaWiki\Session\Session;
 
@@ -15,6 +16,7 @@ use MediaWiki\Session\Session;
  */
 class RuntimeFactory {
 	public function __construct(
+		private readonly Language $contLang,
 		private readonly ProduntoStore $store,
 		private readonly SandboxStore $sandboxStore,
 		private readonly RepoLinker $repoLinker,
@@ -33,7 +35,7 @@ class RuntimeFactory {
 			$loaders[] = $sandboxLoader;
 		}
 		$loaders[] = new SqlLoader( $this->store );
-		return new ProduntoRuntime( $this->repoLinker, $loaders );
+		return new ProduntoRuntime( $this->contLang, $this->repoLinker, $loaders );
 	}
 
 	/**
