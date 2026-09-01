@@ -51,6 +51,7 @@ return [
 
 	'Produnto.RuntimeFactory' => static function ( MediaWikiServices $services ) {
 		return new RuntimeFactory(
+			$services->getContentLanguage(),
 			$services->get( 'Produnto.Store' ),
 			$services->get( 'Produnto.SandboxStore' ),
 			$services->get( 'Produnto.RepoLinker' )
