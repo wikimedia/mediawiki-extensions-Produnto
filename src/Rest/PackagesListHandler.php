@@ -101,7 +101,7 @@ class PackagesListHandler extends Handler {
 		// Permit public caching with revalidation.
 		// We use {credentials:omit} on the client side to work around T264631
 		if ( $this->permissionManager->isEveryoneAllowed( 'read' ) ) {
-			$response->setHeader( 'Cache-Control', 'public' );
+			$response->setHeader( 'Cache-Control', 'public, max-age=2, stale-while-revalidate=30' );
 		}
 		return $response;
 	}

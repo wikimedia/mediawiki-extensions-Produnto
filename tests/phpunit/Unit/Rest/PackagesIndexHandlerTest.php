@@ -35,7 +35,10 @@ class PackagesIndexHandlerTest extends \MediaWikiUnitTestCase {
 		] ] );
 
 		$this->assertSame( $expected, $response->getBody()->getContents() );
-		$this->assertSame( [ 'public' ], $response->getHeader( 'Cache-Control' ) );
+		$this->assertSame(
+			[ 'public, max-age=5, stale-while-revalidate=30' ],
+			$response->getHeader( 'Cache-Control' )
+		);
 	}
 
 	private function getHandler( ?int $maxPackageId ): PackagesIndexHandler {
