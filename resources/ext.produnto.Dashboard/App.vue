@@ -271,7 +271,9 @@ module.exports = defineComponent( {
 				if ( !result ) {
 					// Aborted?
 				} else if ( result.ok ) {
-					activeDeployment.value.active = false;
+					if ( activeDeployment.value ) {
+						activeDeployment.value.active = false;
+					}
 					deployments.value.unshift( result.deployment );
 					activeDeploymentId.value = result.deployment.id;
 					selectedDeploymentId.value = result.deployment.id;
