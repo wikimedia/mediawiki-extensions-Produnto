@@ -72,7 +72,7 @@ class RecentDeploymentsHandler extends Handler {
 			'deployments' => array_merge( ...array_values( $infosByWiki ) )
 		] );
 		if ( $this->permissionManager->isEveryoneAllowed( 'read' ) ) {
-			$response->setHeader( 'Cache-Control', 'public' );
+			$response->setHeader( 'Cache-Control', 'public, max-age=2, stale-while-revalidate=30' );
 		}
 		return $response;
 	}
