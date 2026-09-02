@@ -133,7 +133,8 @@ class Validator {
 	 */
 	private function getPlatformVersions(): array {
 		$versions = [
-			'MediaWiki' => MW_VERSION
+			// Strip text after a hyphen -- fixme T436741
+			'MediaWiki' => preg_replace( '/-.*/', '', MW_VERSION )
 		];
 		( new HookRunner( $this->hookContainer ) )->onProduntoPlatformVersions( $versions );
 		return $versions;
