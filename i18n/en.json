@@ -22,6 +22,8 @@
 	"produnto-update-requires-missing": "Package $1 requires $2 but it is missing.",
 	"produnto-update-requires-unsatisfied-platform": "Package $1 requires $2 $3 but only $2 $4 is available.",
 	"produnto-update-requires-unsatisfied": "Package $1 requires $2 $3 but $2 $4 will be deployed.",
+	"produnto-update-requires-invalid-version": "Package $1 requires package $2 but it has an invalid deployed version \"$4\".",
+	"produnto-update-requires-invalid-constraint": "Package $1 requires $2 but the version constraint \"$3\" was invalid.",
 	"produnto-update-failed-generic": "Failed to save the packages.",
 	"produnto-update-null-edit": "Could not deploy: you didn't make any changes. Maybe someone else made the same change as the same time.",
 	"action-produnto-update": "deploy Produnto packages",

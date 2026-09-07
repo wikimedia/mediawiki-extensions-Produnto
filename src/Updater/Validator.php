@@ -2,9 +2,12 @@
 
 namespace MediaWiki\Extension\Produnto\Updater;
 
-use Composer\Semver\Semver;
 use MediaWiki\Extension\Produnto\Store\PackageAccess;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
+use MediaWiki\Extension\Produnto\Version\ConstraintParser;
+use MediaWiki\Extension\Produnto\Version\ConstraintParserError;
+use MediaWiki\Extension\Produnto\Version\VersionParser;
+use MediaWiki\Extension\Produnto\Version\VersionParserError;
 use MediaWiki\HookContainer\HookContainer;
 use stdClass;
 
@@ -12,6 +15,8 @@ class Validator {
 	private UpdateStatus $status;
 	/** @var array<string,PackageAccess> */
 	private array $packages;
+	private ConstraintParser $constraintParser;
+	private VersionParser $versionParser;
 
 	/**
 	 * @param ProduntoStore $store
@@ -25,6 +30,8 @@ class Validator {
 		private mixed $data
 	) {
 		$this->status = new UpdateStatus;
+		$this->versionParser = new VersionParser();
+		$this->constraintParser = new ConstraintParser( $this->versionParser );
 	}
 
 	public function validate(): UpdateStatus {
@@ -106,17 +113,28 @@ class Validator {
 				$haveVersion = '';
 
 				$platformVersions = $this->getPlatformVersions();
+				$ok = true;
 				if ( isset( $platformVersions[$requiredName] ) ) {
 					$haveVersion = $platformVersions[$requiredName];
-					$ok = Semver::satisfies( $platformVersions[$requiredName], $constraint );
 					$msg = 'produnto-update-requires-unsatisfied-platform';
 				} elseif ( isset( $this->packages[$requiredName] ) ) {
 					$haveVersion = $this->packages[$requiredName]->getVersion();
-					$ok = Semver::satisfies( $haveVersion, $constraint );
 					$msg = 'produnto-update-requires-unsatisfied';
 				} else {
 					$ok = false;
 					$msg = 'produnto-update-requires-missing';
+				}
+				if ( $ok ) {
+					try {
+						$ok = $this->constraintParser->parse( $constraint )
+							->isSatisfiedBy( $this->versionParser->parse( $haveVersion ) );
+					} catch ( VersionParserError ) {
+						$msg = 'produnto-update-requires-invalid-version';
+						$ok = false;
+					} catch ( ConstraintParserError ) {
+						$msg = 'produnto-update-requires-invalid-constraint';
+						$ok = false;
+					}
 				}
 				if ( !$ok ) {
 					$this->warning( $msg, $name, $requiredName, $constraint, $haveVersion );
@@ -133,8 +151,7 @@ class Validator {
 	 */
 	private function getPlatformVersions(): array {
 		$versions = [
-			// Strip text after a hyphen -- fixme T436741
-			'MediaWiki' => preg_replace( '/-.*/', '', MW_VERSION )
+			'MediaWiki' => MW_VERSION
 		];
 		( new HookRunner( $this->hookContainer ) )->onProduntoPlatformVersions( $versions );
 		return $versions;

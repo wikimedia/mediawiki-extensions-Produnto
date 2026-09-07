@@ -80,6 +80,20 @@ class ValidatorTest extends \MediaWikiUnitTestCase {
 				],
 				'produnto-update-requires-unsatisfied'
 			],
+			'depends on package with invalid version' => [
+				(object)[
+					'requires-invalid-version' => '1.0.0',
+					'invalid-version' => '!!',
+				],
+				'produnto-update-requires-invalid-version'
+			],
+			'dependency with invalid constraint' => [
+				(object)[
+					'requires-invalid-constraint' => '1.0.0',
+					'test1' => '1.0.0',
+				],
+				'produnto-update-requires-invalid-constraint'
+			],
 		];
 	}
 
@@ -125,6 +139,11 @@ class ValidatorTest extends \MediaWikiUnitTestCase {
 			requires: [ 'nonexistent' => '1.0.0' ] );
 		$packages[] = $this->createPackage( 'requires-unsatisfied',
 			requires: [ 'test1' => '2.0.0' ] );
+		$packages[] = $this->createPackage( 'invalid-version', '!!' );
+		$packages[] = $this->createPackage( 'requires-invalid-version',
+			requires: [ 'invalid-version' => '1.0.0' ] );
+		$packages[] = $this->createPackage( 'requires-invalid-constraint',
+			requires: [ 'test1' => '<>1.0.0' ] );
 
 		$store = $this->createMock( ProduntoStore::class );
 		$store->method( 'getPackageByName' )
