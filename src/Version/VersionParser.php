@@ -6,7 +6,7 @@ namespace MediaWiki\Extension\Produnto\Version;
  * Parse version strings, following LuaRocks conventions.
  */
 class VersionParser {
-	public const DELTAS = [
+	private const DELTAS = [
 		'dev' => 120000000,
 		'scm' => 110000000,
 		'cvs' => 100000000,
@@ -63,5 +63,14 @@ class VersionParser {
 			}
 		} while ( $offset < strlen( $input ) );
 		return $version;
+	}
+
+	/**
+	 * Get configuration for compareVersions.js
+	 *
+	 * @return array[]
+	 */
+	public static function getJsConfig() {
+		return [ 'deltas' => self::DELTAS ];
 	}
 }

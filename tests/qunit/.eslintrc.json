@@ -1,0 +1,11 @@
+{
+	"root": true,
+	"extends": [
+		"wikimedia/mediawiki/qunit"
+	],
+	"rules": {
+		"comma-dangle": "off",
+		"computed-property-spacing": "off",
+		"no-multiple-empty-lines": "off"
+	}
+}

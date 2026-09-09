@@ -166,6 +166,10 @@
 				"App.vue",
 				"Client.js",
 				"compareVersions.js",
+				{
+					"name": "compareVersions.config.json",
+					"callback": "MediaWiki\\Extension\\Produnto\\Version\\VersionParser::getJsConfig"
+				},
 				"DeploymentBox.vue",
 				"ErrorPage.vue",
 				"MessageList.vue",
@@ -222,6 +226,19 @@
 			"remoteExtPath": "Produnto/resources/ext.produnto.RepoViewer",
 			"styles": [ "RepoViewer.less" ]
 		}
+	},
+	"QUnitTestModule": {
+		"localBasePath": "",
+		"remoteExtPath": "GrowthExperiments",
+		"packageFiles": [
+			"tests/qunit/index.js",
+			"tests/qunit/ext.produnto.Dashboard/compareVersions.test.js",
+			"resources/ext.produnto.Dashboard/compareVersions.js",
+			{
+				"name": "resources/ext.produnto.Dashboard/compareVersions.config.json",
+				"callback": "MediaWiki\\Extension\\Produnto\\Version\\VersionParser::getJsConfig"
+			}
+		]
 	},
 	"ServiceWiringFiles": [
 		"src/ServiceWiring.php"
