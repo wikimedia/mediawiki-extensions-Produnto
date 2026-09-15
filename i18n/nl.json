@@ -23,6 +23,8 @@
 	"produnto-update-requires-missing": "Pakket $1 vereist $2, maar dat ontbreekt.",
 	"produnto-update-requires-unsatisfied-platform": "Pakket $1 vereist $2 $3, maar alleen $2 $4 is beschikbaar.",
 	"produnto-update-requires-unsatisfied": "Pakket $1 vereist $2 $3, maar $2 $4 gaat worden ingezet.",
+	"produnto-update-requires-invalid-version": "Pakket $1 vereist pakket $2, maar het heeft een ongeldige geïmplementeerde versie \"$4\".",
+	"produnto-update-requires-invalid-constraint": "Pakket $1 vereist $2, maar de versiebeperking \"$3\" was problematisch.",
 	"produnto-update-failed-generic": "Het opslaan van de pakketten is mislukt.",
 	"produnto-update-null-edit": "Implementatie mislukt: u heeft geen wijzigingen aangebracht. Mogelijk heeft iemand anders op hetzelfde moment dezelfde wijziging doorgevoerd.",
 	"action-produnto-update": "Produnto-pakketten in te zetten",

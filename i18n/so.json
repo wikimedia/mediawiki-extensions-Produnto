@@ -22,6 +22,8 @@
 	"produnto-update-requires-missing": "Xirmada $1 waxay u baahan tahay $2 balse waa maqan yahay.",
 	"produnto-update-requires-unsatisfied-platform": "Xirmada $1 waxay u baahan tahay $2 $3 balse waxa la heli karo waa kaliya $2 $4.",
 	"produnto-update-requires-unsatisfied": "Xirmada $1 waxay u baahan tahay $2 $3 balse $2 $4 ayaa la diri doonaa.",
+	"produnto-update-requires-invalid-version": "Xirmada $1 waxay u baahan tahay xirmada $2, laakiin waxay leedahay nooc la hawlgeliyey oo aan sax ahayn \"$4\".",
+	"produnto-update-requires-invalid-constraint": "Xirmada $1 waxay u baahan tahay $2, laakiin xaddidaadda nooca \"$3\" ma saxna.",
 	"produnto-update-failed-generic": "Kaydinta xirmooyinka way fashilantay.",
 	"produnto-update-null-edit": "Lama diri karo: ma aadan samayn wax isbeddello ah. Waxaa laga yaabaa in qof kale uu isla isbeddelka sameeyay isla waqtigaas.",
 	"action-produnto-update": "dir xirmooyinka Produnto",

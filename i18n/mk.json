@@ -22,6 +22,8 @@
 	"produnto-update-requires-missing": "На пакетот $1 му треба $2, но тоа недостасува.",
 	"produnto-update-requires-unsatisfied-platform": "На пакетот $1 му треба $2 $3, но на располагање е само $2 $4.",
 	"produnto-update-requires-unsatisfied": "На пакетот $1 му треба $2 $3, но ќе се спроведе само $2 $4.",
+	"produnto-update-requires-invalid-version": "Пакетот $1 бара пакет $2 но има неважечка спроведена верзија „$4“.",
+	"produnto-update-requires-invalid-constraint": "Пакетот $1 бара $2 но верзиското ограничување „$3“ беше неважечко.",
 	"produnto-update-failed-generic": "Не успеав да ги зачувам пакетите.",
 	"produnto-update-null-edit": "Не можев да спроведам: не направивте никакви промени. Можеби некој друг ја направил истата промена во исто време.",
 	"action-produnto-update": "спроведување на пакети од Produnto",

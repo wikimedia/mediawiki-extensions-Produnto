@@ -22,6 +22,8 @@
 	"produnto-update-requires-missing": "O paquete $1 necesita $2, pero falta.",
 	"produnto-update-requires-unsatisfied-platform": "O paquete $1 necesita $2 $3, pero só está dispoñible $2 $4.",
 	"produnto-update-requires-unsatisfied": "O paquete $1 necesita $2 $3, pero despregaranse $2 $4.",
+	"produnto-update-requires-invalid-version": "O paquete $1 necesita o paquete $2, pero ten unha versión despregada non válida: «$4».",
+	"produnto-update-requires-invalid-constraint": "O paquete $1 necesita $2, pero a restrición de versión «$3» non é válida.",
 	"produnto-update-failed-generic": "Non se puideron gardar os paquetes.",
 	"produnto-update-null-edit": "Non se puido despregar: non fixeches ningún cambio. Se cadra outra persoa fixese o mesmo cambio ao mesmo tempo.",
 	"action-produnto-update": "despregar paquetes Produnto",

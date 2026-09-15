@@ -22,6 +22,8 @@
 	"produnto-update-requires-missing": "$1 paketi üçün $2 tələb olunur, amma yoxdur.",
 	"produnto-update-requires-unsatisfied-platform": "$1 paketi üçün $2 $3 tələb olunur, lakin yalnız $2 $4 mövcuddur.",
 	"produnto-update-requires-unsatisfied": "$1 paketi üçün $2 $3 tələb olunur, lakin $2 $4 quraşdırılacaq.",
+	"produnto-update-requires-invalid-version": "$1 paketi $2 paketini tələb edir, lakin onun yanlış \"$4\" versiyası var.",
+	"produnto-update-requires-invalid-constraint": "$1 paketi $2 tələb edir, lakin \"$3\" versiya məhdudiyyəti etibarsızdır.",
 	"produnto-update-failed-generic": "Paketləri yadda saxlamaq alınmadı.",
 	"produnto-update-null-edit": "Quraşdırma alınmadı: siz heç bir dəyişiklik etməmisiniz. Ola bilsin ki, eyni dəyişikliyi başqası eyni vaxtda edib.",
 	"action-produnto-update": "Produnto paketlərini quraşdırmaq",
