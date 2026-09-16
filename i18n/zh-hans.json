@@ -22,6 +22,8 @@
 	"produnto-update-requires-missing": "程序包$1所需的$2缺失。",
 	"produnto-update-requires-unsatisfied-platform": "程序包$1需要$2 $3，但仅有$2 $4可用。",
 	"produnto-update-requires-unsatisfied": "程序包$1需要$2 $3，但将会部署$2 $4。",
+	"produnto-update-requires-invalid-version": "程序包$1需要程序包$2，但其已部署的版本“$4”无效。",
+	"produnto-update-requires-invalid-constraint": "程序包$1需要$2，但版本约束“$3”无效。",
 	"produnto-update-failed-generic": "保存程序包失败。",
 	"produnto-update-null-edit": "无法部署：您没有做出任何更改。可能有人同时做出了相同的更改。",
 	"action-produnto-update": "部署Produnto程序包",
