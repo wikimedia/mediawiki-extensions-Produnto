@@ -9,7 +9,8 @@ use MediaWiki\Context\RequestContext;
 use MediaWiki\Extension\Produnto\Fetcher\Fetcher;
 use MediaWiki\Extension\Produnto\ProduntoServices;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
-use PHPUnit\Framework\AssertionFailedError;
+use Psr\Log\NullLogger;
+use RuntimeException;
 
 /**
  * @covers \MediaWiki\Extension\Produnto\Fetcher\Fetcher
@@ -207,6 +208,8 @@ EOT;
 
 	public function testFetchException() {
 		$this->setupServer();
+		$exceptionLogger = new \TestLogger( true );
+		$this->setLogger( 'exception', $exceptionLogger );
 		$fetcher = $this->getFetcher();
 		$fetcher->asyncFetch(
 			'produnto-test',
@@ -214,11 +217,7 @@ EOT;
 			'1.1',
 			'refs/tags/v1.1'
 		);
-		try {
-			$fetcher->fetchSuspended( 1 );
-			$this->fail( 'expected exception' );
-		} catch ( AssertionFailedError $e ) {
-		}
+		$this->assertFalse( $fetcher->fetchSuspended( 1 ) );
 		$store = $this->getStore();
 		$package = $store->getPackageById( 1 );
 		$status = $package->getStatus();
@@ -227,6 +226,57 @@ EOT;
 		$this->assertStringStartsWith(
 			'Fetch failed: caught exception of class &#34;PHPUnit\Framework\AssertionFailedError&#34;',
 			$this->statusToString( $status ) );
+		$this->assertCount( 1, $exceptionLogger->getBuffer() );
+	}
+
+	/**
+	 * An exception in the job should leave the package in the failed state,
+	 * despite the job runner rolling back the transaction on exception.
+	 */
+	public function testFetchExceptionInJob() {
+		$this->setupServer();
+		$this->setLogger( 'exception', new NullLogger() );
+		$client = $this->createNoOpMock( GuzzleHttp\Client::class, [ 'get' ] );
+		$client->method( 'get' )->willThrowException( new RuntimeException( 'test' ) );
+		$this->installMockHttp( [ $client ] );
+
+		$this->getFetcher()->asyncFetch(
+			'produnto-test',
+			'https://gitlab.wikimedia.org/tstarling/produnto-test',
+			'1.1',
+			'refs/tags/v1.1'
+		);
+		$this->runJobs(
+			[ 'numJobs' => 1, 'complete' => false, 'ignoreErrorsMatchingFormat' => '%a' ],
+			[ 'maxJobs' => 1 ]
+		);
+
+		$package = $this->getStore()->getPackageById( 1 );
+		$this->assertSame( ProduntoStore::STATE_FAILED, $package->getState() );
+		$this->assertStringStartsWith(
+			'Fetch failed: caught exception of class &#34;RuntimeException&#34;',
+			$this->statusToString( $package->getStatus() ) );
+	}
+
+	/**
+	 * A duplicate job for a package that is already fetched should do nothing
+	 */
+	public function testFetchSuspendedReady() {
+		$this->setupServer();
+		$this->setupHttp( 200, file_get_contents( __DIR__ . '/../../data/archive.zip' ) );
+		$fetcher = $this->getFetcher();
+		$this->assertStatusGood( $fetcher->immediateFetch(
+			'produnto-test',
+			'https://gitlab.wikimedia.org/tstarling/produnto-test',
+			'1.1',
+			'refs/tags/v1.1'
+		) );
+
+		$this->installMockHttp( [ $this->createNoOpMock( GuzzleHttp\Client::class ) ] );
+		$this->assertTrue( $fetcher->fetchSuspended( 1 ) );
+		$package = $this->getStore()->getPackageById( 1 );
+		$this->assertSame( ProduntoStore::STATE_READY, $package->getState() );
+		$this->assertCount( 3, $package->getFilePaths() );
 	}
 
 	private function statusToString( $status ) {

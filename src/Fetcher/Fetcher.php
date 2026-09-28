@@ -3,6 +3,7 @@
 namespace MediaWiki\Extension\Produnto\Fetcher;
 
 use Exception;
+use MediaWiki\Exception\MWExceptionHandler;
 use MediaWiki\Extension\Produnto\Manifest\ManifestFactory;
 use MediaWiki\Extension\Produnto\Server\ServerContainer;
 use MediaWiki\Extension\Produnto\Store\PackageBuilder;
@@ -117,6 +118,10 @@ class Fetcher {
 			// Can't report failure on a non-existent package
 			return true;
 		}
+		if ( $package->getState() === ProduntoStore::STATE_READY ) {
+			// Duplicate or retried job for a package that was already fetched
+			return true;
+		}
 		$packageBuilder = $this->store->resumePackageBuilder( $package );
 		try {
 			$status = $this->fetchPackage( $package, $packageBuilder );
@@ -124,11 +129,15 @@ class Fetcher {
 			// Writing the status is unsafe
 			throw $e;
 		} catch ( Exception $e ) {
+			// Don't rethrow, since the job runner would roll back the failure
+			// status, leaving the package in the fetching state forever.
+			MWExceptionHandler::logException( $e );
 			$status = new FetchStatus();
 			$status->genericError( 'caught exception of class "' .
 				get_class( $e ) . '" [' . WebRequest::getRequestId() . ']' );
 			$packageBuilder->fail( $status );
-			throw $e;
+			// Allow the job to be retried
+			return false;
 		}
 		if ( $status->isOK() ) {
 			$packageBuilder->commit();
