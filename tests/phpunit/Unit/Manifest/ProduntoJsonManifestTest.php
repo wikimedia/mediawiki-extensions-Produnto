@@ -3,6 +3,7 @@
 namespace MediaWiki\Extension\Produnto\Tests\Unit\Manifest;
 
 use MediaWiki\Extension\Produnto\Manifest\ProduntoJsonManifestParser;
+use MediaWiki\Extension\Produnto\RepoViewer\RepoLinker;
 use MediaWiki\Extension\Produnto\Store\NameStore;
 use MediaWiki\Extension\Produnto\Store\PackageAccess;
 use MediaWiki\Extension\Produnto\Store\PackageBuilder;
@@ -63,7 +64,8 @@ JSON;
 			$this->createNoOpMock( TextStore::class ),
 			new SimpleFileAccess(),
 			$this->createNoOpMock( NameStore::class ),
-			$this->createNoOpMock( IDatabase::class )
+			$this->createNoOpMock( IDatabase::class ),
+			$this->createNoOpMock( RepoLinker::class )
 		);
 		$status->value->populateProps( $builder );
 		$result = TestingAccessWrapper::newFromObject( $builder )->props;

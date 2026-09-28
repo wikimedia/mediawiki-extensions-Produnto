@@ -53,6 +53,18 @@ class GitlabServerTest extends \MediaWikiUnitTestCase {
 				[ 'foo/' ],
 				'http://example.com/foo/bar',
 				'bar'
+			],
+			'project in subgroup' => [
+				'http://example.com',
+				[ 'foo' ],
+				'http://example.com/foo/sub/bar',
+				'bar'
+			],
+			'empty name' => [
+				'http://example.com',
+				[ 'foo' ],
+				'http://example.com/foo/',
+				null
 			]
 		];
 	}

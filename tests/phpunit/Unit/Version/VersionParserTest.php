@@ -66,6 +66,22 @@ class VersionParserTest extends \MediaWikiUnitTestCase {
 		$versionParser->parse( $s );
 	}
 
+	public static function provideIsValid() {
+		return [
+			[ '1.0.0', true ],
+			[ '1.0-rc1', true ],
+			[ '', false ],
+			[ '1.0/x', false ],
+		];
+	}
+
+	/**
+	 * @dataProvider provideIsValid
+	 */
+	public function testIsValid( string $s, bool $expected ) {
+		$this->assertSame( $expected, ( new VersionParser() )->isValid( $s ) );
+	}
+
 	public static function provideIsPartialMatch() {
 		return [
 			[ '1', '1.0.0', true ],

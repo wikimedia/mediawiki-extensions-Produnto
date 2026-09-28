@@ -31,6 +31,18 @@ class VersionParser {
 		return $this->cache[$input] ??= $this->parseUncached( $input );
 	}
 
+	/**
+	 * Check whether a version string is valid
+	 */
+	public function isValid( string $input ): bool {
+		try {
+			$this->parse( $input );
+		} catch ( VersionParserError ) {
+			return false;
+		}
+		return true;
+	}
+
 	private function parseUncached( string $input ): Version {
 		$version = new Version;
 

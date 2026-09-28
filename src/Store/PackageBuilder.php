@@ -3,6 +3,8 @@
 namespace MediaWiki\Extension\Produnto\Store;
 
 use LogicException;
+use MediaWiki\Extension\Produnto\RepoViewer\RepoLinker;
+use MediaWiki\Extension\Produnto\Version\VersionParser;
 use StatusValue;
 use Wikimedia\JsonCodec\JsonCodec;
 use Wikimedia\Rdbms\IDatabase;
@@ -30,6 +32,7 @@ class PackageBuilder {
 		private FileAccess $fileAccess,
 		private NameStore $nameStore,
 		private IDatabase $dbw,
+		private RepoLinker $repoLinker,
 	) {
 	}
 
@@ -41,9 +44,10 @@ class PackageBuilder {
 		FileAccess $fileAccess,
 		NameStore $nameStore,
 		IDatabase $dbw,
+		RepoLinker $repoLinker,
 		PackageAccess $package
 	): self {
-		$builder = new self( $textStore, $fileAccess, $nameStore, $dbw );
+		$builder = new self( $textStore, $fileAccess, $nameStore, $dbw, $repoLinker );
 		$builder->name = $package->getName();
 		$builder->fetchedUrl = $package->getFetchedUrl();
 		$builder->props = $package->getProps();
@@ -56,18 +60,28 @@ class PackageBuilder {
 
 	/**
 	 * Set the name
+	 *
+	 * @throws InvalidNameError
 	 */
 	public function name( string $name ): self {
 		$this->assertNotInserted( __FUNCTION__ );
+		if ( !$this->repoLinker->getPackageLinkTarget( $name ) ) {
+			throw new InvalidNameError;
+		}
 		$this->name = $name;
 		return $this;
 	}
 
 	/**
 	 * Set the version
+	 *
+	 * @throws InvalidVersionError
 	 */
 	public function version( string $version ): self {
 		$this->assertNotInserted( __FUNCTION__ );
+		if ( !( new VersionParser )->isValid( $version ) ) {
+			throw new InvalidVersionError;
+		}
 		$this->version = $version;
 		return $this;
 	}

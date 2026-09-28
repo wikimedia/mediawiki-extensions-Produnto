@@ -2,6 +2,7 @@
 
 namespace MediaWiki\Extension\Produnto\Store;
 
+use MediaWiki\Extension\Produnto\RepoViewer\RepoLinker;
 use MediaWiki\WikiMap\WikiMap;
 use Wikimedia\MapCacheLRU\MapCacheLRU;
 use Wikimedia\Rdbms\IConnectionProvider;
@@ -33,6 +34,7 @@ class ProduntoStore {
 
 	public function __construct(
 		private readonly IConnectionProvider $dbProvider,
+		private readonly RepoLinker $repoLinker,
 	) {
 		$this->textStore = new TextStore( $dbProvider );
 		$this->textCache = new MapCacheLRU( self::TEXT_CACHE_SIZE );
@@ -198,7 +200,8 @@ class ProduntoStore {
 			$this->textStore,
 			$this->getFileAccess( IDBAccessObject::READ_LATEST ),
 			$this->nameStore,
-			$this->dbProvider->getPrimaryDatabase( 'virtual-produnto' )
+			$this->dbProvider->getPrimaryDatabase( 'virtual-produnto' ),
+			$this->repoLinker
 		);
 	}
 
@@ -211,6 +214,7 @@ class ProduntoStore {
 			$this->getFileAccess( IDBAccessObject::READ_LATEST ),
 			$this->nameStore,
 			$this->dbProvider->getPrimaryDatabase( 'virtual-produnto' ),
+			$this->repoLinker,
 			$package
 		);
 	}

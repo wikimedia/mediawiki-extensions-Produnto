@@ -67,7 +67,9 @@ class GitlabServer extends GitServer {
 	}
 
 	/**
-	 * Extract the package name from a project URL
+	 * Extract the package name from a project URL. This is the last component
+	 * of the project path, so projects in subgroups are named without the
+	 * subgroup.
 	 */
 	public function urlToName( string $url ): ?string {
 		if ( !str_starts_with( $url, $this->url ) ) {
@@ -77,7 +79,9 @@ class GitlabServer extends GitServer {
 		foreach ( $this->projectPrefixes as $prefix ) {
 			$prefix = self::addTrailingSlash( $prefix );
 			if ( str_starts_with( $project, $prefix ) ) {
-				return substr( $project, strlen( $prefix ) );
+				$components = explode( '/', substr( $project, strlen( $prefix ) ) );
+				$name = end( $components );
+				return $name === '' ? null : $name;
 			}
 		}
 		return null;

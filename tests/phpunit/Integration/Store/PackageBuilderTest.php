@@ -3,6 +3,8 @@
 namespace MediaWiki\Extension\Produnto\Tests\Integration\Store;
 
 use MediaWiki\Extension\Produnto\ProduntoServices;
+use MediaWiki\Extension\Produnto\Store\InvalidNameError;
+use MediaWiki\Extension\Produnto\Store\InvalidVersionError;
 use MediaWiki\Extension\Produnto\Store\PackageAccess;
 use MediaWiki\Extension\Produnto\Store\PackageBuilder;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
@@ -11,6 +13,8 @@ use MediaWiki\Extension\Produnto\Store\WrongUrlError;
 
 /**
  * @covers \MediaWiki\Extension\Produnto\Store\PackageBuilder
+ * @covers \MediaWiki\Extension\Produnto\Store\InvalidNameError
+ * @covers \MediaWiki\Extension\Produnto\Store\InvalidVersionError
  * @covers \MediaWiki\Extension\Produnto\Store\PackageAccess::getFileContents
  * @covers \MediaWiki\Extension\Produnto\Store\ProduntoStore::createPackageVersion
  * @covers \MediaWiki\Extension\Produnto\Store\ProduntoStore::resumePackageBuilder
@@ -83,6 +87,20 @@ class PackageBuilderTest extends \MediaWikiIntegrationTestCase {
 		$this->setFields( $builder );
 		$this->expectException( VersionAlreadyExistsError::class );
 		$builder->commit();
+	}
+
+	public function testInvalidName() {
+		$builder = $this->getStore()->createPackageVersion();
+		$this->setFields( $builder );
+		$this->expectException( InvalidNameError::class );
+		$builder->name( 'foo[bar]' );
+	}
+
+	public function testInvalidVersion() {
+		$builder = $this->getStore()->createPackageVersion();
+		$this->setFields( $builder );
+		$this->expectException( InvalidVersionError::class );
+		$builder->version( '1.0/x' );
 	}
 
 	public function testWrongUrl() {

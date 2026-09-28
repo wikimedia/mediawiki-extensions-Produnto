@@ -75,7 +75,8 @@ return [
 
 	'Produnto.Store' => static function ( MediaWikiServices $services ) {
 		return new ProduntoStore(
-			$services->getConnectionProvider()
+			$services->getConnectionProvider(),
+			$services->get( 'Produnto.RepoLinker' )
 		);
 	},
 

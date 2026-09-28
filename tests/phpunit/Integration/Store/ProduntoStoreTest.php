@@ -11,7 +11,8 @@ use MediaWiki\Extension\Produnto\Store\ProduntoStore;
 class ProduntoStoreTest extends \MediaWikiIntegrationTestCase {
 	private function getStore() {
 		return new ProduntoStore(
-			new ValidateDomainDbProvider( $this->getServiceContainer()->getDBLoadBalancerFactory() )
+			new ValidateDomainDbProvider( $this->getServiceContainer()->getDBLoadBalancerFactory() ),
+			$this->getServiceContainer()->get( 'Produnto.RepoLinker' )
 		);
 	}
 
