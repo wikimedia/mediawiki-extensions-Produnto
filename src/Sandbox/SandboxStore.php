@@ -2,9 +2,9 @@
 
 namespace MediaWiki\Extension\Produnto\Sandbox;
 
-use IDBAccessObject;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
 use Wikimedia\ObjectCache\BagOStuff;
+use Wikimedia\Rdbms\IDBAccessObject;
 
 class SandboxStore {
 	/** Sandbox data array key used to store hashes by package and path */

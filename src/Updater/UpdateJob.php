@@ -15,6 +15,7 @@ use MediaWiki\Linker\LinkTarget;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Title\Title;
 use Wikimedia\Rdbms\IConnectionProvider;
+use Wikimedia\Rdbms\IDBAccessObject;
 
 /**
  * Purge or invalidate caches following a deployment
@@ -76,7 +77,7 @@ class UpdateJob extends Job {
 		$newDeployment = $this->store->getDeploymentById( $this->params['newId'] );
 		if ( !$newDeployment ) {
 			$newDeployment = $this->store->getDeploymentById(
-				$this->params['newId'], \IDBAccessObject::READ_LATEST );
+				$this->params['newId'], IDBAccessObject::READ_LATEST );
 			if ( !$newDeployment ) {
 				throw new \RuntimeException( "New deployment not found" );
 			}

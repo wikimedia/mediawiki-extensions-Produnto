@@ -229,7 +229,7 @@
 	},
 	"QUnitTestModule": {
 		"localBasePath": "",
-		"remoteExtPath": "GrowthExperiments",
+		"remoteExtPath": "Produnto",
 		"packageFiles": [
 			"tests/qunit/index.js",
 			"tests/qunit/ext.produnto.Dashboard/compareVersions.test.js",

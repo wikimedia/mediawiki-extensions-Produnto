@@ -322,6 +322,7 @@ class ProduntoStore {
 		$value = $db->newSelectQueryBuilder()
 			->select( 'MAX(ppv_id)' )
 			->from( 'produnto_package_version' )
+			->caller( __METHOD__ )
 			->fetchField();
 		return ( $value === null || $value === false ) ? null : (int)$value;
 	}
@@ -372,7 +373,7 @@ class ProduntoStore {
 	 * @return array<int,int>
 	 */
 	public function getPackageStatesFromIdRange( $startId, $endId ) {
-		$db = $this->getDbFromRecency( \IDBAccessObject::READ_NORMAL );
+		$db = $this->getDbFromRecency( IDBAccessObject::READ_NORMAL );
 		$res = $db->newSelectQueryBuilder()
 			->select( [ 'ppv_id', 'ppv_state' ] )
 			->from( 'produnto_package_version' )
