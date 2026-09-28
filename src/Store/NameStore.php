@@ -9,6 +9,9 @@ use Wikimedia\Rdbms\IConnectionProvider;
  * paths inside packages, mapping each path to an integer.
  */
 class NameStore {
+	/** The maximum length of a name in bytes, limited by the size of pfn_name */
+	public const int MAX_LENGTH = 3072;
+
 	public function __construct(
 		private readonly IConnectionProvider $dbProvider
 	) {

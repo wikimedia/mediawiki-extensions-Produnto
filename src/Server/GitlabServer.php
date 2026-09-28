@@ -7,6 +7,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 use InvalidArgumentException;
 use MediaWiki\Extension\Produnto\Fetcher\FetchStatus;
+use MediaWiki\Extension\Produnto\Store\NameStore;
 use MediaWiki\Extension\Produnto\Store\PackageBuilder;
 use MediaWiki\Extension\Produnto\Store\PackageMetaAccess;
 use MediaWiki\Http\HttpRequestFactory;
@@ -136,6 +137,10 @@ class GitlabServer extends GitServer {
 			$name = $this->stripInitialPathSegment( $stat['name'] );
 			if ( $name === null ) {
 				// Ignore files not in a directory
+				continue;
+			}
+			if ( strlen( $name ) > NameStore::MAX_LENGTH ) {
+				$status->genericError( "The file path \"$name\" is too long" );
 				continue;
 			}
 			if ( $stat['size'] >= $this->maxFileSize ) {

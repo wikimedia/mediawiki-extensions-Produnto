@@ -1,0 +1,171 @@
+{
+	"comment": "Change ppv_package to an integer, matching pp_id (T439402)",
+	"before": {
+		"name": "produnto_package_version",
+		"comment": "Package versions",
+		"columns": [
+			{
+				"name": "ppv_id",
+				"comment": "primary key",
+				"type": "integer",
+				"options": {
+					"unsigned": true,
+					"notnull": true,
+					"autoincrement": true
+				}
+			},
+			{
+				"name": "ppv_package",
+				"comment": "Link to produnto_package.pp_id",
+				"type": "binary",
+				"options": {
+					"length": 255,
+					"notnull": true
+				}
+			},
+			{
+				"name": "ppv_version",
+				"comment": "The version string, e.g. 1.0.0",
+				"type": "binary",
+				"options": {
+					"length": 255,
+					"notnull": true
+				}
+			},
+			{
+				"name": "ppv_upstream_ref",
+				"comment": "Some kind of upstream server-dependent identifier, for example a Git commit name",
+				"type": "binary",
+				"options": {
+					"length": 255,
+					"notnull": true
+				}
+			},
+			{
+				"name": "ppv_state",
+				"comment": "PHP const: 1=fetching, 2=ready, 3=failed",
+				"type": "mwtinyint",
+				"options": {
+					"length": 1,
+					"notnull": true
+				}
+			},
+			{
+				"name": "ppv_error",
+				"comment": "An error message, set if the fetch failed",
+				"type": "blob",
+				"options": {
+					"length": 65535,
+					"notnull": false
+				}
+			},
+			{
+				"name": "ppv_props",
+				"comment": "JSON blob of package properties",
+				"type": "blob",
+				"options": {
+					"length": 16777215,
+					"notnull": true
+				}
+			}
+		],
+		"indexes": [
+			{
+				"name": "ppv_package_version",
+				"columns": [
+					"ppv_package",
+					"ppv_version"
+				],
+				"comment": "To deduplicate fetch requests",
+				"unique": true
+			}
+		],
+		"pk": [
+			"ppv_id"
+		]
+	},
+	"after": {
+		"name": "produnto_package_version",
+		"comment": "Package versions",
+		"columns": [
+			{
+				"name": "ppv_id",
+				"comment": "primary key",
+				"type": "integer",
+				"options": {
+					"unsigned": true,
+					"notnull": true,
+					"autoincrement": true
+				}
+			},
+			{
+				"name": "ppv_package",
+				"comment": "Link to produnto_package.pp_id",
+				"type": "integer",
+				"options": {
+					"unsigned": true,
+					"notnull": true
+				}
+			},
+			{
+				"name": "ppv_version",
+				"comment": "The version string, e.g. 1.0.0",
+				"type": "binary",
+				"options": {
+					"length": 255,
+					"notnull": true
+				}
+			},
+			{
+				"name": "ppv_upstream_ref",
+				"comment": "Some kind of upstream server-dependent identifier, for example a Git commit name",
+				"type": "binary",
+				"options": {
+					"length": 255,
+					"notnull": true
+				}
+			},
+			{
+				"name": "ppv_state",
+				"comment": "PHP const: 1=fetching, 2=ready, 3=failed",
+				"type": "mwtinyint",
+				"options": {
+					"length": 1,
+					"notnull": true
+				}
+			},
+			{
+				"name": "ppv_error",
+				"comment": "An error message, set if the fetch failed",
+				"type": "blob",
+				"options": {
+					"length": 65535,
+					"notnull": false
+				}
+			},
+			{
+				"name": "ppv_props",
+				"comment": "JSON blob of package properties",
+				"type": "blob",
+				"options": {
+					"length": 16777215,
+					"notnull": true
+				}
+			}
+		],
+		"indexes": [
+			{
+				"name": "ppv_package_version",
+				"columns": [
+					"ppv_package",
+					"ppv_version"
+				],
+				"comment": "To deduplicate fetch requests",
+				"unique": true
+			}
+		],
+		"pk": [
+			"ppv_id"
+		]
+	}
+}

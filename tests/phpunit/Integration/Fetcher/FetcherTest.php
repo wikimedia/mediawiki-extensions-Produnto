@@ -318,6 +318,27 @@ EOT;
 			$this->statusToString( $status ) );
 	}
 
+	public function testPathTooLong() {
+		$this->setupServer();
+		$zipFileName = $this->getNewTempFile();
+		$zip = new \ZipArchive;
+		$zip->open( $zipFileName, \ZipArchive::OVERWRITE );
+		$longPath = str_repeat( 'a', 3100 );
+		$zip->addFromString( "root/$longPath", 'x' );
+		$zip->close();
+		$this->setupHttp( 200, file_get_contents( $zipFileName ) );
+
+		$status = $this->getFetcher()->immediateFetch(
+			'produnto-test',
+			'https://gitlab.wikimedia.org/tstarling/produnto-test',
+			'1.1',
+			'refs/tags/v1.1'
+		);
+		$this->assertStringStartsWith(
+			"Fetch failed: The file path &#34;$longPath&#34; is too long",
+			$this->statusToString( $status ) );
+	}
+
 	public function testManifestError() {
 		$this->setupServer();
 		$body = file_get_contents( __DIR__ . '/../../data/manifest-error.zip' );

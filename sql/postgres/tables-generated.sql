@@ -44,7 +44,7 @@ CREATE INDEX ppd_package_version ON produnto_package_deployment (ppd_package_ver
 
 CREATE TABLE produnto_package_version (
   ppv_id SERIAL NOT NULL,
-  ppv_package TEXT NOT NULL,
+  ppv_package INT NOT NULL,
   ppv_version TEXT NOT NULL,
   ppv_upstream_ref TEXT NOT NULL,
   ppv_state SMALLINT NOT NULL,

@@ -1,0 +1,79 @@
+{
+	"comment": "Reduce pfn_name to 3072 bytes, so that the unique index fits in the InnoDB maximum key length (T439402)",
+	"before": {
+		"name": "produnto_file_name",
+		"comment": "File paths relative to the package root, shared to reduce size",
+		"columns": [
+			{
+				"name": "pfn_id",
+				"comment": "primary key",
+				"type": "integer",
+				"options": {
+					"unsigned": true,
+					"notnull": true,
+					"autoincrement": true
+				}
+			},
+			{
+				"name": "pfn_name",
+				"comment": "relative path",
+				"type": "binary",
+				"options": {
+					"length": 4095,
+					"notnull": true
+				}
+			}
+		],
+		"indexes": [
+			{
+				"name": "pfn_name",
+				"columns": [
+					"pfn_name"
+				],
+				"comment": "For insert deduplication, loading",
+				"unique": true
+			}
+		],
+		"pk": [
+			"pfn_id"
+		]
+	},
+	"after": {
+		"name": "produnto_file_name",
+		"comment": "File paths relative to the package root, shared to reduce size",
+		"columns": [
+			{
+				"name": "pfn_id",
+				"comment": "primary key",
+				"type": "integer",
+				"options": {
+					"unsigned": true,
+					"notnull": true,
+					"autoincrement": true
+				}
+			},
+			{
+				"name": "pfn_name",
+				"comment": "relative path",
+				"type": "binary",
+				"options": {
+					"length": 3072,
+					"notnull": true
+				}
+			}
+		],
+		"indexes": [
+			{
+				"name": "pfn_name",
+				"columns": [
+					"pfn_name"
+				],
+				"comment": "For insert deduplication, loading",
+				"unique": true
+			}
+		],
+		"pk": [
+			"pfn_id"
+		]
+	}
+}

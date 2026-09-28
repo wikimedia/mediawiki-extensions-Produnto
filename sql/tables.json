@@ -179,9 +179,9 @@
 			{
 				"name": "ppv_package",
 				"comment": "Link to produnto_package.pp_id",
-				"type": "binary",
+				"type": "integer",
 				"options": {
-					"length": 255,
+					"unsigned": true,
 					"notnull": true
 				}
 			},
@@ -368,7 +368,7 @@
 				"comment": "relative path",
 				"type": "binary",
 				"options": {
-					"length": 4095,
+					"length": 3072,
 					"notnull": true
 				}
 			}

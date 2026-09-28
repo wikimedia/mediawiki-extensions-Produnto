@@ -41,7 +41,7 @@ CREATE TABLE /*_*/produnto_package_deployment (
 
 CREATE TABLE /*_*/produnto_package_version (
   ppv_id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-  ppv_package VARBINARY(255) NOT NULL,
+  ppv_package INT UNSIGNED NOT NULL,
   ppv_version VARBINARY(255) NOT NULL,
   ppv_upstream_ref VARBINARY(255) NOT NULL,
   ppv_state TINYINT(1) NOT NULL,
@@ -75,7 +75,7 @@ CREATE TABLE /*_*/produnto_file (
 
 CREATE TABLE /*_*/produnto_file_name (
   pfn_id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-  pfn_name VARBINARY(4095) NOT NULL,
+  pfn_name VARBINARY(3072) NOT NULL,
   UNIQUE INDEX pfn_name (pfn_name),
   PRIMARY KEY(pfn_id)
 ) /*$wgDBTableOptions*/;
