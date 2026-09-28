@@ -26,8 +26,8 @@ class GitlabServer extends GitServer {
 
 	/**
 	 * @param HttpRequestFactory $httpRequestFactory
-	 * @param callable $dnsResolver A function which takes a string hostname and
-	 *   returns an array of IP addresses.
+	 * @param callable $dnsResolver A function with the signature of
+	 *   dns_get_record(), used to look up A and AAAA records.
 	 * @param array $config Associative array:
 	 *   - url: The base URL of the GitLab installation (external_url)
 	 *   - projectPrefixes: An array of strings specifying allowable project
@@ -193,7 +193,14 @@ class GitlabServer extends GitServer {
 			if ( $host === null || $host === '' ) {
 				throw new \RuntimeException( 'Invalid configured GitLab URL' );
 			}
-			$allowedRanges = ( $this->dnsResolver )( $host );
+			$allowedRanges = [];
+			foreach ( [ DNS_A => 'ip', DNS_AAAA => 'ipv6' ] as $type => $field ) {
+				// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+				$records = @( $this->dnsResolver )( $host, $type );
+				foreach ( $records ?: [] as $record ) {
+					$allowedRanges[] = $record[$field];
+				}
+			}
 			if ( !$allowedRanges ) {
 				throw new \RuntimeException( 'Could not resolve host for GitLab URL' );
 			}

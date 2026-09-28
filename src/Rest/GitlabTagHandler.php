@@ -119,6 +119,7 @@ class GitlabTagHandler extends Handler {
 			'project' => [
 				self::PARAM_SOURCE => 'body',
 				ParamValidator::PARAM_TYPE => 'array',
+				ParamValidator::PARAM_REQUIRED => true,
 				ArrayDef::PARAM_SCHEMA => ArrayDef::makeObjectSchema(
 					[ 'web_url' => 'string' ],
 					[],

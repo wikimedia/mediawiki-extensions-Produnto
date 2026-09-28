@@ -136,7 +136,7 @@ class GitlabTagHandlerTest extends \MediaWikiIntegrationTestCase {
 		] );
 		$this->setService( 'Produnto.DnsResolver',
 			static fn () =>
-			static fn ( $host ) => [ '127.0.0.1' ] );
+			static fn ( $host, $type ) => $type === DNS_A ? [ [ 'type' => 'A', 'ip' => '127.0.0.1' ] ] : [] );
 	}
 
 	private function getHandler() {
@@ -183,5 +183,17 @@ class GitlabTagHandlerTest extends \MediaWikiIntegrationTestCase {
 			'{"status":"already fetched"}',
 			$response->getBody()->getContents()
 		);
+	}
+
+	public function testMissingProject() {
+		$reqData = iterator_to_array( self::provideExecute() )['success'][0];
+		$bodyData = json_decode( $reqData['bodyContents'], true );
+		unset( $bodyData['project'] );
+		$reqData['bodyContents'] = json_encode( $bodyData );
+		$this->setupServers();
+
+		$exception = $this->executeHandlerAndGetHttpException(
+			$this->getHandler(), new RequestData( $reqData ) );
+		$this->assertSame( 400, $exception->getCode() );
 	}
 }

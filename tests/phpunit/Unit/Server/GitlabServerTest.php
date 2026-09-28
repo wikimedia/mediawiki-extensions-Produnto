@@ -160,6 +160,8 @@ class GitlabServerTest extends \MediaWikiUnitTestCase {
 			'single IP deny' => [ '127.0.0.1', '127.0.0.2', false ],
 			'multiple IP allow' => [ [ '127.0.0.1', '127.0.0.2' ], '127.0.0.2', true ],
 			'multiple IP deny' => [ [ '127.0.0.1', '127.0.0.2' ], '127.0.0.3', false ],
+			'IPv6 allow' => [ [ '127.0.0.1', '2001:db8::1' ], '2001:db8::1', true ],
+			'IPv6 deny' => [ [ '127.0.0.1', '2001:db8::1' ], '2001:db8::2', false ],
 		];
 	}
 
@@ -173,7 +175,7 @@ class GitlabServerTest extends \MediaWikiUnitTestCase {
 		$http = $this->createNoOpMock( HttpRequestFactory::class );
 		$server = new GitlabServer(
 			$http,
-			static fn ( $host ) => (array)$allowedIps,
+			self::makeResolver( (array)$allowedIps ),
 			[
 				'url' => 'https://localhost/',
 				'projectPrefixes' => [ '' ]
@@ -185,6 +187,26 @@ class GitlabServerTest extends \MediaWikiUnitTestCase {
 	}
 
 	private function makeFakeResolver() {
-		return static fn ( $host ) => [ '10.1.1.1' ];
+		return self::makeResolver( [ '10.1.1.1' ] );
+	}
+
+	/**
+	 * Make a fake dns_get_record() which returns the given IPv4 and IPv6 addresses
+	 *
+	 * @param string[] $ips
+	 * @return callable
+	 */
+	private static function makeResolver( array $ips ) {
+		return static function ( $host, $type ) use ( $ips ) {
+			$records = [];
+			foreach ( $ips as $ip ) {
+				if ( $type === DNS_AAAA && str_contains( $ip, ':' ) ) {
+					$records[] = [ 'type' => 'AAAA', 'ipv6' => $ip ];
+				} elseif ( $type === DNS_A && !str_contains( $ip, ':' ) ) {
+					$records[] = [ 'type' => 'A', 'ip' => $ip ];
+				}
+			}
+			return $records;
+		};
 	}
 }

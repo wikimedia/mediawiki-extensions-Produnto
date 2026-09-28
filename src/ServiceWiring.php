@@ -22,7 +22,7 @@ return [
 	},
 
 	'Produnto.DnsResolver' => static function ( MediaWikiServices $services ) {
-		return gethostbynamel( ... );
+		return dns_get_record( ... );
 	},
 
 	'Produnto.Fetcher' => static function ( MediaWikiServices $services ) {
