@@ -150,6 +150,41 @@ EOT;
 		$this->assertSame( ProduntoStore::STATE_READY, $package->getState() );
 	}
 
+	/**
+	 * Files added by a failed fetch should be removed when the package is refetched
+	 */
+	public function testRefetchFailedRemovesOldFiles() {
+		$this->setupServer();
+		$this->setupHttp( 200, file_get_contents( __DIR__ . '/../../data/manifest-error.zip' ) );
+		$fetcher = $this->getFetcher();
+		$fetcher->asyncFetch(
+			'produnto-test',
+			'https://gitlab.wikimedia.org/tstarling/produnto-test',
+			'1.1',
+			'refs/tags/v1.1'
+		);
+		$this->runJobs();
+		$store = $this->getStore();
+		$this->assertSame( ProduntoStore::STATE_FAILED, $store->getPackageById( 1 )->getState() );
+
+		$archive = file_get_contents( __DIR__ . '/../../data/archive.zip' );
+		$this->setupHttp( 200, $archive );
+		$fetcher = $this->getFetcher();
+		$fetcher->asyncFetch(
+			'produnto-test',
+			'https://gitlab.wikimedia.org/tstarling/produnto-test',
+			'1.1',
+			'refs/tags/v1.1'
+		);
+		$this->runJobs();
+
+		$package = $store->getPackageById( 1 );
+		$this->assertSame( ProduntoStore::STATE_READY, $package->getState() );
+		$paths = $package->getFilePaths();
+		sort( $paths );
+		$this->assertSame( [ 'README.md', 'produnto.json', 'src/init.lua' ], $paths );
+	}
+
 	private function getFetcher(): Fetcher {
 		return ( new ProduntoServices( $this->getServiceContainer() ) )->getFetcher();
 	}

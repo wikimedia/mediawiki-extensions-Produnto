@@ -242,6 +242,20 @@ class PackageBuilder {
 	}
 
 	/**
+	 * Delete all files previously added to the package, for example by a
+	 * failed fetch which is now being retried.
+	 */
+	public function deleteFiles(): self {
+		$this->assertInserted( __METHOD__ );
+		$this->dbw->newDeleteQueryBuilder()
+			->deleteFrom( 'produnto_file' )
+			->where( [ 'pf_package_version' => $this->id ] )
+			->caller( __METHOD__ )
+			->execute();
+		return $this;
+	}
+
+	/**
 	 * Suspend construction of the package, to be resumed in a job
 	 *
 	 * @throws PackageBuilderError

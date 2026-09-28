@@ -150,6 +150,10 @@ class Fetcher {
 			$status->genericError( 'Server is no longer configured' );
 			return $status;
 		}
+		if ( $packageBuilder->isInserted() ) {
+			// Remove any files left over from a previous failed attempt
+			$packageBuilder->deleteFiles();
+		}
 		$status = $server->fetch( $package, $packageBuilder );
 		if ( !$status->isOK() ) {
 			$this->logger->error( 'Fetch failure: {status}',
