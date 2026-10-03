@@ -2,7 +2,6 @@
 
 namespace MediaWiki\Extension\Produnto\Maintenance;
 
-use Maintenance;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\Extension\Produnto\Fetcher\Fetcher;
 use MediaWiki\Extension\Produnto\ProduntoServices;
@@ -10,6 +9,7 @@ use MediaWiki\Extension\Produnto\Server\GitServer;
 use MediaWiki\Extension\Produnto\Server\ServerContainer;
 use MediaWiki\Extension\Produnto\Store\PackageBuilderError;
 use MediaWiki\Language\FormatterFactory;
+use MediaWiki\Maintenance\Maintenance;
 
 // @codeCoverageIgnoreStart
 $IP = getenv( 'MW_INSTALL_PATH' );
