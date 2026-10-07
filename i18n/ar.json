@@ -22,6 +22,8 @@
 	"produnto-update-requires-missing": "تتطلب الحزمة $1 $2 ، لكنه غير موجود.",
 	"produnto-update-requires-unsatisfied-platform": "تتطلب الباقة $1 $2 $3 ولكن الباقة المتاحة هي فقط $2 $4 دولارات.",
 	"produnto-update-requires-unsatisfied": "تتطلب الحزمة $1 $2 $3 ولكن سيتم نشر $2 $4 .",
+	"produnto-update-requires-invalid-version": "تتطلب الحزمة $1 الحزمة $2 ولكن لديها إصدار منشور غير صالح \" $4 \".",
+	"produnto-update-requires-invalid-constraint": "تتطلب الحزمة $1 الحزمة $2 ولكن قيد الإصدار \" $3 \" كان غير صالح.",
 	"produnto-update-failed-generic": "فشل حفظ الحزم.",
 	"produnto-update-null-edit": "تعذر النشر: لم تُجرِ أي تغييرات. ربما أجرى شخص آخر نفس التغيير في نفس الوقت.",
 	"action-produnto-update": "نشر حزم Produnto",
