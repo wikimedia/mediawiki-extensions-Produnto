@@ -1,0 +1,20 @@
+{
+	"@metadata": {
+		"authors": [
+			"Jon Harald Søby"
+		]
+	},
+	"produnto-desc": "Pakkebehandler for programvareutvikling på wikien",
+	"produnto-fetch-error": "Henting mislyktes: $1",
+	"produnto-fetch-server-error": "Henting mislyktes på grunn av en tjenerfeil: $1 $2",
+	"produnto-fetch-connect-error": "Henting mislyktes på grunn av en tjenerfeil: $1",
+	"produnto-fetch-http-error": "Henting mislyktes med en feilmelding: $1 $2",
+	"produnto-fetch-no-manifest": "Pakken inneholdt ikke en manifest-fil.",
+	"produnto-fetch-manifest": "Feil i produnto.json: $1",
+	"produnto-fetch-manifest-schema": "Skjemavalideringsfeil i produnto.json: [$1] $2",
+	"produnto-fetch-module-missing": "Pakkemanifestet refererer til modulen «$1» med stien «$2», men ingen slik sti finnes.",
+	"produnto-update-invalid": "Kan ikke lagre pakkeside: ikke en gyldig pakkeliste",
+	"produnto-update-json-error": "Kan ikke lagre pakkeside: $1",
+	"produnto-sandbox-error": "Feil under oppretting av sandkasse: $1",
+	"produnto-sandbox-preview-warning": "Denne forhåndsvisningen brukte en pakke fra din lokale arbeidskopi. Den ser kanskje ikke lik ut når den lagres."
+}
