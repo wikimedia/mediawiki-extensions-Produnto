@@ -82,10 +82,7 @@ class PatchDeploymentHandlerTest extends \MediaWikiIntegrationTestCase {
 		$handler = new PatchDeploymentHandler(
 			$services->getContentLanguage(),
 			$services->getMessageFormatterFactory(),
-			$services->getPageUpdaterFactory(),
-			$services->getPageStore(),
 			$this->getProduntoServices()->getAuthorizingPageSaverFactory(),
-			$this->getProduntoServices()->getUpdater()
 		);
 		$authority = $this->mockRegisteredAuthorityWithPermissions( [ 'produnto-update' ] );
 		$response = $this->executeHandler(

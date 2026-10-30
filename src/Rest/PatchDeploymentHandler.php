@@ -3,16 +3,13 @@
 namespace MediaWiki\Extension\Produnto\Rest;
 
 use MediaWiki\Extension\Produnto\Updater\AuthorizingPageSaverFactory;
-use MediaWiki\Extension\Produnto\Updater\Updater;
 use MediaWiki\Extension\Produnto\Updater\UpdateStatus;
 use MediaWiki\Language\Language;
 use MediaWiki\Message\MessageFormatterFactory;
-use MediaWiki\Page\PageStore;
 use MediaWiki\Rest\Handler;
 use MediaWiki\Rest\RequestInterface;
 use MediaWiki\Rest\TokenAwareHandlerTrait;
 use MediaWiki\Rest\Validator\Validator;
-use MediaWiki\Storage\PageUpdaterFactory;
 use Wikimedia\Message\MessageValue;
 use Wikimedia\ParamValidator\ParamValidator;
 use Wikimedia\Timestamp\TimestampFormat;
@@ -23,10 +20,7 @@ class PatchDeploymentHandler extends Handler {
 	public function __construct(
 		private Language $contLang,
 		private MessageFormatterFactory $formatterFactory,
-		private PageUpdaterFactory $pageUpdaterFactory,
-		private PageStore $pageStore,
 		private AuthorizingPageSaverFactory $pageSaverFactory,
-		private Updater $updater,
 	) {
 	}
 

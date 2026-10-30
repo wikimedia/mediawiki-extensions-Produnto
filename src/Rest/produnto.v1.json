@@ -42,10 +42,7 @@
 					"services": [
 						"ContentLanguage",
 						"MessageFormatterFactory",
-						"PageUpdaterFactory",
-						"PageStore",
-						"Produnto.AuthorizingPageSaverFactory",
-						"Produnto.Updater"
+						"Produnto.AuthorizingPageSaverFactory"
 					]
 				}
 			}
