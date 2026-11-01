@@ -8,6 +8,7 @@ use MediaWiki\Extension\Produnto\RepoViewer\RepoLinker;
 use MediaWiki\Extension\Produnto\Runtime\RuntimeFactory;
 use MediaWiki\Extension\Produnto\Sandbox\SandboxStore;
 use MediaWiki\Extension\Produnto\Server\ServerContainer;
+use MediaWiki\Extension\Produnto\Store\PackageProtectionStore;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
 use MediaWiki\Extension\Produnto\Updater\AuthorizingPageSaverFactory;
 use MediaWiki\Extension\Produnto\Updater\Updater;
@@ -33,6 +34,10 @@ class ProduntoServices {
 
 	public function getManifestFactory(): ManifestFactory {
 		return $this->services->get( 'Produnto.ManifestFactory' );
+	}
+
+	public function getPackageProtectionStore(): PackageProtectionStore {
+		return $this->services->get( 'Produnto.PackageProtectionStore' );
 	}
 
 	public function getRepoLinker(): RepoLinker {

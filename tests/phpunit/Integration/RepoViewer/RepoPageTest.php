@@ -4,14 +4,17 @@ namespace MediaWiki\Extension\Produnto\Tests\Integration\RepoViewer;
 
 use MediaWiki\Content\TextContent;
 use MediaWiki\Content\WikitextContent;
+use MediaWiki\Context\RequestContext;
 use MediaWiki\Extension\Produnto\RepoViewer\RepoPage;
 use MediaWiki\Extension\Produnto\RepoViewer\RepoProvider;
 use MediaWiki\Extension\Produnto\Store\DeploymentAccess;
 use MediaWiki\Extension\Produnto\Store\PackageAccess;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
 use MediaWiki\Extension\Produnto\Store\SimpleFileAccess;
+use MediaWiki\Page\Article;
 use MediaWiki\Page\PageReferenceValue;
 use MediaWiki\Parser\ParserOptions;
+use MediaWiki\Title\Title;
 use Wikimedia\Rdbms\IReadableDatabase;
 
 /**
@@ -165,6 +168,48 @@ class RepoPageTest extends \MediaWikiIntegrationTestCase {
 		$html = $view->getParserOutput()->getContentHolder()->getAsHtmlString();
 		foreach ( $expectedPatterns as $pattern ) {
 			$this->assertStringContainsString( $pattern, $html );
+		}
+	}
+
+	public static function provideProtectionNotice() {
+		return [
+			'indefinite protection' => [ 'sysop', 'infinity', true ],
+			'custom level and expiry' => [ 'reviewer', '20990101000000', true ],
+			'expired protection' => [ 'sysop', '20000101000000', false ],
+			'unprotected' => [ '', 'infinity', false ],
+		];
+	}
+
+	/** @dataProvider provideProtectionNotice */
+	public function testProtectionNotice( string $level, string $expiry, bool $visible ) {
+		$this->overrideConfigValue( 'RestrictionLevels', [ '', 'sysop', 'reviewer' ] );
+		$this->setGroupPermissions( 'sysop', 'reviewer', true );
+		$protection = $this->getServiceContainer()->get( 'Produnto.PackageProtectionStore' );
+		$authority = $this->getTestSysop()->getAuthority();
+		$protection->setProtection( $authority->getUser(), 'package1', $level, 'infinity', '' );
+		if ( $expiry !== 'infinity' ) {
+			$this->getDb()->newUpdateQueryBuilder()->update( 'protected_titles' )
+				->set( [ 'pt_expiry' => $expiry ] )->where( [ 'pt_namespace' => NS_PACKAGE ] )
+				->caller( __METHOD__ )->execute();
+		}
+		$this->getPage( [ 'dbKey' => 'Package1' ] );
+		$title = Title::makeTitle( NS_PACKAGE, 'Package1' );
+		$context = new RequestContext();
+		$context->setTitle( $title );
+		$context->setUser( $this->getTestUser()->getUser() );
+		$context->setLanguage( 'en' );
+		$article = new Article( $title );
+		$article->setContext( $context );
+		$article->showMissingArticle();
+		$html = $context->getOutput()->getHTML();
+		$this->assertStringContainsString( 'ext-produnto-viewer-prop-table', $html );
+		$this->assertStringNotContainsString( 'This page does not exist', $html );
+		if ( $visible ) {
+			$this->assertStringContainsString( 'ext-produnto-viewer-protected', $html );
+			$this->assertStringContainsString( "level: $level", $html );
+			$this->assertStringContainsString( $expiry === 'infinity' ? 'indefinite' : '(UTC)', $html );
+		} else {
+			$this->assertStringNotContainsString( 'ext-produnto-viewer-protected', $html );
 		}
 	}
 

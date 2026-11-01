@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\Produnto\RepoViewer;
 
 use MediaWiki\Extension\Produnto\Store\DeploymentAccess;
 use MediaWiki\Extension\Produnto\Store\PackageAccess;
+use MediaWiki\Extension\Produnto\Store\PackageProtectionStore;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
 use MediaWiki\Language\Language;
 use MediaWiki\Language\LanguageFactory;
@@ -31,6 +32,7 @@ class RepoProvider extends BaseShadowPageProvider {
 		private readonly RepoLinker $repoLinker,
 		private readonly LinkRenderer $linkRenderer,
 		private readonly ProduntoStore $store,
+		private readonly PackageProtectionStore $packageProtection,
 		private readonly ?SyntaxHighlight $syntaxHighlight,
 	) {
 	}
@@ -91,6 +93,7 @@ class RepoProvider extends BaseShadowPageProvider {
 			$this->linkRenderer,
 			$this->syntaxHighlight,
 			$this->getParseHelper(),
+			$this->packageProtection,
 			$isIndex, $title, $package, $path, $contents
 		);
 	}

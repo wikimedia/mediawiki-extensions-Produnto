@@ -59,7 +59,9 @@
 		"ContentHandlerDefaultModelFor": "updater",
 		"JsonValidateSave": "updater",
 		"PageSaveComplete": "updater",
-		"getUserPermissionsErrors": "viewer"
+		"getUserPermissionsErrors": "viewer",
+		"MediaWikiPerformAction": "viewer",
+		"SkinTemplateNavigation::Universal": "viewer"
 	},
 	"HookHandlers": {
 		"schema": {
@@ -72,7 +74,11 @@
 			]
 		},
 		"viewer": {
-			"class": "MediaWiki\\Extension\\Produnto\\RepoViewer\\RepoViewerHooks"
+			"class": "MediaWiki\\Extension\\Produnto\\RepoViewer\\RepoViewerHooks",
+			"services": [
+				"PermissionManager",
+				"Produnto.PackageProtectionStore"
+			]
 		}
 	},
 	"DatabaseVirtualDomains": [
@@ -274,7 +280,8 @@
 				"LanguageFactory",
 				"Produnto.RepoLinker",
 				"LinkRenderer",
-				"Produnto.Store"
+				"Produnto.Store",
+				"Produnto.PackageProtectionStore"
 			],
 			"optional_services": [
 				"SyntaxHighlight.SyntaxHighlight"

@@ -6,6 +6,7 @@ use MediaWiki\Content\Content;
 use MediaWiki\Content\TextContent;
 use MediaWiki\Content\WikitextContent;
 use MediaWiki\Extension\Produnto\Store\PackageAccess;
+use MediaWiki\Extension\Produnto\Store\PackageProtectionStore;
 use MediaWiki\Html\Html;
 use MediaWiki\Language\LanguageFactory;
 use MediaWiki\Language\LanguageFallback;
@@ -41,6 +42,7 @@ class RepoPage extends BaseShadowPage {
 		private readonly LinkRenderer $linkRenderer,
 		private readonly ?SyntaxHighlight $syntaxHighlight,
 		private readonly ParseHelper $parseHelper,
+		private readonly PackageProtectionStore $packageProtection,
 		private readonly bool $isIndex,
 		private readonly PageReference $title,
 		private readonly PackageAccess $package,
@@ -106,7 +108,7 @@ class RepoPage extends BaseShadowPage {
 		}
 
 		if ( $this->isIndex ) {
-			$header = $this->getIndexHeader( $textFormatter );
+			$header = $this->getProtectionNotice( $textFormatter ) . $this->getIndexHeader( $textFormatter );
 		} else {
 			$header = $this->getFileInfoHeader( $textFormatter );
 		}
@@ -122,6 +124,33 @@ class RepoPage extends BaseShadowPage {
 		$view->getParserOutput()->addModuleStyles( [ 'ext.produnto.RepoViewer' ] );
 
 		return $view;
+	}
+
+	/** Show current deployment protection, rather than a missing-page log warning. */
+	private function getProtectionNotice( ITextFormatter $textFormatter ): string {
+		$protection = $this->packageProtection->getProtection( $this->package->getName() );
+		if ( !$protection ) {
+			return '';
+		}
+		$lang = $this->languageFactory->getLanguage( $textFormatter->getLangCode() );
+		$expiry = $protection['expiry'] === 'infinity'
+			? new MessageValue( 'protect-expiry-indefinite' )
+			: new MessageValue( 'protect-expiring', [ $lang->timeanddate( $protection['expiry'], false, false ) ] );
+		$message = new MessageValue( 'produnto-viewer-protected', [
+			$protection['level'], $textFormatter->format( $expiry )
+		] );
+		return Html::noticeBox(
+			htmlspecialchars( $textFormatter->format( $message ), ENT_NOQUOTES ),
+			'ext-produnto-viewer-protected'
+		);
+	}
+
+	/**
+	 * Package views provide their own content and protection notice, so the
+	 * missing-page log extract and its notice do not apply.
+	 */
+	public function shouldShowLogExtract(): bool {
+		return false;
 	}
 
 	/**

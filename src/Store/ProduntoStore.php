@@ -11,7 +11,7 @@ use Wikimedia\Rdbms\IReadableDatabase;
 use Wikimedia\Rdbms\SelectQueryBuilder;
 
 /**
- * Service providing access to the database
+ * Service providing access to the Produnto database tables
  */
 class ProduntoStore {
 	public const int STATE_FETCHING = 1;

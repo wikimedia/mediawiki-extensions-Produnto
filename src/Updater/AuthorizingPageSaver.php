@@ -3,6 +3,7 @@
 namespace MediaWiki\Extension\Produnto\Updater;
 
 use MediaWiki\Content\JsonContent;
+use MediaWiki\Extension\Produnto\Store\PackageProtectionStore;
 use MediaWiki\Json\FormatJson;
 use MediaWiki\Page\PageIdentity;
 use MediaWiki\Page\PageStore;
@@ -13,6 +14,7 @@ use MediaWiki\Storage\PageUpdater;
 use MediaWiki\Storage\PageUpdaterFactory;
 use StatusValue;
 use stdClass;
+use Wikimedia\Rdbms\IDBAccessObject;
 
 /**
  * Authorize and execute an update to MediaWiki:Packages.json,
@@ -28,6 +30,7 @@ class AuthorizingPageSaver {
 		private PageStore $pageStore,
 		private PageUpdaterFactory $pageUpdaterFactory,
 		private Updater $updater,
+		private PackageProtectionStore $packageProtection,
 		private Authority $authority,
 	) {
 	}
@@ -159,6 +162,8 @@ class AuthorizingPageSaver {
 			$data = new \stdClass();
 		}
 
+		$oldData = clone $data;
+
 		$patchDataStatus = FormatJson::parse( $this->jsonPatch );
 		if ( !$patchDataStatus->isOK() ) {
 			return $patchDataStatus;
@@ -176,6 +181,10 @@ class AuthorizingPageSaver {
 				return StatusValue::newFatal( 'produnto-update-invalid' );
 			}
 		}
+		$protectionStatus = $this->authorizeChanges( $oldData, $data );
+		if ( !$protectionStatus->isOK() ) {
+			return $protectionStatus;
+		}
 		$data = $this->sortObjectByKey( $data );
 
 		$validateStatus = $this->updater->validateDeployment( $data );
@@ -187,6 +196,29 @@ class AuthorizingPageSaver {
 			}
 		}
 		return $validateStatus;
+	}
+
+	/** Check additions, version changes and removals, leaving unchanged packages alone. */
+	private function authorizeChanges( stdClass $old, stdClass $new ): StatusValue {
+		$status = StatusValue::newGood();
+		$names = array_unique( array_merge( array_keys( (array)$old ), array_keys( (array)$new ) ) );
+		$changed = array_values( array_filter(
+			$names, static fn ( $name ) => ( $old->$name ?? null ) !== ( $new->$name ?? null )
+		) );
+		$protections = $this->packageProtection->getProtections( $changed, IDBAccessObject::READ_LATEST );
+		foreach ( $protections as $name => $protection ) {
+			foreach ( explode( ',', $protection['level'] ) as $level ) {
+				$right = match ( $level ) {
+					'sysop' => 'editprotected',
+					'autoconfirmed' => 'editsemiprotected',
+					default => $level,
+				};
+				if ( $right !== '' && !$this->authority->isAllowed( $right ) ) {
+					$status->fatal( 'produnto-update-protected', $name, $right );
+				}
+			}
+		}
+		return $status;
 	}
 
 	/**

@@ -6,6 +6,7 @@ use MediaWiki\Extension\Produnto\RepoViewer\RepoLinker;
 use MediaWiki\Extension\Produnto\Runtime\RuntimeFactory;
 use MediaWiki\Extension\Produnto\Sandbox\SandboxStore;
 use MediaWiki\Extension\Produnto\Server\ServerContainer;
+use MediaWiki\Extension\Produnto\Store\PackageProtectionStore;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
 use MediaWiki\Extension\Produnto\Updater\AuthorizingPageSaverFactory;
 use MediaWiki\Extension\Produnto\Updater\Updater;
@@ -17,7 +18,16 @@ return [
 		return new AuthorizingPageSaverFactory(
 			$services->getPageStore(),
 			$services->getPageUpdaterFactory(),
+			$services->get( 'Produnto.PackageProtectionStore' ),
 			$services->get( 'Produnto.Updater' ),
+		);
+	},
+
+	'Produnto.PackageProtectionStore' => static function ( MediaWikiServices $services ) {
+		return new PackageProtectionStore(
+			$services->get( 'Produnto.RepoLinker' ),
+			$services->getConnectionProvider(),
+			$services->getRestrictionStore(),
 		);
 	},
 
