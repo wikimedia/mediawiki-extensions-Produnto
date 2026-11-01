@@ -75,6 +75,7 @@ module.exports = defineComponent( {
 		summary: { type: String, required: true },
 		// Whether any selected package version differs from the active package set
 		isChanged: Boolean,
+		isDeploying: Boolean,
 	},
 
 	emits: [
@@ -134,7 +135,9 @@ module.exports = defineComponent( {
 		const isNewSelected = computed( () => selectedDeploymentId.value === 'new' );
 		const isActiveSelected = computed(
 			() => selectedDeploymentId.value === activeDeploymentId.value );
-		const canSave = computed( () => isNewSelected.value && props.isChanged );
+		const canSave = computed(
+			() => isNewSelected.value && props.isChanged && !props.isDeploying
+		);
 
 		// It would be nice if we could apply custom HTML formatting to menu
 		// items, but the example for that in the CdxMenu documentation, using

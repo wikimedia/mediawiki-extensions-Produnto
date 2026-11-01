@@ -174,28 +174,26 @@ class Client {
 			}
 		}
 
-		const formData = new FormData();
-		formData.set( 'packages', JSON.stringify( patchVersions ) );
-		formData.set( 'summary', summary );
-		formData.set( 'ignoreWarnings', ignoreWarnings ? '1' : '' );
-		formData.set( 'token', await this.actionApi.getToken( 'csrf' ) );
-		const opts = {
-			method: 'POST',
-			body: formData
-		};
-
 		this.deployPending = true;
-		const result = await this.fetchJsonRest(
-			'deployment/patch',
-			opts
-		);
-		this.deployPending = false;
-		return {
-			ok: result.ok,
-			warnings: this.localiseStatusArray( result.warnings ),
-			errors: this.localiseStatusArray( result.errors ),
-			deployment: result.deployment,
-		};
+		try {
+			const formData = new FormData();
+			formData.set( 'packages', JSON.stringify( patchVersions ) );
+			formData.set( 'summary', summary );
+			formData.set( 'ignoreWarnings', ignoreWarnings ? '1' : '' );
+			formData.set( 'token', await this.actionApi.getToken( 'csrf' ) );
+			const result = await this.fetchJsonRest( 'deployment/patch', {
+				method: 'POST',
+				body: formData
+			} );
+			return {
+				ok: result.ok,
+				warnings: this.localiseStatusArray( result.warnings ),
+				errors: this.localiseStatusArray( result.errors ),
+				deployment: result.deployment,
+			};
+		} finally {
+			this.deployPending = false;
+		}
 	}
 
 	/**
@@ -312,6 +310,12 @@ class Client {
 			} catch ( e ) {
 			}
 			// Use the message from the JSON response if MediaWiki provided it
+			if ( data && data.messageTranslations ) {
+				const message = this.localise( data.messageTranslations, true );
+				if ( message ) {
+					throw new Error( message );
+				}
+			}
 			if ( data && data.message ) {
 				throw new Error( data.message );
 			}
@@ -344,12 +348,14 @@ class Client {
 	 *
 	 * @private
 	 * @param {Object.<string,string>} messages
+	 * @param {boolean} [useBcp47] Whether the response uses BCP 47 language tags
 	 * @return {string|undefined}
 	 */
-	localise( messages ) {
+	localise( messages, useBcp47 = false ) {
 		for ( const langCode of this.langCodes ) {
-			if ( langCode in messages ) {
-				return messages[langCode];
+			const key = useBcp47 ? mw.language.bcp47( langCode ) : langCode;
+			if ( key in messages ) {
+				return messages[key];
 			}
 		}
 		// As a final fallback, use the first defined language

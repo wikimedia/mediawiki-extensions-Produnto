@@ -232,9 +232,15 @@
 	"QUnitTestModule": {
 		"localBasePath": "",
 		"remoteExtPath": "Produnto",
+		"dependencies": [
+			"mediawiki.api",
+			"mediawiki.language"
+		],
 		"packageFiles": [
 			"tests/qunit/index.js",
 			"tests/qunit/ext.produnto.Dashboard/compareVersions.test.js",
+			"tests/qunit/ext.produnto.Dashboard/Client.test.js",
+			"resources/ext.produnto.Dashboard/Client.js",
 			"resources/ext.produnto.Dashboard/compareVersions.js",
 			{
 				"name": "resources/ext.produnto.Dashboard/compareVersions.config.json",

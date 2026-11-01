@@ -5,6 +5,7 @@
 			:deployments="deployments"
 			:selected="selectedDeploymentId"
 			:is-changed="isChanged"
+			:is-deploying="showDeployProgress"
 			@update:selected="updateDeploymentId"
 			@revert="revert"
 			@deploy="deploy"
@@ -257,6 +258,9 @@ module.exports = defineComponent( {
 		}
 
 		async function deploy() {
+			if ( showDeployProgress.value ) {
+				return;
+			}
 			clearMessages();
 			showDeployProgress.value = true;
 
@@ -267,7 +271,6 @@ module.exports = defineComponent( {
 					summary.value,
 					ignoreWarnings.value
 				);
-				showDeployProgress.value = false;
 				if ( !result ) {
 					// Aborted?
 				} else if ( result.ok ) {
@@ -287,9 +290,10 @@ module.exports = defineComponent( {
 			} catch ( error ) {
 				// eslint-disable-next-line no-console
 				console.log( error );
-				showDeployProgress.value = false;
-				deploymentErrors.value = [ error.toString() ];
+				deploymentErrors.value = [ error instanceof Error ? error.message : String( error ) ];
 				deploymentWarnings.value = [];
+			} finally {
+				showDeployProgress.value = false;
 			}
 		}
 
