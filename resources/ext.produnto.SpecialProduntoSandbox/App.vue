@@ -217,6 +217,7 @@ module.exports = defineComponent( {
 <style lang="less">
 @import 'mediawiki.skin.variables.less';
 
+/* stylelint-disable selector-class-pattern */
 .ext-produnto-sandbox-vue-app {
 	.produnto-sandbox-card {
 		background-color: @background-color-base;

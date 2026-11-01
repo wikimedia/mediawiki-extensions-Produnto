@@ -142,6 +142,7 @@ module.exports = defineComponent( {
 <style lang="less">
 @import 'mediawiki.skin.variables.less';
 
+/* stylelint-disable no-descending-specificity */
 .ext-produnto-package {
 	background-color: @background-color-base;
 	display: flex;
@@ -172,9 +173,11 @@ module.exports = defineComponent( {
 
 			&__internal {
 				margin-inline-start: 1em;
+
 				&::before {
 					content: '@{msg-brackets-start}';
 				}
+
 				&::after {
 					content: '@{msg-brackets-end}';
 				}
@@ -195,7 +198,7 @@ module.exports = defineComponent( {
 		&__links {
 			margin-top: @spacing-50;
 
-			&>span {
+			& > span {
 				margin-left: @spacing-50;
 				display: inline list-item;
 			}

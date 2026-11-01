@@ -176,6 +176,7 @@ module.exports = defineComponent( {
 <style lang="less">
 @import 'mediawiki.skin.variables.less';
 
+/* stylelint-disable no-descending-specificity */
 .ext-produnto-deployment-box {
 	// Leave enough space so that it usually doesn't vertically expand when it
 	// switches to edit mode
@@ -191,9 +192,11 @@ module.exports = defineComponent( {
 			display: flex;
 			align-items: end;
 			column-gap: @spacing-50;
+
 			.cdx-field {
 				flex: auto;
 			}
+
 			&--submit {
 				flex: none;
 				// Match cdx-text-input padding
@@ -208,25 +211,31 @@ module.exports = defineComponent( {
 			&--info {
 				flex: auto;
 			}
+
 			button {
 				flex: none;
 			}
+
 			&--links {
 				&::before {
 					content: '@{msg-parentheses-start}';
 				}
+
 				&::after {
 					content: '@{msg-parentheses-end} . . ';
 				}
+
 				> span:not( :first-child )::before {
 					content: '@{msg-pipe-separator}';
 				}
 			}
+
 			&--summary {
 				/* Like core comment class */
 				font-style: italic;
 				unicode-bidi: isolate;
 				overflow-wrap: break-word;
+				/* stylelint-disable-next-line declaration-property-value-keyword-no-deprecated */
 				word-break: break-word;
 			}
 		}

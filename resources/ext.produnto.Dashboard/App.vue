@@ -333,6 +333,7 @@ module.exports = defineComponent( {
 		margin: @spacing-50 0;
 		max-width: @size-1200;
 	}
+
 	&--packages {
 		border: @border-subtle;
 		border-radius: @border-radius-base;
