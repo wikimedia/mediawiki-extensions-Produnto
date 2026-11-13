@@ -6,13 +6,15 @@ use MediaWiki\Config\HashConfig;
 use MediaWiki\Extension\Produnto\Rest\PackagesIndexHandler;
 use MediaWiki\Extension\Produnto\Store\ProduntoStore;
 use MediaWiki\Permissions\PermissionManager;
-use MediaWiki\Rest\ResponseFactory;
+use MediaWiki\Tests\Rest\RestTestTrait;
 use Wikimedia\TestingAccessWrapper;
 
 /**
  * @covers \MediaWiki\Extension\Produnto\Rest\PackagesIndexHandler
  */
 class PackagesIndexHandlerTest extends \MediaWikiUnitTestCase {
+	use RestTestTrait;
+
 	public function testGetETag() {
 		$res1 = $this->getHandler( 1500 )->getETag();
 		$res2 = $this->getHandler( 1600 )->getETag();
@@ -54,7 +56,7 @@ class PackagesIndexHandlerTest extends \MediaWikiUnitTestCase {
 			->willReturn( true );
 
 		$handler = new PackagesIndexHandler( $config, $store, $permissionManager );
-		TestingAccessWrapper::newFromObject( $handler )->responseFactory = new ResponseFactory( [] );
+		TestingAccessWrapper::newFromObject( $handler )->responseFactory = $this->newResponseFactory();
 		return $handler;
 	}
 }
