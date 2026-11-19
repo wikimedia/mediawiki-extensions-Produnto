@@ -8,7 +8,7 @@
 	"license-name": "GPL-2.0-or-later",
 	"type": "other",
 	"requires": {
-		"MediaWiki": ">= 1.45.0"
+		"MediaWiki": ">= 1.48.0"
 	},
 	"AutoloadNamespaces": {
 		"MediaWiki\\Extension\\Produnto\\": "src/",
@@ -224,7 +224,9 @@
 		"ext.produnto.RepoViewer": {
 			"localBasePath": "resources/ext.produnto.RepoViewer",
 			"remoteExtPath": "Produnto/resources/ext.produnto.RepoViewer",
-			"styles": [ "RepoViewer.less" ]
+			"styles": [
+				"RepoViewer.less"
+			]
 		}
 	},
 	"QUnitTestModule": {
@@ -255,21 +257,23 @@
 			"name": "Package_talk"
 		}
 	],
-	"ShadowPageProviders": [ {
-		"namespace": 850,
-		"class": "MediaWiki\\Extension\\Produnto\\RepoViewer\\RepoProvider",
-		"services": [
-			"ContentLanguage",
-			"LanguageFallback",
-			"MessageFormatterFactory",
-			"LanguageFactory",
-			"Produnto.RepoLinker",
-			"LinkRenderer",
-			"Produnto.Store"
-		],
-		"optional_services": [
-			"SyntaxHighlight.SyntaxHighlight"
-		]
-	} ],
+	"ShadowPageProviders": [
+		{
+			"namespace": 850,
+			"class": "MediaWiki\\Extension\\Produnto\\RepoViewer\\RepoProvider",
+			"services": [
+				"ContentLanguage",
+				"LanguageFallback",
+				"MessageFormatterFactory",
+				"LanguageFactory",
+				"Produnto.RepoLinker",
+				"LinkRenderer",
+				"Produnto.Store"
+			],
+			"optional_services": [
+				"SyntaxHighlight.SyntaxHighlight"
+			]
+		}
+	],
 	"manifest_version": 2
 }
